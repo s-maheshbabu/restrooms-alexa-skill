@@ -1,0 +1,5 @@
+Run tests: npm test
+Run tests in watch mode: npm run watch
+
+Deploy to beta: grunt deploy
+Deploy to prod: grunt deploy_prod

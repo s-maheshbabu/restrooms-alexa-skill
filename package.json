@@ -1,0 +1,40 @@
+{
+  "name": "restrooms-alexa-skill",
+  "version": "1.0.0",
+  "description": "An Alexa skill that seeks to provide safe restroom access for transgender, intersex, and gender nonconforming individuals.",
+  "main": "index.js",
+  "watch": {
+    "test": "{src,test}/*.js"
+  },
+  "scripts": {
+    "test": "find ./test | xargs ./node_modules/.bin/mocha -R spec",
+    "watch": "npm-watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-maheshbabu/restrooms-alexa-skill.git"
+  },
+  "author": "Mahesh Sabbavarapu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s-maheshbabu/restrooms-alexa-skill/issues"
+  },
+  "homepage": "https://github.com/s-maheshbabu/restrooms-alexa-skill#readme",
+  "dependencies": {
+    "app-module-path": "^2.2.0",
+    "ask-sdk": "^2.7.0",
+    "immutable": "^4.0.0-rc.12",
+    "node-fetch": "^2.6.0",
+    "ramda": "0.27.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "decache": "^4.5.1",
+    "grunt": "^1.0.4",
+    "grunt-aws-lambda": "^0.13.0",
+    "lodash.clonedeep": "^4.5.0",
+    "mocha": "^6.2.0",
+    "npm-watch": "^0.6.0",
+    "sinon": "^7.4.1"
+  }
+}

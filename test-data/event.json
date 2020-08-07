@@ -1,0 +1,119 @@
+{
+  "version": "1.0",
+  "session": {
+    "new": true,
+    "sessionId": "amzn1.echo-api.session.b8728be5-f71b-4b7e-831e-a31ecea57a83",
+    "application": {
+      "applicationId": "amzn1.ask.skill.916edbcf-e7fd-4d8e-be91-bb3da117e526"
+    },
+    "user": {
+      "userId": "amzn1.ask.account.AGST5AJ2NS3AM4PTRWYEEWCFWRZ36NFHMHF46ED7WAQZXGXHEWQCHG6KGVKC4GUB5HRE6C7UA36CSTWKUGUJ3VE6BMBVFKQIXIJPWUWTBEEBMBZ4VYS5NMC7L7FMKECWTXNXHSB3SRRWHZ6OHGFZ44GRPE6LRTYJMLQU2COK76O33DLHR4NP3HKIY3BWEMFS7JBI3WP7VVAZ5GI"
+    }
+  },
+  "context": {
+    "Alexa.Presentation.APL": {
+      "token": "",
+      "version": "APL_WEB_RENDERER_GANDALF",
+      "componentsVisibleOnScreen": [
+        {
+          "id": null,
+          "uid": ":1051",
+          "position": "1024x600+0+0:0",
+          "type": "mixed",
+          "tags": {
+            "viewport": {
+              "canGoBack": null
+            }
+          },
+          "visibility": null,
+          "children": null,
+          "entities": [],
+          "transform": null
+        }
+      ]
+    },
+    "System": {
+      "application": {
+        "applicationId": "amzn1.ask.skill.916edbcf-e7fd-4d8e-be91-bb3da117e526"
+      },
+      "user": {
+        "userId": "amzn1.ask.account.AGST5AJ2NS3AM4PTRWYEEWCFWRZ36NFHMHF46ED7WAQZXGXHEWQCHG6KGVKC4GUB5HRE6C7UA36CSTWKUGUJ3VE6BMBVFKQIXIJPWUWTBEEBMBZ4VYS5NMC7L7FMKECWTXNXHSB3SRRWHZ6OHGFZ44GRPE6LRTYJMLQU2COK76O33DLHR4NP3HKIY3BWEMFS7JBI3WP7VVAZ5GI"
+      },
+      "device": {
+        "deviceId": "amzn1.ask.device.AF4JZD2EE75CHDOM4Q3HWPJGNZWAFJQZ3GV2DF5LJ746SWPDLEMNSUXO5MX67B5E2JGTQK7D3CTM4I6J76PFSJALY4AS2KJG5NXMJPONHDYCUF26Y4PQYFATVRZKZ5EVA7DVGEIEDYTJLW7WGFMVWPBVICHQ",
+        "supportedInterfaces": {
+          "Alexa.Presentation.APL": {
+            "runtime": {
+              "maxVersion": "1.4"
+            }
+          }
+        }
+      },
+      "apiEndpoint": "https://api.amazonalexa.com",
+      "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjkxNmVkYmNmLWU3ZmQtNGQ4ZS1iZTkxLWJiM2RhMTE3ZTUyNiIsImV4cCI6MTU5NjI2Njc0NiwiaWF0IjoxNTk2MjY2NDQ2LCJuYmYiOjE1OTYyNjY0NDYsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFEM05IQnJvSHlKQlZGRkdOaXB2dGJkSkFFQUFBQUFBQUQwMUk2cUpERFJjWW1nczdKbkNQOFEvRHpVbk1rUEozbFl3WFpJK2h5RDRxT2dZM0ZNSzhpYTFWTEdNM3dWekFZbFNUaC8xcGo5Kzgyd0k0YmhYdXJEaTNuQnBOeGF3bUh1bldWcDAveXhLeVpweURaZ0Vvam16MGhtM1QrTVo1MExEbjYveWV6UkNjYjBiN3diVmpWZnFYUGZuQzVlcU82d2ZQcERQWmdyK0NZUXVXOUlVZGlwY25HTC93WW1aeGEyQ0hsTkQ4UnRjVStUWHk4eVhJNUQxK003SHg0WXBzbjRIR28rTExWelUvY3orUFlYRFV5bTBidjUxUFh6aUVtNXdvM3FVM1YxOUpnNkJVRFVBTXQxVUFSeG1DeVppemZ6eGxFZUkxOExiUmNuREtFa3dwTGN2RDRSSDJrMmRJOForcEZSYlM0amVlL2o5dWlZTlNqTWFCQnNFYXRwNmk0UldWY1hDdFRnLzBrL0xMN0FtdWUwNndQalpIRm13M2lveUVsaiIsImNvbnNlbnRUb2tlbiI6bnVsbCwiZGV2aWNlSWQiOiJhbXpuMS5hc2suZGV2aWNlLkFGNEpaRDJFRTc1Q0hET000UTNIV1BKR05aV0FGSlFaM0dWMkRGNUxKNzQ2U1dQRExFTU5TVVhPNU1YNjdCNUUySkdUUUs3RDNDVE00STZKNzZQRlNKQUxZNEFTMktKRzVOWE1KUE9OSERZQ1VGMjZZNFBRWUZBVFZSWktaNUVWQTdEVkdFSUVEWVRKTFc3V0dGTVZXUEJWSUNIUSIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHU1Q1QUoyTlMzQU00UFRSV1lFRVdDRldSWjM2TkZITUhGNDZFRDdXQVFaWEdYSEVXUUNIRzZLR1ZLQzRHVUI1SFJFNkM3VUEzNkNTVFdLVUdVSjNWRTZCTUJWRktRSVhJSlBXVVdUQkVFQk1CWjRWWVM1Tk1DN0w3Rk1LRUNXVFhOWEhTQjNTUlJXSFo2T0hHRlo0NEdSUEU2TFJUWUpNTFFVMkNPSzc2TzMzRExIUjROUDNIS0lZM0JXRU1GUzdKQkkzV1A3VlZBWjVHSSJ9fQ.EbVGSvEQSa97ou96ovW1aJjOx563EYu45lpwVznVLyurosb1Cg-0AQbvZxhPp3vOajvLF5ptC0o4sWTiKdC1WEW6IPSCQyuBPJeFanyYwrdW7THCzYmIEk0a5ZgyfZQrYEU_ip-tsRoggtiEbC8RV7-F0swJFKXop5oYtDqX-QNANkhHPXTWQfZenm5TrRmy2_6dD8Bj6yz5WY1wSL2fV4-T_1JoVujIJfkECbypCMQGKJLPjxm14HeVuaJ_VeYy_rdgOCEa_XL_t5qQ8DLC_64tig4cmPCsXyMEFqoq1Gi_ykpXQRJ4Y1pDObK1TwNp5xz98D1mtwUof-DuQtLRWQ"
+    },
+    "Viewport": {
+      "experiences": [
+        {
+          "arcMinuteWidth": 246,
+          "arcMinuteHeight": 144,
+          "canRotate": false,
+          "canResize": false
+        }
+      ],
+      "mode": "HUB",
+      "shape": "RECTANGLE",
+      "pixelWidth": 1024,
+      "pixelHeight": 600,
+      "dpi": 160,
+      "currentPixelWidth": 1024,
+      "currentPixelHeight": 600,
+      "touch": [
+        "SINGLE"
+      ],
+      "keyboard": null,
+      "video": {
+        "codecs": [
+          "H_264_42",
+          "H_264_41"
+        ]
+      }
+    },
+    "Viewports": [
+      {
+        "type": "APL",
+        "id": "main",
+        "shape": "RECTANGLE",
+        "dpi": 160,
+        "presentationType": "STANDARD",
+        "canRotate": false,
+        "configuration": {
+          "current": {
+            "mode": "HUB",
+            "video": {
+              "codecs": [
+                "H_264_42",
+                "H_264_41"
+              ]
+            },
+            "size": {
+              "type": "DISCRETE",
+              "pixelWidth": 1024,
+              "pixelHeight": 600
+            }
+          }
+        }
+      }
+    ]
+  },
+  "request": {
+    "type": "Dialog.API.Invoked",
+    "requestId": "amzn1.echo-api.request.b5f1b85b-6e60-4be0-bee2-5a94bc2823b0",
+    "timestamp": "2020-08-01T07:20:50Z",
+    "locale": "en_US",
+    "apiRequest": {
+      "name": "GetCharityAPI",
+      "arguments": {}
+    }
+  }
+}
