@@ -1,3 +1,5 @@
+const RR = require("gateway/refugeeRestrooms");
+
 module.exports = FindRestroomNearMeIntentHandler = {
   canHandle(handlerInput) {
     return (
@@ -6,9 +8,10 @@ module.exports = FindRestroomNearMeIntentHandler = {
     );
   }, handle(handlerInput) {
     const { responseBuilder } = handlerInput;
+    const restrooms = RR.searchRestroomsByLatLon();
 
     return responseBuilder
-      .speak("Placeholder response FindRestroomNearMeIntent")
+      .speak(`Placeholder response ${JSON.stringify(restrooms[0])}`)
       .withShouldEndSession(true)
       .getResponse();
   }
