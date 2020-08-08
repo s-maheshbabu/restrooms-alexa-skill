@@ -47,6 +47,7 @@ exports.handler = async function (event, context) {
       .addResponseInterceptors(
         LogResponseInterceptor)
       .addErrorHandlers(ErrorHandler)
+      .withApiClient(new Alexa.DefaultApiClient())
       .create();
   }
 
