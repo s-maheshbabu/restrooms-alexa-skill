@@ -10,6 +10,8 @@ const HelpIntentHandler = require("intenthandlers/HelpIntentHandler");
 const LaunchRequestHandler = require("requesthandlers/LaunchRequestHandler");
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
 
+const PostalCodeToLatLonDataLoadInterceptor = require("interceptors/PostalCodeToLatLonDataLoadInterceptor");
+
 const ErrorHandler = require("errors/ErrorHandler");
 
 // ***************************************************************************************************
@@ -17,7 +19,7 @@ const ErrorHandler = require("errors/ErrorHandler");
 
 const LogRequestInterceptor = {
   process(handlerInput) {
-    console.log(`REQUEST ENVELOPE = ${JSON.stringify(handlerInput.requestEnvelope)}`);
+    //console.log(`REQUEST ENVELOPE = ${JSON.stringify(handlerInput.requestEnvelope)}`);
   },
 };
 
@@ -42,6 +44,7 @@ exports.handler = async function (event, context) {
         SessionEndedRequestHandler
       )
       .addRequestInterceptors(
+        PostalCodeToLatLonDataLoadInterceptor,
         LogRequestInterceptor,
       )
       .addResponseInterceptors(

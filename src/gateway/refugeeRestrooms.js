@@ -1,9 +1,9 @@
 const fetch = require("node-fetch");
 
-async function searchRestroomsByLatLon() {
-    const latitude = -6.5909745;
-    const longitude = 106.7986648;
-    const URL = `https://www.refugerestrooms.org/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&lat=${latitude}&lng=${longitude}`;
+const BASE_URL = `https://www.refugerestrooms.org`;
+
+async function searchRestroomsByLatLon(latitude, longitude) {
+    const URL = `${BASE_URL}/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&lat=${latitude}&lng=${longitude}`;
     console.log(`Endpoint ${URL}`);
 
     var restroomsArray;
@@ -13,10 +13,6 @@ async function searchRestroomsByLatLon() {
     } catch (error) {
         console.log(error);
     }
-
-    await asyncForEach(restroomsArray, (restroom) => {
-        console.log(JSON.stringify(restroom));
-    });
 
     return restroomsArray;
 }
@@ -32,5 +28,6 @@ async function asyncForEach(array, callback) {
 }
 
 module.exports = {
-    searchRestroomsByLatLon: searchRestroomsByLatLon
+    BASE_URL: BASE_URL,
+    searchRestroomsByLatLon: searchRestroomsByLatLon,
 };
