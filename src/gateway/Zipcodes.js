@@ -25,6 +25,8 @@ module.exports.init = () => {
  * Doc
  */
 module.exports.getCoordinates = zipCode => {
+    if (!map.has(zipCode)) return null;
+
     const address = map.get(zipCode);
     return { latitude: address.latitude, longitude: address.longitude };
 };

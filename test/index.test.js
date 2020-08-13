@@ -11,11 +11,14 @@ const context = {};
 const RR = require("gateway/RefugeeRestrooms");
 const zipcodes = require("gateway/Zipcodes");
 
-const DUMMY_COUNTRY_CODE = "US";
+const messages = require("constants/Messages").messages;
+const scopes = require("constants/Scopes").scopes;
+
+const US_COUNTRY_CODE = "US";
 const DUMMY_POSTAL_CODE = "98112";
 
-const aCountryAndPostalCode = {
-  countryCode: DUMMY_COUNTRY_CODE,
+const aDeviceAddress = {
+  countryCode: US_COUNTRY_CODE,
   postalCode: DUMMY_POSTAL_CODE,
 };
 const dummyRestRooms = require("../test-data/sample-RR-response.json");
@@ -30,10 +33,9 @@ afterEach(function () {
 
 it("should be able to fetch the postal address in the happy case where skill has permissions to access the device address.", async () => {
   const event = require("../test-data/event");
-  configureAddressService(200, event.context, aCountryAndPostalCode);
+  configureAddressService(200, event.context, aDeviceAddress);
 
   const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
-  console.log(coordinates)
   configureRRService(200, coordinates.latitude, coordinates.longitude, dummyRestRooms);
 
   const responseContainer = await unitUnderTest.handler(event, context);
@@ -48,13 +50,96 @@ it("should be able to fetch the postal address in the happy case where skill has
   expect(outputSpeech.type).to.equal("SSML");
 });
 
+it("should render a message and card requesting for device address permissions if said permissions are not already granted by the user", async () => {
+  const event = require("../test-data/event");
+
+  // Simulating lack of permissions to fetch device address.
+  event.context.System.apiAccessToken = null;
+
+  const responseContainer = await unitUnderTest.handler(event, context);
+
+  const response = responseContainer.response;
+
+  const outputSpeech = response.outputSpeech;
+  expect(outputSpeech.ssml).to.equal(
+    `<speak>${messages.NOTIFY_MISSING_PERMISSIONS}</speak>`
+  );
+  expect(outputSpeech.type).to.equal("SSML");
+
+  const card = response.card;
+  expect(card.type).to.equal("AskForPermissionsConsent");
+  expect(card.permissions).to.eql([scopes.ADDRESS_SCOPE]);
+});
+
+it("should render an error message when the zipcode requested by the user is invalid.", async () => {
+  const event = require("../test-data/event");
+
+  const deviceAddress_InvalidPostalCode = {
+    countryCode: US_COUNTRY_CODE,
+    postalCode: "anInvalidUSAPostalCode",
+  };
+  configureAddressService(200, event.context, deviceAddress_InvalidPostalCode);
+
+  const responseContainer = await unitUnderTest.handler(event, context);
+
+  const response = responseContainer.response;
+  assert(response.shouldEndSession);
+
+  const outputSpeech = response.outputSpeech;
+  expect(outputSpeech.ssml).to.equal(
+    `<speak>Sorry. ${deviceAddress_InvalidPostalCode.postalCode} is not a valid postal code in the US. Please try again later.</speak>`
+  );
+  expect(outputSpeech.type).to.equal("SSML");
+});
+
+it("should render an error message when the user's device address is not a US address.", async () => {
+  const event = require("../test-data/event");
+
+  const deviceAddress_NonAmericanAddress = {
+    countryCode: "notUS",
+    postalCode: "postal code is irrelevant here",
+  };
+  configureAddressService(200, event.context, deviceAddress_NonAmericanAddress);
+
+  const responseContainer = await unitUnderTest.handler(event, context);
+
+  const response = responseContainer.response;
+  assert(response.shouldEndSession);
+
+  const outputSpeech = response.outputSpeech;
+  expect(outputSpeech.ssml).to.equal(
+    `<speak>Sorry. I currently only support locations within the United States.</speak>`
+  );
+  expect(outputSpeech.type).to.equal("SSML");
+});
+
+it("should render an error message when the user's device address does not include a postal code.", async () => {
+  const event = require("../test-data/event");
+
+  const deviceAddress_NoPostalCode = {
+    countryCode: US_COUNTRY_CODE,
+    postalCode: null,
+  };
+  configureAddressService(200, event.context, deviceAddress_NoPostalCode);
+
+  const responseContainer = await unitUnderTest.handler(event, context);
+
+  const response = responseContainer.response;
+  assert(response.shouldEndSession);
+
+  const outputSpeech = response.outputSpeech;
+  expect(outputSpeech.ssml).to.equal(
+    `<speak>Sorry. I was unable to determine your device location with sufficient granualarity. Please try again later.</speak>`
+  );
+  expect(outputSpeech.type).to.equal("SSML");
+});
+
 function configureAddressService(responseCode, context, payload) {
   if (!nock.isActive()) {
     nock.activate();
   }
 
   nock(context.System.apiEndpoint)
-    .persist()
     .get(`/v1/devices/${context.System.device.deviceId}/settings/address/countryAndPostalCode`)
     .query(true)
     .reply(responseCode, JSON.stringify(payload, null, 2));
@@ -66,7 +151,6 @@ function configureRRService(responseCode, latitude, longitude, payload) {
   }
 
   nock(RR.BASE_URL)
-    .persist()
     .get(`/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&lat=${latitude}&lng=${longitude}`)
     .reply(responseCode, JSON.stringify(payload, null, 2));
 }
