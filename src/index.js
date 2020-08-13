@@ -10,7 +10,7 @@ const HelpIntentHandler = require("intenthandlers/HelpIntentHandler");
 const LaunchRequestHandler = require("requesthandlers/LaunchRequestHandler");
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
 
-const PostalCodeToLatLonDataLoadInterceptor = require("interceptors/PostalCodeToLatLonDataLoadInterceptor");
+const ZipcodesDataLoadInterceptor = require("interceptors/ZipcodesDataLoadInterceptor");
 
 const ErrorHandler = require("errors/ErrorHandler");
 
@@ -44,7 +44,7 @@ exports.handler = async function (event, context) {
         SessionEndedRequestHandler
       )
       .addRequestInterceptors(
-        PostalCodeToLatLonDataLoadInterceptor,
+        ZipcodesDataLoadInterceptor,
         LogRequestInterceptor,
       )
       .addResponseInterceptors(

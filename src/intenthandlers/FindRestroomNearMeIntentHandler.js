@@ -1,5 +1,5 @@
-const RR = require("gateway/refugeeRestrooms");
-const postalCodeToLatLon = require("gateway/postalCodeToLatLon");
+const RR = require("gateway/RefugeeRestrooms");
+const zipcodes = require("gateway/Zipcodes");
 
 const messages = require("constants/Messages");
 
@@ -30,7 +30,6 @@ module.exports = FindRestroomNearMeIntentHandler = {
     try {
       address = await deviceAddressServiceClient.getCountryAndPostalCode(deviceId);
     } catch (error) {
-      console.log(error)
       if (error.name !== 'ServiceError') {
         const response = responseBuilder.speak(messages.ERROR).getResponse();
         return response;
@@ -42,8 +41,8 @@ module.exports = FindRestroomNearMeIntentHandler = {
     // If address.countryCode !== US, say only supported in the US.
     // If address.postalCode === null, say address is not configured.
 
-    const latlon = postalCodeToLatLon.getLatLon(address.postalCode);
-    const restrooms = await RR.searchRestroomsByLatLon(latlon.latitude, latlon.longitude);
+    const coordinates = zipcodes.getCoordinates(address.postalCode);
+    const restrooms = await RR.searchRestroomsByLatLon(coordinates.latitude, coordinates.longitude);
 
     return responseBuilder
       .speak(`Placeholder response ${restrooms[0].name} ${address.postalCode}`)

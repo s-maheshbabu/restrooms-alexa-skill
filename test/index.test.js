@@ -8,8 +8,8 @@ const nock = require('nock')
 
 const context = {};
 
-const RR = require("gateway/refugeeRestrooms");
-const postalCodeToLatLon = require("gateway/postalCodeToLatLon");
+const RR = require("gateway/RefugeeRestrooms");
+const zipcodes = require("gateway/Zipcodes");
 
 const DUMMY_COUNTRY_CODE = "US";
 const DUMMY_POSTAL_CODE = "98112";
@@ -21,7 +21,7 @@ const aCountryAndPostalCode = {
 const dummyRestRooms = require("../test-data/sample-RR-response.json");
 
 before(async () => {
-  await postalCodeToLatLon.init();
+  await zipcodes.init();
 });
 
 afterEach(function () {
@@ -32,9 +32,9 @@ it("should be able to fetch the postal address in the happy case where skill has
   const event = require("../test-data/event");
   configureAddressService(200, event.context, aCountryAndPostalCode);
 
-  const latlon = postalCodeToLatLon.getLatLon(DUMMY_POSTAL_CODE);
-  console.log(latlon)
-  configureRRService(200, latlon.latitude, latlon.longitude, dummyRestRooms);
+  const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+  console.log(coordinates)
+  configureRRService(200, coordinates.latitude, coordinates.longitude, dummyRestRooms);
 
   const responseContainer = await unitUnderTest.handler(event, context);
 
