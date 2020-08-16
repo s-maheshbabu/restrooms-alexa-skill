@@ -37,13 +37,93 @@
                 },
                 {
                     "name": "FindRestroomNearMeIntent",
-                    "slots": [],
+                    "slots": [
+                        {
+                            "name": "SearchFilter_One",
+                            "type": "RestRoomTypes"
+                        },
+                        {
+                            "name": "SearchFilter_Two",
+                            "type": "RestRoomTypes"
+                        },
+                        {
+                            "name": "SearchFilter_Three",
+                            "type": "RestRoomTypes"
+                        }
+                    ],
                     "samples": [
-                        "find a restroom near me"
+                        "find a {SearchFilter_One} {SearchFilter_Three} {SearchFilter_Two} restroom near me",
+                        "find a {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two} restroom near me",
+                        "find a {SearchFilter_One} {SearchFilter_Three} restroom near me",
+                        "find a {SearchFilter_One} and {SearchFilter_Three} restroom near me",
+                        "find a {SearchFilter_One} restroom near me",
+                        "find a restroom near me that is {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two}",
+                        "find a restroom near me that is {SearchFilter_One} and {SearchFilter_Three}",
+                        "find a restroom near me that is {SearchFilter_One}",
+                        "find a restroom near me",
+                        "find an {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two} restroom near me",
+                        "find an {SearchFilter_One} and {SearchFilter_Three} restroom near me",
+                        "find an {SearchFilter_One} restroom near me",
+                        "find restrooms near me that are {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two}",
+                        "find restrooms near me that are {SearchFilter_One} and {SearchFilter_Three}",
+                        "find restrooms near me that are {SearchFilter_One}"
                     ]
                 }
             ],
-            "types": []
+            "types": [
+                {
+                    "name": "RestRoomTypes",
+                    "values": [
+                        {
+                            "id": "ACCESSIBLE",
+                            "name": {
+                                "value": "Accessible",
+                                "synonyms": [
+                                    "ada",
+                                    "disabled friendly",
+                                    "disabled",
+                                    "handicapped friendly",
+                                    "handicapped",
+                                    "wheel chair access",
+                                    "wheel chair friendly",
+                                    "wheelchair friendly",
+                                    "wheelchair"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "CHANGING_TABLE",
+                            "name": {
+                                "value": "ChangingTable",
+                                "synonyms": [
+                                    "baby changing station",
+                                    "baby friendly",
+                                    "changing station",
+                                    "diaper changing station",
+                                    "diaper friendly",
+                                    "diaper station",
+                                    "infant friendly",
+                                    "kid friendly",
+                                    "toddler friendly"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "UNISEX",
+                            "name": {
+                                "value": "Unisex",
+                                "synonyms": [
+                                    "lgbt",
+                                    "lgbtq",
+                                    "trans friendly",
+                                    "transgender",
+                                    "unisex"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     }
 }
