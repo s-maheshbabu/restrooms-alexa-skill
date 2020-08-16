@@ -1,0 +1,276 @@
+{
+    "version": "1.0",
+    "session": {
+        "new": true,
+        "sessionId": "amzn1.echo-api.session.964a67cc-a855-442a-9748-94b9a187e804",
+        "application": {
+            "applicationId": "amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa"
+        },
+        "user": {
+            "userId": "amzn1.ask.account.AGUOMKKBWWCKIUFIXRX7Q7CR3VKB4ABKYIVXZQAVOXQHHP4IPW4JAKHO54Y4IS4V7LAUOCQVH2U2S5NDESSXGWA6YOM2FH4XF5WJ3TCG6XJ4IR6BRNJP5S4LE5XEJEF622GVRJB636BUQAXXZAW3VG5DRTPZIQU2DCKRJIQRMVZMYSSJ6EC5MK56T3JJCELDJJPQBF34YRLAHLQ",
+            "permissions": {
+                "consentToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjVlMDBhZjAwLWRjYmEtNGE5Yi1iMThlLTc5YmQwYTYwZTFhYSIsImV4cCI6MTU5NzUzMDUzNSwiaWF0IjoxNTk3NTI2OTM1LCJuYmYiOjE1OTc1MjY5MzUsInByaXZhdGVDbGFpbXMiOnsiaXNEZXByZWNhdGVkIjoidHJ1ZSIsImNvbnNlbnRUb2tlbiI6IkF0emF8SXdFQklMSkd4ZXdvVXB1dFBTbC0wQmZpNExrUGY0YTNLY0ZWTnBGanhqM05RWjFSbnM4UW1wd1pIMlRLRXkxdHQxVnF4ZTdDYXJmMndIWnVkRGFEdk9rQUdRb1gyZDM4WGRnWnNhUFl3aXBUNE9uOU1FWWNOdlBnLWdCVnBkZDFSQlZFbTZxRjR1SlVpbVFPYTJmb1ZPdFpKS2R3dUQzZ3luWl83ZFM0LWwza3VkcGdKVmhRSDFlTW1nQnRqNm0yckJ6YnJSVmViZDJhMUU2U2FMd01Fcm1oS0FUNFBRT2NaUlhwNG9lTk1IaS1IVmR0YmxlUXgteHFXdzB1c01wQ19NTnJCRkJsMDZ4TmhJcUExWHZTWWhsOG1lZXlaTDV3b3hnMmJ2cXkxT3pOTk4weWZPOXZwWHFWMExGcW1kQ2FtRE4wbXRlaGs3NFNJcW5JNHpiMkE3UHdTMjF0M3liZS1ORjVCM1ZDYzM5N180amJjUSIsImRldmljZUlkIjoiYW16bjEuYXNrLmRldmljZS5BSFE1UFRXU1ZaRTRQUjZZN1ZJMjJBVTVER0dEM0JNSVdZSURMSjJSS0NRSktVSU5WMzRZU0pBS0pFVUJCWTdSV0pJSUNDUExIN01HVlNGVElEVVBBTzNaQU5OVkdWR0FPM1FJSlJOSU5YVFU1WUJWUEIzMlREQlVTN0xBWlY2SUEyRU1XVFlGWVRNS0VUS0xFN0lQSURMUUtUSkEiLCJ1c2VySWQiOiJhbXpuMS5hc2suYWNjb3VudC5BR1VPTUtLQldXQ0tJVUZJWFJYN1E3Q1IzVktCNEFCS1lJVlhaUUFWT1hRSEhQNElQVzRKQUtITzU0WTRJUzRWN0xBVU9DUVZIMlUyUzVOREVTU1hHV0E2WU9NMkZINFhGNVdKM1RDRzZYSjRJUjZCUk5KUDVTNExFNVhFSkVGNjIyR1ZSSkI2MzZCVVFBWFhaQVczVkc1RFJUUFpJUVUyRENLUkpJUVJNVlpNWVNTSjZFQzVNSzU2VDNKSkNFTERKSlBRQkYzNFlSTEFITFEifX0.hDE1XOY6KURkso9l-EW-xC2MnPcNb7gAxJIPwWK4cfDo2YQw23_-D14a_L-Fo-bPq-a9xDUE6SttBDSPqAD0Amc-YOxQT2co6sAju1unm_44N5rT0dp3PZCl8ME1UfUWG4_Aszxi3vLnCZL_fk4IZ76kdAaKSQKVVe-7jvq2ta7Pq6mIl-BmO-f3s6nJUIbUUYSiD1HA4-5QBUcfbfO-8taAlFJddLci-WNEl5id663lPteJAnEWm9nj-qMUHh6eaulhu2DSXJ0XsWSTAHtJ0BTLE3LvgdJTpEFhOrs3qrZYhNo5pbsv2exjNqV6HDHPGEAFoJCEgJoxxC3IU8vLxA",
+                "scopes": {
+                    "alexa::devices:all:geolocation:read": {
+                        "status": "GRANTED"
+                    }
+                }
+            }
+        }
+    },
+    "context": {
+        "Geolocation": {
+            "locationServices": {
+                "status": "RUNNING",
+                "access": "ENABLED"
+            },
+            "timestamp": "2020-08-14T23:49:07Z",
+            "coordinate": {
+                "latitudeInDegrees": 47.62078857421875,
+                "longitudeInDegrees": -122.30061853955556,
+                "accuracyInMeters": 10
+            },
+            "altitude": {
+                "altitudeInMeters": 83.92568778991699,
+                "accuracyInMeters": 10
+            },
+            "heading": {
+                "directionInDegrees": 155.25836181640625
+            },
+            "speed": {
+                "speedInMetersPerSecond": 1
+            }
+        },
+        "Viewports": [
+            {
+                "type": "APL",
+                "id": "main",
+                "shape": "RECTANGLE",
+                "dpi": 160,
+                "presentationType": "STANDARD",
+                "canRotate": false,
+                "configuration": {
+                    "current": {
+                        "mode": "HUB",
+                        "video": {
+                            "codecs": [
+                                "H_264_42",
+                                "H_264_41"
+                            ]
+                        },
+                        "size": {
+                            "type": "DISCRETE",
+                            "pixelWidth": 1024,
+                            "pixelHeight": 600
+                        }
+                    }
+                }
+            }
+        ],
+        "Viewport": {
+            "experiences": [
+                {
+                    "arcMinuteWidth": 246,
+                    "arcMinuteHeight": 144,
+                    "canRotate": false,
+                    "canResize": false
+                }
+            ],
+            "mode": "HUB",
+            "shape": "RECTANGLE",
+            "pixelWidth": 1024,
+            "pixelHeight": 600,
+            "dpi": 160,
+            "currentPixelWidth": 1024,
+            "currentPixelHeight": 600,
+            "touch": [
+                "SINGLE"
+            ],
+            "video": {
+                "codecs": [
+                    "H_264_42",
+                    "H_264_41"
+                ]
+            }
+        },
+        "System": {
+            "application": {
+                "applicationId": "amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa"
+            },
+            "user": {
+                "userId": "amzn1.ask.account.AGUOMKKBWWCKIUFIXRX7Q7CR3VKB4ABKYIVXZQAVOXQHHP4IPW4JAKHO54Y4IS4V7LAUOCQVH2U2S5NDESSXGWA6YOM2FH4XF5WJ3TCG6XJ4IR6BRNJP5S4LE5XEJEF622GVRJB636BUQAXXZAW3VG5DRTPZIQU2DCKRJIQRMVZMYSSJ6EC5MK56T3JJCELDJJPQBF34YRLAHLQ",
+                "permissions": {
+                    "consentToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjVlMDBhZjAwLWRjYmEtNGE5Yi1iMThlLTc5YmQwYTYwZTFhYSIsImV4cCI6MTU5NzUzMDUzNSwiaWF0IjoxNTk3NTI2OTM1LCJuYmYiOjE1OTc1MjY5MzUsInByaXZhdGVDbGFpbXMiOnsiaXNEZXByZWNhdGVkIjoidHJ1ZSIsImNvbnNlbnRUb2tlbiI6IkF0emF8SXdFQklMSkd4ZXdvVXB1dFBTbC0wQmZpNExrUGY0YTNLY0ZWTnBGanhqM05RWjFSbnM4UW1wd1pIMlRLRXkxdHQxVnF4ZTdDYXJmMndIWnVkRGFEdk9rQUdRb1gyZDM4WGRnWnNhUFl3aXBUNE9uOU1FWWNOdlBnLWdCVnBkZDFSQlZFbTZxRjR1SlVpbVFPYTJmb1ZPdFpKS2R3dUQzZ3luWl83ZFM0LWwza3VkcGdKVmhRSDFlTW1nQnRqNm0yckJ6YnJSVmViZDJhMUU2U2FMd01Fcm1oS0FUNFBRT2NaUlhwNG9lTk1IaS1IVmR0YmxlUXgteHFXdzB1c01wQ19NTnJCRkJsMDZ4TmhJcUExWHZTWWhsOG1lZXlaTDV3b3hnMmJ2cXkxT3pOTk4weWZPOXZwWHFWMExGcW1kQ2FtRE4wbXRlaGs3NFNJcW5JNHpiMkE3UHdTMjF0M3liZS1ORjVCM1ZDYzM5N180amJjUSIsImRldmljZUlkIjoiYW16bjEuYXNrLmRldmljZS5BSFE1UFRXU1ZaRTRQUjZZN1ZJMjJBVTVER0dEM0JNSVdZSURMSjJSS0NRSktVSU5WMzRZU0pBS0pFVUJCWTdSV0pJSUNDUExIN01HVlNGVElEVVBBTzNaQU5OVkdWR0FPM1FJSlJOSU5YVFU1WUJWUEIzMlREQlVTN0xBWlY2SUEyRU1XVFlGWVRNS0VUS0xFN0lQSURMUUtUSkEiLCJ1c2VySWQiOiJhbXpuMS5hc2suYWNjb3VudC5BR1VPTUtLQldXQ0tJVUZJWFJYN1E3Q1IzVktCNEFCS1lJVlhaUUFWT1hRSEhQNElQVzRKQUtITzU0WTRJUzRWN0xBVU9DUVZIMlUyUzVOREVTU1hHV0E2WU9NMkZINFhGNVdKM1RDRzZYSjRJUjZCUk5KUDVTNExFNVhFSkVGNjIyR1ZSSkI2MzZCVVFBWFhaQVczVkc1RFJUUFpJUVUyRENLUkpJUVJNVlpNWVNTSjZFQzVNSzU2VDNKSkNFTERKSlBRQkYzNFlSTEFITFEifX0.hDE1XOY6KURkso9l-EW-xC2MnPcNb7gAxJIPwWK4cfDo2YQw23_-D14a_L-Fo-bPq-a9xDUE6SttBDSPqAD0Amc-YOxQT2co6sAju1unm_44N5rT0dp3PZCl8ME1UfUWG4_Aszxi3vLnCZL_fk4IZ76kdAaKSQKVVe-7jvq2ta7Pq6mIl-BmO-f3s6nJUIbUUYSiD1HA4-5QBUcfbfO-8taAlFJddLci-WNEl5id663lPteJAnEWm9nj-qMUHh6eaulhu2DSXJ0XsWSTAHtJ0BTLE3LvgdJTpEFhOrs3qrZYhNo5pbsv2exjNqV6HDHPGEAFoJCEgJoxxC3IU8vLxA",
+                    "scopes": {
+                        "alexa::devices:all:geolocation:read": {
+                            "status": "GRANTED"
+                        }
+                    }
+                }
+            },
+            "device": {
+                "deviceId": "amzn1.ask.device.AHQ5PTWSVZE4PR6Y7VI22AU5DGGD3BMIWYIDLJ2RKCQJKUINV34YSJAKJEUBBY7RWJIICCPLH7MGVSFTIDUPAO3ZANNVGVGAO3QIJRNINXTU5YBVPB32TDBUS7LAZV6IA2EMWTYFYTMKETKLE7IPIDLQKTJA",
+                "supportedInterfaces": {
+                    "Alexa.Presentation.APL": {
+                        "runtime": {
+                            "maxVersion": "1.4"
+                        }
+                    },
+                    "Geolocation": {}
+                }
+            },
+            "apiEndpoint": "https://api.amazonalexa.com",
+            "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjVlMDBhZjAwLWRjYmEtNGE5Yi1iMThlLTc5YmQwYTYwZTFhYSIsImV4cCI6MTU5NzUyNzIzNSwiaWF0IjoxNTk3NTI2OTM1LCJuYmYiOjE1OTc1MjY5MzUsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFEOTlqY1VXdm1jTTN2VGxmcy9UM2hUZ2dFQUFBQUFBQURWbGIvRjBtSHpyNGprOGt6VzJQcXovV3NOWXE4SXZKWlZlOURTVkw0SzZucm9naFVJZXFxb01JUkdnYUJyNVloYm40WS96L2plblhkQ2Z1UzNWVUNQNWljd3lpUG5NcFdqaExmQm5EWGw2WnpUSjBKejYwSlVmYlU2MTlkeVdjbkliL0JRcTNCZnErTngxelJrUk4zMmlHRXkxeEdBY01STkpIaENBZVZJeDdqNS9maFZBOWJTcFZzbFNCUmhHWVMramJzOFlwV2Fjc1dXTld5YlBmY21iaXNScEh1VmRVVVg4TW1tVnhsZGZ0WXkyeGRndE5RWjBFaWRpTTJMeHpFMDNaWDgwZlNxcVE4UnB5N1E5MkxsczFxSTFzWXllaHZycFNUWGYrdVdsVTY2dnY0ZFBtSzdITmNCWUQ3bXlRYUxpNUc5WmVSUWNaUW45eVN4eXdjaElsMnZud1RWY1JRZWJzRitpVjFhSGJsTXhwc0tISlNjajlPakJ6NTg4bFkzVlR5UjhweTBMZEJUMHdYMmlIS1lUR0ZSOUNqeE5tVjBiN2YrTkJLWkFIaXNTc2U1MVFIbnpXcXlaaFJrUjRZRUJSOFU0UlVUVWFzRFZONmxiNHJsZDM5KzUxVm54bEpVOVcyVXNaWlcrTlVsOVFiTHNPWnBTNHB5RnExN3NDRmRLQT09IiwiY29uc2VudFRva2VuIjoiQXR6YXxJd0VCSUxKR3hld29VcHV0UFNsLTBCZmk0TGtQZjRhM0tjRlZOcEZqeGozTlFaMVJuczhRbXB3WkgyVEtFeTF0dDFWcXhlN0NhcmYyd0hadWREYUR2T2tBR1FvWDJkMzhYZGdac2FQWXdpcFQ0T245TUVZY052UGctZ0JWcGRkMVJCVkVtNnFGNHVKVWltUU9hMmZvVk90WkpLZHd1RDNneW5aXzdkUzQtbDNrdWRwZ0pWaFFIMWVNbWdCdGo2bTJyQnpiclJWZWJkMmExRTZTYUx3TUVybWhLQVQ0UFFPY1pSWHA0b2VOTUhpLUhWZHRibGVReC14cVd3MHVzTXBDX01OckJGQmwwNnhOaElxQTFYdlNZaGw4bWVleVpMNXdveGcyYnZxeTFPek5OTjB5Zk85dnBYcVYwTEZxbWRDYW1ETjBtdGVoazc0U0lxbkk0emIyQTdQd1MyMXQzeWJlLU5GNUIzVkNjMzk3XzRqYmNRIiwiZGV2aWNlSWQiOiJhbXpuMS5hc2suZGV2aWNlLkFIUTVQVFdTVlpFNFBSNlk3VkkyMkFVNURHR0QzQk1JV1lJRExKMlJLQ1FKS1VJTlYzNFlTSkFLSkVVQkJZN1JXSklJQ0NQTEg3TUdWU0ZUSURVUEFPM1pBTk5WR1ZHQU8zUUlKUk5JTlhUVTVZQlZQQjMyVERCVVM3TEFaVjZJQTJFTVdUWUZZVE1LRVRLTEU3SVBJRExRS1RKQSIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHVU9NS0tCV1dDS0lVRklYUlg3UTdDUjNWS0I0QUJLWUlWWFpRQVZPWFFISFA0SVBXNEpBS0hPNTRZNElTNFY3TEFVT0NRVkgyVTJTNU5ERVNTWEdXQTZZT00yRkg0WEY1V0ozVENHNlhKNElSNkJSTkpQNVM0TEU1WEVKRUY2MjJHVlJKQjYzNkJVUUFYWFpBVzNWRzVEUlRQWklRVTJEQ0tSSklRUk1WWk1ZU1NKNkVDNU1LNTZUM0pKQ0VMREpKUFFCRjM0WVJMQUhMUSJ9fQ.QjI2u_QgFp3xOVvce8EviUn31x3ovGzpNp2UzMey-e5Wx8YleZyxXCxn7TFesl2kO7ItoI509F0hrwKKFMwSgFbM4JCQUAKNKGLwG5mKvz_KEL1XxbnsIBsiThcJ6no60lwg8vDJ3ZvkMe0aLoL12EiPv5mhW0zpTIWKV0pKjLQvlOF1x_0FPdo1jfV29wBFOsY9lcEJ2itNwR9b7dJdGnuxiLbMqasHjYt8i6E21Ytks4-lTHKkLudx5sFnnMmtEfkmugSni4lJbh2dngtxQ0WE8ucrIYfL0zTHfxBzXsnbWxjCr0-TtKnchMrRazvO8JNql6KqSEim8CgITSr-hA"
+        }
+    },
+    "request": {
+        "type": "IntentRequest",
+        "requestId": "amzn1.echo-api.request.eb5ac09d-ee5c-4d37-8701-f5bda7735fe8",
+        "locale": "en-US",
+        "timestamp": "2020-08-15T21:28:55Z",
+        "intent": {
+            "name": "FindRestroomNearMeIntent",
+            "confirmationStatus": "NONE",
+            "slots": {
+                "SearchFilter_One": {
+                    "name": "SearchFilter_One",
+                    "value": "unisex",
+                    "resolutions": {
+                        "resolutionsPerAuthority": [
+                            {
+                                "authority": "amzn1.er-authority.echo-sdk.amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa.RestRoomTypes",
+                                "status": {
+                                    "code": "ER_SUCCESS_MATCH"
+                                },
+                                "values": [
+                                    {
+                                        "value": {
+                                            "name": "Unisex",
+                                            "id": "UNISEX"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "confirmationStatus": "NONE",
+                    "source": "USER",
+                    "slotValue": {
+                        "type": "Simple",
+                        "value": "unisex",
+                        "resolutions": {
+                            "resolutionsPerAuthority": [
+                                {
+                                    "authority": "amzn1.er-authority.echo-sdk.amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa.RestRoomTypes",
+                                    "status": {
+                                        "code": "ER_SUCCESS_MATCH"
+                                    },
+                                    "values": [
+                                        {
+                                            "value": {
+                                                "name": "Unisex",
+                                                "id": "UNISEX"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "SearchFilter_Two": {
+                    "name": "SearchFilter_Two",
+                    "value": "accessible",
+                    "resolutions": {
+                        "resolutionsPerAuthority": [
+                            {
+                                "authority": "amzn1.er-authority.echo-sdk.amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa.RestRoomTypes",
+                                "status": {
+                                    "code": "ER_SUCCESS_MATCH"
+                                },
+                                "values": [
+                                    {
+                                        "value": {
+                                            "name": "Accessible",
+                                            "id": "ACCESSIBLE"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "confirmationStatus": "NONE",
+                    "source": "USER",
+                    "slotValue": {
+                        "type": "Simple",
+                        "value": "accessible",
+                        "resolutions": {
+                            "resolutionsPerAuthority": [
+                                {
+                                    "authority": "amzn1.er-authority.echo-sdk.amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa.RestRoomTypes",
+                                    "status": {
+                                        "code": "ER_SUCCESS_MATCH"
+                                    },
+                                    "values": [
+                                        {
+                                            "value": {
+                                                "name": "Accessible",
+                                                "id": "ACCESSIBLE"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "SearchFilter_Three": {
+                    "name": "SearchFilter_Three",
+                    "value": "diaper friendly",
+                    "resolutions": {
+                        "resolutionsPerAuthority": [
+                            {
+                                "authority": "amzn1.er-authority.echo-sdk.amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa.RestRoomTypes",
+                                "status": {
+                                    "code": "ER_SUCCESS_MATCH"
+                                },
+                                "values": [
+                                    {
+                                        "value": {
+                                            "name": "ChangingTable",
+                                            "id": "CHANGING_TABLE"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "confirmationStatus": "NONE",
+                    "source": "USER",
+                    "slotValue": {
+                        "type": "Simple",
+                        "value": "diaper friendly",
+                        "resolutions": {
+                            "resolutionsPerAuthority": [
+                                {
+                                    "authority": "amzn1.er-authority.echo-sdk.amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa.RestRoomTypes",
+                                    "status": {
+                                        "code": "ER_SUCCESS_MATCH"
+                                    },
+                                    "values": [
+                                        {
+                                            "value": {
+                                                "name": "ChangingTable",
+                                                "id": "CHANGING_TABLE"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

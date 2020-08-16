@@ -1,4 +1,45 @@
-const Alexa = require('ask-sdk');
+const Alexa = require('ask-sdk-core');
+
+const getFirstResolvedEntityValue = (element) => {
+    const [firstResolution = {}] = element.resolutions.resolutionsPerAuthority || [];
+    return firstResolution && firstResolution.status.code === 'ER_SUCCESS_MATCH'
+        ? firstResolution.values[0].value.name
+        : null;
+};
+
+const getFirstResolvedEntityId = (element) => {
+    const [firstResolution = {}] = element.resolutions.resolutionsPerAuthority || [];
+    return firstResolution && firstResolution.status.code === 'ER_SUCCESS_MATCH'
+        ? firstResolution.values[0].value.id
+        : null;
+};
+
+const getReadableSlotValue = (requestEnvelope, slotName) => {
+    const rootSlotValue = Alexa.getSlotValueV2(requestEnvelope, slotName);
+    const slotValueStr = !rootSlotValue
+        ? 'None'
+        : Alexa.getSimpleSlotValues(rootSlotValue)
+            .map(
+                (slotValue) =>
+                    getFirstResolvedEntityValue(slotValue) || `${slotValue.value}`
+            )
+            .join(' ');
+    console.log(JSON.stringify(Alexa.getSimpleSlotValues(rootSlotValue)))
+    return `${slotName} ${slotValueStr}`;
+};
+
+const getReadableSlotId = (requestEnvelope, slotName) => {
+    const rootSlotValue = Alexa.getSlotValueV2(requestEnvelope, slotName);
+    const slotIdStr = !rootSlotValue
+        ? 'None'
+        : Alexa.getSimpleSlotValues(rootSlotValue)
+            .map(
+                (slotValue) =>
+                    getFirstResolvedEntityId(slotValue) || `${slotValue.id}`
+            )
+            .join(' ');
+    return `${slotIdStr}`;
+};
 
 /**
  * Helper method to find if a request is for a certain apiName.
@@ -63,6 +104,8 @@ const cleanupForVisualPresentation = (input) => {
 module.exports = {
     isApiRequest: isApiRequest,
     getApiArguments: getApiArguments,
+    getReadableSlotValue: getReadableSlotValue,
+    getReadableSlotId: getReadableSlotId,
     getSlots: getSlots,
     cleanupForVisualPresentation: cleanupForVisualPresentation,
     shuffle: shuffle

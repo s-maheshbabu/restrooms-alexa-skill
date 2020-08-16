@@ -22,7 +22,8 @@
   "homepage": "https://github.com/s-maheshbabu/restrooms-alexa-skill#readme",
   "dependencies": {
     "app-module-path": "^2.2.0",
-    "ask-sdk": "^2.7.0",
+    "ask-sdk-core": "^2.9.0",
+    "ask-sdk-model": "^1.29.0",
     "immutable": "^4.0.0-rc.12",
     "node-fetch": "^2.6.0",
     "ramda": "0.27.0"

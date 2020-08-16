@@ -10,11 +10,14 @@ const context = {};
 
 const RR = require("gateway/RefugeeRestrooms");
 const zipcodes = require("gateway/Zipcodes");
+const utilities = require("../src/utilities");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
+const slotnames = require("constants/SlotNames").slotnames;
+const searchfilters = require("constants/SearchFilters").searchfilters;
 
-describe("Finding restaurants near user's geo location", function () {
+describe("Finding restrooms near user's geo location", function () {
   const DUMMY_LATITUDE = 47.62078857421875;
   const DUMMY_LONGITUDE = -122.30061853955556;
 
@@ -33,7 +36,7 @@ describe("Finding restaurants near user's geo location", function () {
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
-    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, dummyRestRooms);
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
 
     const responseContainer = await unitUnderTest.handler(event, context);
 
@@ -110,7 +113,7 @@ describe("Finding restaurants near user's geo location", function () {
   });
 });
 
-describe("Finding restaurants near device address", function () {
+describe("Finding restrooms near device address", function () {
   const US_COUNTRY_CODE = "US";
   const DUMMY_POSTAL_CODE = "77840";
 
@@ -133,7 +136,7 @@ describe("Finding restaurants near device address", function () {
     configureAddressService(200, event.context, aDeviceAddress);
 
     const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
-    configureRRService(200, coordinates.latitude, coordinates.longitude, dummyRestRooms);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, dummyRestRooms);
 
     const responseContainer = await unitUnderTest.handler(event, context);
 
@@ -232,6 +235,105 @@ describe("Finding restaurants near device address", function () {
   });
 });
 
+describe("Honor search filters", function () {
+  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+
+  before(async () => {
+    await zipcodes.init();
+  });
+
+  afterEach(function () {
+    decache("../test-data/nearme_ada_unisex_filters");
+    decache("../test-data/nearme_ada_filters");
+    decache("../test-data/nearme_unisex_filters");
+    decache("../test-data/nearme_ada_unisex_changing_table_filters");
+  });
+
+  it("should be able to fetch restrooms when user filters for accessible & unisex restrooms", async () => {
+    const event = require("../test-data/nearme_ada_unisex_filters");
+    const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
+    const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
+
+    configureRRService(200, latitude, longitude, true, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>Placeholder response geo location ${dummyRestRooms[0].name}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
+  it("should be able to fetch restrooms when user filters for accessible restrooms", async () => {
+    const event = require("../test-data/nearme_ada_filters");
+    const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
+    const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
+
+    configureRRService(200, latitude, longitude, true, false, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>Placeholder response geo location ${dummyRestRooms[0].name}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
+  it("should be able to fetch restrooms when user filters for unisex restrooms", async () => {
+    const event = require("../test-data/nearme_unisex_filters");
+    const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
+    const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
+
+    configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>Placeholder response geo location ${dummyRestRooms[0].name}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
+  it("should be able to fetch restrooms when user filters for accessible & unisex & changing_table restrooms. Refugee Restrooms does not support filtering by changing_table restrooms and so we filter it ourselves. Hence this additional test.", async () => {
+    const event = require("../test-data/nearme_ada_unisex_changing_table_filters");
+    const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
+    const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
+
+    let firstRestroomWithChangingTable;
+    for (var index = 0; index < dummyRestRooms.length; index++) {
+      let restroom = dummyRestRooms[index];
+      if (restroom.changing_table) { firstRestroomWithChangingTable = restroom; break; }
+    }
+    configureRRService(200, latitude, longitude, true, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>Placeholder response geo location ${firstRestroomWithChangingTable.name}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    // once we start navigating through all restrooms, assertions can get better here. Count the number of changing table restrooms in dummyRestrooms and
+    // assert that we are only presenting that many restrooms and that all restrooms we are presenting to the user have changing tables.
+  });
+});
+
 function configureAddressService(responseCode, context, payload) {
   if (!nock.isActive()) {
     nock.activate();
@@ -243,13 +345,13 @@ function configureAddressService(responseCode, context, payload) {
     .reply(responseCode, JSON.stringify(payload, null, 2));
 }
 
-function configureRRService(responseCode, latitude, longitude, payload) {
+function configureRRService(responseCode, latitude, longitude, isFilterByADA, isFilterByUnisex, payload) {
   if (!nock.isActive()) {
     nock.activate();
   }
 
   nock(RR.BASE_URL)
-    .get(`/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&lat=${latitude}&lng=${longitude}`)
+    .get(`/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`)
     .reply(responseCode, JSON.stringify(payload, null, 2));
 }
 

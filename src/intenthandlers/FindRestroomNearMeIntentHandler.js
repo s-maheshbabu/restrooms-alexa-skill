@@ -3,6 +3,10 @@ const zipcodes = require("gateway/Zipcodes");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
+const slotnames = require("constants/SlotNames").slotnames;
+const searchfilters = require("constants/SearchFilters").searchfilters;
+
+const utilities = require("../utilities");
 
 module.exports = FindRestroomNearMeIntentHandler = {
   canHandle(handlerInput) {
@@ -74,7 +78,8 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
       .getResponse();
   }
 
-  const restrooms = await RR.searchRestroomsByLatLon(coordinates.latitude, coordinates.longitude);
+  const filters = getSearchFilters(handlerInput);
+  const restrooms = await RR.searchRestroomsByLatLon(coordinates.latitude, coordinates.longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
   return responseBuilder
     .speak(`Placeholder response ${restrooms[0].name} ${address.postalCode}`)
     .withShouldEndSession(true)
@@ -109,9 +114,34 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   const longitude = geoObject.coordinate.longitudeInDegrees;
 
   console.log(`A valid user geo location was retrieved: ${latitude}, ${longitude}`);
-  const restrooms = await RR.searchRestroomsByLatLon(latitude, longitude);
+  const filters = getSearchFilters(handlerInput);
+  const restrooms = await RR.searchRestroomsByLatLon(latitude, longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
   return responseBuilder
     .speak(`Placeholder response geo location ${restrooms[0].name}`)
     .withShouldEndSession(true)
     .getResponse();
+}
+
+/**
+ * 
+ * Documentation
+ */
+function getSearchFilters(handlerInput) {
+  const { requestEnvelope } = handlerInput;
+
+  const allFilters = new Set();
+  allFilters.add(utilities.getReadableSlotId(requestEnvelope, slotnames.SEARCH_FILTER_ONE));
+  allFilters.add(utilities.getReadableSlotId(requestEnvelope, slotnames.SEARCH_FILTER_TWO));
+  allFilters.add(utilities.getReadableSlotId(requestEnvelope, slotnames.SEARCH_FILTER_THREE));
+
+  let isFilterByADA = false, isFilterByUnisex = false, isFilterByChangingTable = false;
+  if (allFilters.has(searchfilters.ACCESSIBLE)) isFilterByADA = true;
+  if (allFilters.has(searchfilters.UNISEX)) isFilterByUnisex = true;
+  if (allFilters.has(searchfilters.CHANGING_TABLE)) isFilterByChangingTable = true;
+
+  return {
+    isFilterByADA: isFilterByADA,
+    isFilterByUnisex: isFilterByUnisex,
+    isFilterByChangingTable: isFilterByChangingTable,
+  };
 }

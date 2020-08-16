@@ -1,6 +1,6 @@
 require("app-module-path").addPath(__dirname);
 
-const Alexa = require("ask-sdk");
+const Alexa = require("ask-sdk-core");
 
 const CancelAndStopIntentHandler = require("intenthandlers/CancelAndStopIntentHandler");
 const FindRestroomIntentHandler = require("intenthandlers/FindRestroomIntentHandler");
