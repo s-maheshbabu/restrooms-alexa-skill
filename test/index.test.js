@@ -14,8 +14,6 @@ const utilities = require("../src/utilities");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
-const slotnames = require("constants/SlotNames").slotnames;
-const searchfilters = require("constants/SearchFilters").searchfilters;
 
 describe("Finding restrooms near user's geo location", function () {
   const DUMMY_LATITUDE = 47.62078857421875;

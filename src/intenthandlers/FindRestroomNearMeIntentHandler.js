@@ -3,10 +3,7 @@ const zipcodes = require("gateway/Zipcodes");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
-const slotnames = require("constants/SlotNames").slotnames;
 const searchfilters = require("constants/SearchFilters").searchfilters;
-
-const utilities = require("../utilities");
 
 module.exports = FindRestroomNearMeIntentHandler = {
   canHandle(handlerInput) {
@@ -127,17 +124,13 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
  * Documentation
  */
 function getSearchFilters(handlerInput) {
-  const { requestEnvelope } = handlerInput;
-
-  const allFilters = new Set();
-  allFilters.add(utilities.getReadableSlotId(requestEnvelope, slotnames.SEARCH_FILTER_ONE));
-  allFilters.add(utilities.getReadableSlotId(requestEnvelope, slotnames.SEARCH_FILTER_TWO));
-  allFilters.add(utilities.getReadableSlotId(requestEnvelope, slotnames.SEARCH_FILTER_THREE));
+  const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+  const search_filters = sessionAttributes.search_filters || [];
 
   let isFilterByADA = false, isFilterByUnisex = false, isFilterByChangingTable = false;
-  if (allFilters.has(searchfilters.ACCESSIBLE)) isFilterByADA = true;
-  if (allFilters.has(searchfilters.UNISEX)) isFilterByUnisex = true;
-  if (allFilters.has(searchfilters.CHANGING_TABLE)) isFilterByChangingTable = true;
+  if (search_filters.includes(searchfilters.ACCESSIBLE)) isFilterByADA = true;
+  if (search_filters.includes(searchfilters.UNISEX)) isFilterByUnisex = true;
+  if (search_filters.includes(searchfilters.CHANGING_TABLE)) isFilterByChangingTable = true;
 
   return {
     isFilterByADA: isFilterByADA,

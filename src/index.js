@@ -2,6 +2,8 @@ require("app-module-path").addPath(__dirname);
 
 const Alexa = require("ask-sdk-core");
 
+const FindRestroomNearMeAPI = require("api/FindRestroomNearMeAPI");
+
 const CancelAndStopIntentHandler = require("intenthandlers/CancelAndStopIntentHandler");
 const FindRestroomIntentHandler = require("intenthandlers/FindRestroomIntentHandler");
 const FindRestroomNearMeIntentHandler = require("intenthandlers/FindRestroomNearMeIntentHandler");
@@ -19,7 +21,7 @@ const ErrorHandler = require("errors/ErrorHandler");
 
 const LogRequestInterceptor = {
   process(handlerInput) {
-    //console.log(`REQUEST ENVELOPE = ${JSON.stringify(handlerInput.requestEnvelope)}`);
+    console.log(`REQUEST ENVELOPE = ${JSON.stringify(handlerInput.requestEnvelope)}`);
   },
 };
 
@@ -41,7 +43,8 @@ exports.handler = async function (event, context) {
         FindRestroomNearMeIntentHandler,
         HelpIntentHandler,
         LaunchRequestHandler,
-        SessionEndedRequestHandler
+        SessionEndedRequestHandler,
+        FindRestroomNearMeAPI,
       )
       .addRequestInterceptors(
         ZipcodesDataLoadInterceptor,

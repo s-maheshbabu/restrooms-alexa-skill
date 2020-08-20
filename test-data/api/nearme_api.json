@@ -1,0 +1,120 @@
+{
+    "version": "1.0",
+    "session": {
+        "new": false,
+        "sessionId": "amzn1.echo-api.session.cd4c419c-ac30-43a4-9740-fb37e277f6db",
+        "application": {
+            "applicationId": "amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa"
+        },
+        "user": {
+            "userId": "amzn1.ask.account.AGUOMKKBWWCKIUFIXRX7Q7CR3VKB4ABKYIVXZQAVOXQHHP4IPW4JAKHO54Y4IS4V7LAUOCQVH2U2S5NDESSXGWA6YOM2FH4XF5WJ3TCG6XJ4IR6BRNJP5S4LE5XEJEF622GVRJB636BUQAXXZAW3VG5DRTPZIQU2DCKRJIQRMVZMYSSJ6EC5MK56T3JJCELDJJPQBF34YRLAHLQ",
+            "permissions": {
+                "consentToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjVlMDBhZjAwLWRjYmEtNGE5Yi1iMThlLTc5YmQwYTYwZTFhYSIsImV4cCI6MTU5NzkwODY3OCwiaWF0IjoxNTk3OTA1MDc4LCJuYmYiOjE1OTc5MDUwNzgsInByaXZhdGVDbGFpbXMiOnsiaXNEZXByZWNhdGVkIjoidHJ1ZSIsImNvbnNlbnRUb2tlbiI6IkF0emF8SXdFQklLSGVqZ0NoOEZjSV9JVTc3TTRva1RzRHYtV2NITk44Q2ZSTmdHMUlwRXJ6RC1yelMxZ1JQSWZ4ODFrRkhzMEdyTjBEeWhMSTN0SEFjaUNKazhtNEZaZ1JlM2FpY1FQcmRCSXBkQzNRdGl5U0ZTN3lOLUJ2dVBPS0RRZGhkbDlhMG1WZ2k2NHlFS3NMN3dOcEM3WmxXejQ5Tld4V04tSkRCajRNZllaZ0E4S0hnNjFjZkhWX3NWdk8tRHhZYzhNdVMyeUgyQ1A2WnhwV2VrWUdrUDJqcmcyelkwVE1BRnBuRXNxcnRVaUpoMDFtN0NYNjc1WkpiY0M2VkV2ZWtneS1fQTlkbXRCMWZmVGstdVRjYzVTLVdtb2c1aTNGM3d2WExsWm05UW5VWlh4c3QtLTJNNHBRb2pFVTFwbGg3Nm16dm5VVjJrYkpLMm5NY1dYN2ZpVEMtYzBNTFJfNkxlVFRoOG9YTTB3UkgyVk5NQSIsImRldmljZUlkIjoiYW16bjEuYXNrLmRldmljZS5BSFE1UFRXU1ZaRTRQUjZZN1ZJMjJBVTVER0dEM0JNSVdZSURMSjJSS0NRSktVSU5WMzRZU0pBS0pFVUJCWTdSV0pJSUNDUExIN01HVlNGVElEVVBBTzNaQU5OVkdWR0FPM1FJSlJOSU5YVFU1WUJWUEIzMlREQlVTN0xBWlY2SUEyRU1XVFlGWVRNS0VUS0xFN0lQSURMUUtUSkEiLCJ1c2VySWQiOiJhbXpuMS5hc2suYWNjb3VudC5BR1VPTUtLQldXQ0tJVUZJWFJYN1E3Q1IzVktCNEFCS1lJVlhaUUFWT1hRSEhQNElQVzRKQUtITzU0WTRJUzRWN0xBVU9DUVZIMlUyUzVOREVTU1hHV0E2WU9NMkZINFhGNVdKM1RDRzZYSjRJUjZCUk5KUDVTNExFNVhFSkVGNjIyR1ZSSkI2MzZCVVFBWFhaQVczVkc1RFJUUFpJUVUyRENLUkpJUVJNVlpNWVNTSjZFQzVNSzU2VDNKSkNFTERKSlBRQkYzNFlSTEFITFEifX0.MNGGjhnKHkNsOenC8yVTqCyZPwe87ZiCf0A1QNWul7ubExRXigRiTxCkbTvNyv09uR-KdLnt5HSdewhiKEw9W08Isro3MQS46RctvA3bCztVANJa9XrSCSazxZ2FPUVuu8tZCv7Ovj_03y5xFJS7-ae2RV8cDgw8DkWUjQUNffPD5kfDJ6pxZxNcofHh8ONS-8GE1md3nsVrRU3sf80ZeJJsyGF09_usgxBDlYgMH8wAc-DxEhL0NogXyKnYXglkjdMQ8aXI4u7-1w6t51NCMAua4vHWulIrakXB7LnA8AiTsPYmMfJPKm2GMq0oju0p3rofpMS7iMRhpPDEFayDMA",
+                "scopes": {
+                    "alexa::devices:all:geolocation:read": {
+                        "status": "GRANTED"
+                    }
+                }
+            }
+        }
+    },
+    "context": {
+        "System": {
+            "application": {
+                "applicationId": "amzn1.ask.skill.5e00af00-dcba-4a9b-b18e-79bd0a60e1aa"
+            },
+            "user": {
+                "userId": "amzn1.ask.account.AGUOMKKBWWCKIUFIXRX7Q7CR3VKB4ABKYIVXZQAVOXQHHP4IPW4JAKHO54Y4IS4V7LAUOCQVH2U2S5NDESSXGWA6YOM2FH4XF5WJ3TCG6XJ4IR6BRNJP5S4LE5XEJEF622GVRJB636BUQAXXZAW3VG5DRTPZIQU2DCKRJIQRMVZMYSSJ6EC5MK56T3JJCELDJJPQBF34YRLAHLQ",
+                "permissions": {
+                    "consentToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjVlMDBhZjAwLWRjYmEtNGE5Yi1iMThlLTc5YmQwYTYwZTFhYSIsImV4cCI6MTU5NzkwODY3OCwiaWF0IjoxNTk3OTA1MDc4LCJuYmYiOjE1OTc5MDUwNzgsInByaXZhdGVDbGFpbXMiOnsiaXNEZXByZWNhdGVkIjoidHJ1ZSIsImNvbnNlbnRUb2tlbiI6IkF0emF8SXdFQklLSGVqZ0NoOEZjSV9JVTc3TTRva1RzRHYtV2NITk44Q2ZSTmdHMUlwRXJ6RC1yelMxZ1JQSWZ4ODFrRkhzMEdyTjBEeWhMSTN0SEFjaUNKazhtNEZaZ1JlM2FpY1FQcmRCSXBkQzNRdGl5U0ZTN3lOLUJ2dVBPS0RRZGhkbDlhMG1WZ2k2NHlFS3NMN3dOcEM3WmxXejQ5Tld4V04tSkRCajRNZllaZ0E4S0hnNjFjZkhWX3NWdk8tRHhZYzhNdVMyeUgyQ1A2WnhwV2VrWUdrUDJqcmcyelkwVE1BRnBuRXNxcnRVaUpoMDFtN0NYNjc1WkpiY0M2VkV2ZWtneS1fQTlkbXRCMWZmVGstdVRjYzVTLVdtb2c1aTNGM3d2WExsWm05UW5VWlh4c3QtLTJNNHBRb2pFVTFwbGg3Nm16dm5VVjJrYkpLMm5NY1dYN2ZpVEMtYzBNTFJfNkxlVFRoOG9YTTB3UkgyVk5NQSIsImRldmljZUlkIjoiYW16bjEuYXNrLmRldmljZS5BSFE1UFRXU1ZaRTRQUjZZN1ZJMjJBVTVER0dEM0JNSVdZSURMSjJSS0NRSktVSU5WMzRZU0pBS0pFVUJCWTdSV0pJSUNDUExIN01HVlNGVElEVVBBTzNaQU5OVkdWR0FPM1FJSlJOSU5YVFU1WUJWUEIzMlREQlVTN0xBWlY2SUEyRU1XVFlGWVRNS0VUS0xFN0lQSURMUUtUSkEiLCJ1c2VySWQiOiJhbXpuMS5hc2suYWNjb3VudC5BR1VPTUtLQldXQ0tJVUZJWFJYN1E3Q1IzVktCNEFCS1lJVlhaUUFWT1hRSEhQNElQVzRKQUtITzU0WTRJUzRWN0xBVU9DUVZIMlUyUzVOREVTU1hHV0E2WU9NMkZINFhGNVdKM1RDRzZYSjRJUjZCUk5KUDVTNExFNVhFSkVGNjIyR1ZSSkI2MzZCVVFBWFhaQVczVkc1RFJUUFpJUVUyRENLUkpJUVJNVlpNWVNTSjZFQzVNSzU2VDNKSkNFTERKSlBRQkYzNFlSTEFITFEifX0.MNGGjhnKHkNsOenC8yVTqCyZPwe87ZiCf0A1QNWul7ubExRXigRiTxCkbTvNyv09uR-KdLnt5HSdewhiKEw9W08Isro3MQS46RctvA3bCztVANJa9XrSCSazxZ2FPUVuu8tZCv7Ovj_03y5xFJS7-ae2RV8cDgw8DkWUjQUNffPD5kfDJ6pxZxNcofHh8ONS-8GE1md3nsVrRU3sf80ZeJJsyGF09_usgxBDlYgMH8wAc-DxEhL0NogXyKnYXglkjdMQ8aXI4u7-1w6t51NCMAua4vHWulIrakXB7LnA8AiTsPYmMfJPKm2GMq0oju0p3rofpMS7iMRhpPDEFayDMA",
+                    "scopes": {
+                        "alexa::devices:all:geolocation:read": {
+                            "status": "GRANTED"
+                        }
+                    }
+                }
+            },
+            "device": {
+                "deviceId": "amzn1.ask.device.AHQ5PTWSVZE4PR6Y7VI22AU5DGGD3BMIWYIDLJ2RKCQJKUINV34YSJAKJEUBBY7RWJIICCPLH7MGVSFTIDUPAO3ZANNVGVGAO3QIJRNINXTU5YBVPB32TDBUS7LAZV6IA2EMWTYFYTMKETKLE7IPIDLQKTJA",
+                "supportedInterfaces": {
+                    "Alexa.Presentation.APL": {
+                        "runtime": {
+                            "maxVersion": "1.4"
+                        }
+                    }
+                }
+            },
+            "apiEndpoint": "https://api.amazonalexa.com",
+            "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjVlMDBhZjAwLWRjYmEtNGE5Yi1iMThlLTc5YmQwYTYwZTFhYSIsImV4cCI6MTU5NzkwNTM3OCwiaWF0IjoxNTk3OTA1MDc4LCJuYmYiOjE1OTc5MDUwNzgsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFEYnB5QWFxcUh3LzIyN2hDM2ZPd3BjZ2dFQUFBQUFBQURleE5EQnNNdWJyZURyZmhDbmsxMmx6WUNKTnNxRFVxQ1g3MmVjUjRUTWFkNmJsL1ZtWnNsWTNLdDkrMDBsWVRRL243RmhKTmd5RWtsbHU1NlExS1BpNEhETGx1T29hNnZpQ0NCSWlHTzU4eGpnZENRejN4Q2taMDBWS1hsMEE3VldjdFVZcFdKZXFyRWp0enZBc0x5bnF2SlNvNGtXVERqODdpWi9PT2loVUhCdkwyTTRYQ2xwSHVkK2pLLytTSEV4akFZRE5PczIvVHBGeU9YVGdkMU5MZU5yTVRUWllZdHI2WnkvVGFkb2Y4YkJaUWVENmptYnkvRTRGY2Y2U1hnVWxwZUZDRFlPdkRBMGhUYSsyQ1A5MzBZKzM3KzBnd0NtcElPM044aytmZHdFOVhLQTNxUjE2c1lENElEZXR1bmN3YW9CSXU4bWZqdkxuNWQ0MHhyOVJsVFFnQjhaU3dZT25IUHQ0L3VXZ2tSYkxmQWJSTDJoendpdGMzNjhQK2VyL0Z5M0FPVXlRTkdmUVVwV1ZlQlNxaGMvN1NiejJDYmdjVTA2YVA2NnRKOGhjWkFZNDBpMi9WbHdFMVVhL2IzdXc0eGZlK1dtc2RFRHNLVkg4cGFJNnJpN0c3Z2lINTgwVlVxTWtYWFI1L0FqNnAwdDJBNytBQ3VmclUxbkJ4a0N3UT09IiwiY29uc2VudFRva2VuIjoiQXR6YXxJd0VCSUtIZWpnQ2g4RmNJX0lVNzdNNG9rVHNEdi1XY0hOTjhDZlJOZ0cxSXBFcnpELXJ6UzFnUlBJZng4MWtGSHMwR3JOMER5aExJM3RIQWNpQ0prOG00RlpnUmUzYWljUVByZEJJcGRDM1F0aXlTRlM3eU4tQnZ1UE9LRFFkaGRsOWEwbVZnaTY0eUVLc0w3d05wQzdabFd6NDlOV3hXTi1KREJqNE1mWVpnQThLSGc2MWNmSFZfc1Z2Ty1EeFljOE11UzJ5SDJDUDZaeHBXZWtZR2tQMmpyZzJ6WTBUTUFGcG5Fc3FydFVpSmgwMW03Q1g2NzVaSmJjQzZWRXZla2d5LV9BOWRtdEIxZmZUay11VGNjNVMtV21vZzVpM0Yzd3ZYTGxabTlRblVaWHhzdC0tMk00cFFvakVVMXBsaDc2bXp2blVWMmtiSksybk1jV1g3ZmlUQy1jME1MUl82TGVUVGg4b1hNMHdSSDJWTk1BIiwiZGV2aWNlSWQiOiJhbXpuMS5hc2suZGV2aWNlLkFIUTVQVFdTVlpFNFBSNlk3VkkyMkFVNURHR0QzQk1JV1lJRExKMlJLQ1FKS1VJTlYzNFlTSkFLSkVVQkJZN1JXSklJQ0NQTEg3TUdWU0ZUSURVUEFPM1pBTk5WR1ZHQU8zUUlKUk5JTlhUVTVZQlZQQjMyVERCVVM3TEFaVjZJQTJFTVdUWUZZVE1LRVRLTEU3SVBJRExRS1RKQSIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHVU9NS0tCV1dDS0lVRklYUlg3UTdDUjNWS0I0QUJLWUlWWFpRQVZPWFFISFA0SVBXNEpBS0hPNTRZNElTNFY3TEFVT0NRVkgyVTJTNU5ERVNTWEdXQTZZT00yRkg0WEY1V0ozVENHNlhKNElSNkJSTkpQNVM0TEU1WEVKRUY2MjJHVlJKQjYzNkJVUUFYWFpBVzNWRzVEUlRQWklRVTJEQ0tSSklRUk1WWk1ZU1NKNkVDNU1LNTZUM0pKQ0VMREpKUFFCRjM0WVJMQUhMUSJ9fQ.STG0V58QE7utvRqdEKxMW9EuxZJipIxd3KcnbY7PVqJsfShhIG8gt3ONkBw5B2Vrc1Z02aXysBKS941i4lI4gqqVwfdCNFoaxcpT9As8MbwNjw0IyVA4lfusZ80BNRnjsB4TJOaKpMjjiB01BMWCIXvBJ-A_SRwUeOROZ5KRnVuOlDcG-_HjzcVmZLi6wN7MfREMixFrMWtPI2kQXVyGIQeqktk7Z1rM11Gweq5gnUjIFl8rlmwlnIZ6dQsmK78X3Gm59UXBHThPtpSakLZEplGOGVs3dP_E82JZ1I5fZoqDYInW6tu87j5ovw_NHUARxFyARXeMlRmbkuTyQWN6fw"
+        },
+        "Viewport": {
+            "experiences": [
+                {
+                    "arcMinuteWidth": 246,
+                    "arcMinuteHeight": 144,
+                    "canRotate": false,
+                    "canResize": false
+                }
+            ],
+            "mode": "HUB",
+            "shape": "RECTANGLE",
+            "pixelWidth": 1024,
+            "pixelHeight": 600,
+            "dpi": 160,
+            "currentPixelWidth": 1024,
+            "currentPixelHeight": 600,
+            "touch": [
+                "SINGLE"
+            ],
+            "keyboard": null,
+            "video": {
+                "codecs": [
+                    "H_264_42",
+                    "H_264_41"
+                ]
+            }
+        },
+        "Viewports": [
+            {
+                "type": "APL",
+                "id": "main",
+                "shape": "RECTANGLE",
+                "dpi": 160,
+                "presentationType": "STANDARD",
+                "canRotate": false,
+                "configuration": {
+                    "current": {
+                        "mode": "HUB",
+                        "video": {
+                            "codecs": [
+                                "H_264_42",
+                                "H_264_41"
+                            ]
+                        },
+                        "size": {
+                            "type": "DISCRETE",
+                            "pixelWidth": 1024,
+                            "pixelHeight": 600
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "request": {
+        "type": "Dialog.API.Invoked",
+        "requestId": "amzn1.echo-api.request.752d1237-ffb4-47af-a221-768a86ea7874",
+        "timestamp": "2020-08-20T06:31:19Z",
+        "locale": "en_US",
+        "apiRequest": {
+            "name": "FindRestroomsNearMeAPI",
+            "arguments": {
+                "SearchFiltersList": [
+                    "unisex",
+                    "kid friendly",
+                    "ada compliant"
+                ]
+            }
+        }
+    }
+}

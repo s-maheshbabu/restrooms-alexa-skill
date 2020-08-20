@@ -20,54 +20,15 @@
                     "samples": []
                 },
                 {
-                    "name": "FindRestroomIntent",
-                    "slots": [
-                        {
-                            "name": "Address",
-                            "type": "AMAZON.StreetAddress"
-                        },
-                        {
-                            "name": "Zipcode",
-                            "type": "AMAZON.NUMBER"
-                        }
-                    ],
+                    "name": "DummyIntent",
+                    "slots": [],
                     "samples": [
-                        "find a restroom at {Address} {Zipcode}"
+                        "dummy utterance"
                     ]
                 },
                 {
-                    "name": "FindRestroomNearMeIntent",
-                    "slots": [
-                        {
-                            "name": "SearchFilter_One",
-                            "type": "RestRoomTypes"
-                        },
-                        {
-                            "name": "SearchFilter_Two",
-                            "type": "RestRoomTypes"
-                        },
-                        {
-                            "name": "SearchFilter_Three",
-                            "type": "RestRoomTypes"
-                        }
-                    ],
-                    "samples": [
-                        "find a {SearchFilter_One} {SearchFilter_Three} {SearchFilter_Two} restroom near me",
-                        "find a {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two} restroom near me",
-                        "find a {SearchFilter_One} {SearchFilter_Three} restroom near me",
-                        "find a {SearchFilter_One} and {SearchFilter_Three} restroom near me",
-                        "find a {SearchFilter_One} restroom near me",
-                        "find a restroom near me that is {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two}",
-                        "find a restroom near me that is {SearchFilter_One} and {SearchFilter_Three}",
-                        "find a restroom near me that is {SearchFilter_One}",
-                        "find a restroom near me",
-                        "find an {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two} restroom near me",
-                        "find an {SearchFilter_One} and {SearchFilter_Three} restroom near me",
-                        "find an {SearchFilter_One} restroom near me",
-                        "find restrooms near me that are {SearchFilter_One} {SearchFilter_Three} and {SearchFilter_Two}",
-                        "find restrooms near me that are {SearchFilter_One} and {SearchFilter_Three}",
-                        "find restrooms near me that are {SearchFilter_One}"
-                    ]
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
                 }
             ],
             "types": [
@@ -79,6 +40,8 @@
                             "name": {
                                 "value": "Accessible",
                                 "synonyms": [
+                                    "accessible",
+                                    "ada compliant",
                                     "ada",
                                     "disabled friendly",
                                     "disabled",
@@ -99,6 +62,7 @@
                                     "baby changing station",
                                     "baby friendly",
                                     "changing station",
+                                    "changing table",
                                     "diaper changing station",
                                     "diaper friendly",
                                     "diaper station",
@@ -113,10 +77,13 @@
                             "name": {
                                 "value": "Unisex",
                                 "synonyms": [
+                                    "gender neutral",
                                     "lgbt",
                                     "lgbtq",
+                                    "queer friendly",
                                     "trans friendly",
                                     "transgender",
+                                    "unisex friendly",
                                     "unisex"
                                 ]
                             }

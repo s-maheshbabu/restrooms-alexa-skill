@@ -1,4 +1,29 @@
 const Alexa = require('ask-sdk-core');
+const { hasIn } = require('immutable');
+
+const skill_model = require("../model/en_US");
+
+const slotSynonymsToIdMap = (slotTypeName) => {
+    if (!hasIn(skill_model, ['interactionModel', 'languageModel', 'types'])) throw new ReferenceError("Unexpected skill model. Unable to find path to slots.");
+
+    const slotTypes = skill_model.interactionModel.languageModel.types;
+    if (!Array.isArray(slotTypes) || slotTypes.length == 0) return new Map();
+
+    let synonymsToIdMap = new Map();
+    for (var i = 0; i < slotTypes.length; i++) {
+        if (slotTypes[i].name === slotTypeName) {
+
+            const slotValues = slotTypes[i].values;
+            slotValues.forEach(element => {
+                const id = element.id;
+                const synonyms = element.name.synonyms;
+                synonyms.forEach(synonym => synonymsToIdMap.set(synonym, id));
+            });
+        }
+    }
+
+    return synonymsToIdMap;
+};
 
 const getFirstResolvedEntityValue = (element) => {
     const [firstResolution = {}] = element.resolutions.resolutionsPerAuthority || [];
@@ -108,6 +133,7 @@ module.exports = {
     getReadableSlotId: getReadableSlotId,
     getSlots: getSlots,
     cleanupForVisualPresentation: cleanupForVisualPresentation,
-    shuffle: shuffle
+    shuffle: shuffle,
+    slotSynonymsToIdMap: slotSynonymsToIdMap,
 };
 
