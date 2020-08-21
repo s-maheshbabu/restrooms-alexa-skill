@@ -46,6 +46,16 @@ describe("Finding restrooms near user's geo location", function () {
       `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.title).to.equal("Restroom details");
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(
+      `${visuallyDescribeRestroom(dummyRestRooms[0])}
+Directions: ${dummyRestRooms[0].directions}
+Accessible: ${dummyRestRooms[0].accessible}
+Unisex: ${dummyRestRooms[0].unisex}
+Has Changing Table: ${dummyRestRooms[0].changing_table}`);
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
@@ -167,6 +177,16 @@ describe("Finding restrooms near device address", function () {
       `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.title).to.equal("Restroom details");
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(
+      `${visuallyDescribeRestroom(dummyRestRooms[0])}
+Directions: ${dummyRestRooms[0].directions}
+Accessible: ${dummyRestRooms[0].accessible}
+Unisex: ${dummyRestRooms[0].unisex}
+Has Changing Table: ${dummyRestRooms[0].changing_table}`);
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
@@ -302,6 +322,16 @@ describe("Finding restrooms at a user specified location", function () {
       `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.title).to.equal("Restroom details");
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(
+      `${visuallyDescribeRestroom(dummyRestRooms[0])}
+Directions: ${dummyRestRooms[0].directions}
+Accessible: ${dummyRestRooms[0].accessible}
+Unisex: ${dummyRestRooms[0].unisex}
+Has Changing Table: ${dummyRestRooms[0].changing_table}`);
   });
 
   it("should let the user know if there are no restrooms in the location they are searching for", async () => {
@@ -450,4 +480,11 @@ function configureRRService(responseCode, latitude, longitude, isFilterByADA, is
  */
 function describeRestroom(restroom) {
   return `<s>${restroom.name}</s> <say-as interpret-as="address"> ${restroom.street} </say-as>, ${restroom.city}`;
+}
+
+/**
+ * Visual response describing the restroom to be delivered to the customers.
+ */
+function visuallyDescribeRestroom(restroom) {
+  return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
 }

@@ -36,6 +36,14 @@ module.exports = FindRestroomAtLocationIntentHandler = {
 
     return responseBuilder
       .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restrooms[0])}`)
+      .withSimpleCard(
+        `Restroom details`,
+        `${visuallyDescribeRestroom(restrooms[0])}
+Directions: ${restrooms[0].directions}
+Accessible: ${restrooms[0].accessible}
+Unisex: ${restrooms[0].unisex}
+Has Changing Table: ${restrooms[0].changing_table}`
+      )
       .withShouldEndSession(true)
       .getResponse();
   }
@@ -75,4 +83,11 @@ function getSearchFilters(handlerInput) {
  */
 function describeRestroom(restroom) {
   return `<s>${restroom.name}</s> <say-as interpret-as="address"> ${restroom.street} </say-as>, ${restroom.city}`;
+}
+
+/**
+ * An SSML description of the given restroom.
+ */
+function visuallyDescribeRestroom(restroom) {
+  return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
 }
