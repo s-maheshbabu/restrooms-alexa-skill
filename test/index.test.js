@@ -43,7 +43,7 @@ describe("Finding restrooms near user's geo location", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Placeholder response geo location ${dummyRestRooms[0].name}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -143,7 +143,7 @@ describe("Finding restrooms near device address", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Placeholder response ${dummyRestRooms[0].name} ${DUMMY_POSTAL_CODE}</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -261,7 +261,7 @@ describe("Honor search filters", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Placeholder response geo location ${dummyRestRooms[0].name}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -280,7 +280,7 @@ describe("Honor search filters", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Placeholder response geo location ${dummyRestRooms[0].name}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -299,7 +299,7 @@ describe("Honor search filters", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Placeholder response geo location ${dummyRestRooms[0].name}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -323,7 +323,7 @@ describe("Honor search filters", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Placeholder response geo location ${firstRestroomWithChangingTable.name}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(firstRestroomWithChangingTable)}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -354,76 +354,8 @@ function configureRRService(responseCode, latitude, longitude, isFilterByADA, is
 }
 
 /**
- * Verify the structure of the APL directives. We check that we are sending exactly
- * one directive and that it is of the right type and version.
+ * SSML response describing the restroom to be delivered to the customers.
  */
-function verifyAPLDirectiveStructure(directives) {
-  expect(directives).is.not.null;
-  expect(directives.length).is.equal(1);
-
-  const directive = directives[0];
-  expect(directive.type).to.equal(APL_DOCUMENT_TYPE);
-  expect(directive.version).to.equal(APL_DOCUMENT_VERSION);
-}
-
-/**
- * Returns a string that is a comma separated list of top suggestions.
- * @param suggestedSpellings The complete list of spellings. Should be a non-empty array.
- * @param numberOfSuggestions The number of top spellings to extract. This should be a
- * positive number. If the number is larger than the size of all spellings available, we
- * will return all spellings.
- */
-function topSuggestedSpellings(suggestedSpellings, numberOfSuggestions) {
-  if (
-    !Array.isArray(suggestedSpellings) ||
-    !suggestedSpellings.length ||
-    numberOfSuggestions <= 0
-  )
-    throw `Invalid inputs. suggestedSpellings = ${suggestedSpellings}. numberOfSuggestions = ${numberOfSuggestions}.`;
-
-  let result = "";
-  for (
-    var i = 0;
-    i < numberOfSuggestions && i < suggestedSpellings.length;
-    i++
-  ) {
-    result += suggestedSpellings[i] + ", ";
-  }
-
-  return result.substring(0, result.length - 2);
-}
-
-
-
-/*
-Alexa supports Alexa Presentation Language (APL) on only a few devices and
-so there is a fork in the code to issue APL directives for devices that support
-APL and plain old cards for other devices. This test method generates an array
-of two events simulating devices with and without APL support.
-*/
-function getEventObjects(path) {
-  // Events by default are configured to have APL support.
-  const event = require(path);
-
-  // Build an event object without APL support.
-  const eventWithoutAPLSupport = cloneDeep(event);
-  delete eventWithoutAPLSupport.context.System.device.supportedInterfaces["Alexa.Presentation.APL"];
-
-  return [event, eventWithoutAPLSupport];
-}
-
-/*
-Helper fucntion to tell if APL is supported.
-*/
-function hasAPLSupport(event) {
-  if (
-    hasIn(event, [
-      "context",
-      "System",
-      "device",
-      "supportedInterfaces",
-      "Alexa.Presentation.APL"
-    ])
-  ) return true;
-  else return false;
+function describeRestroom(restroom) {
+  return `<s>${restroom.name}</s> <say-as interpret-as="address"> ${restroom.street} </say-as>, ${restroom.city}`;
 }

@@ -77,8 +77,9 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
 
   const filters = getSearchFilters(handlerInput);
   const restrooms = await RR.searchRestroomsByLatLon(coordinates.latitude, coordinates.longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
+  // What if we couldn't find any matches.
   return responseBuilder
-    .speak(`Placeholder response ${restrooms[0].name} ${address.postalCode}`)
+    .speak(`I found this restroom near you. ${describeRestroom(restrooms[0])}`)
     .withShouldEndSession(true)
     .getResponse();
 }
@@ -113,15 +114,16 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   console.log(`A valid user geo location was retrieved: ${latitude}, ${longitude}`);
   const filters = getSearchFilters(handlerInput);
   const restrooms = await RR.searchRestroomsByLatLon(latitude, longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
+  // What if we couldn't find any matches.
   return responseBuilder
-    .speak(`Placeholder response geo location ${restrooms[0].name}`)
+    .speak(`I found this restroom close to your location. ${describeRestroom(restrooms[0])}`)
     .withShouldEndSession(true)
     .getResponse();
 }
 
 /**
- * 
- * Documentation
+ * Converts the search filters in the user's request to boolean search filters that
+ * can be used in the queries to refugee restrooms gateway.
  */
 function getSearchFilters(handlerInput) {
   const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
@@ -137,4 +139,11 @@ function getSearchFilters(handlerInput) {
     isFilterByUnisex: isFilterByUnisex,
     isFilterByChangingTable: isFilterByChangingTable,
   };
+}
+
+/**
+ * An SSML description of the given restroom.
+ */
+function describeRestroom(restroom) {
+  return `<s>${restroom.name}</s> <say-as interpret-as="address"> ${restroom.street} </say-as>, ${restroom.city}`;
 }
