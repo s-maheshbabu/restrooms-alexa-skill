@@ -3,9 +3,10 @@ require("app-module-path").addPath(__dirname);
 const Alexa = require("ask-sdk-core");
 
 const FindRestroomNearMeAPI = require("api/FindRestroomNearMeAPI");
+const FindRestroomAtLocationAPI = require("api/FindRestroomAtLocationAPI");
 
 const CancelAndStopIntentHandler = require("intenthandlers/CancelAndStopIntentHandler");
-const FindRestroomIntentHandler = require("intenthandlers/FindRestroomIntentHandler");
+const FindRestroomAtLocationIntentHandler = require("intenthandlers/FindRestroomAtLocationIntentHandler");
 const FindRestroomNearMeIntentHandler = require("intenthandlers/FindRestroomNearMeIntentHandler");
 const HelpIntentHandler = require("intenthandlers/HelpIntentHandler");
 
@@ -39,12 +40,13 @@ exports.handler = async function (event, context) {
     skill = Alexa.SkillBuilders.custom()
       .addRequestHandlers(
         CancelAndStopIntentHandler,
-        FindRestroomIntentHandler,
+        FindRestroomAtLocationIntentHandler,
         FindRestroomNearMeIntentHandler,
         HelpIntentHandler,
         LaunchRequestHandler,
         SessionEndedRequestHandler,
         FindRestroomNearMeAPI,
+        FindRestroomAtLocationAPI,
       )
       .addRequestInterceptors(
         ZipcodesDataLoadInterceptor,

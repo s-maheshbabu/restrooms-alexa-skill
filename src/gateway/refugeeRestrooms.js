@@ -6,7 +6,7 @@ async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFil
     const URL = `${BASE_URL}/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`;
     console.log(`Endpoint ${URL}`);
 
-    var restroomsArray;
+    var restroomsArray = [];
     try {
         const response = await fetch(URL);
         restroomsArray = await response.json();
@@ -18,16 +18,6 @@ async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFil
         restroomsArray = restroomsArray.filter((value) => { return value.changing_table; });
     }
     return restroomsArray;
-}
-
-async function asyncForEach(array, callback) {
-    for (let index = 0; index < array.length; index++) {
-        try {
-            await callback(array[index], index, array);
-        } catch (error) {
-            console.log(error);
-        }
-    }
 }
 
 module.exports = {

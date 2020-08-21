@@ -48,6 +48,27 @@ describe("Finding restrooms near user's geo location", function () {
     expect(outputSpeech.type).to.equal("SSML");
   });
 
+  it("should let the user know if there are no restrooms near the user's geo location", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    const emptyRestroomsResult = [];
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, emptyRestroomsResult);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I'm sorry. I couldn't find any restrooms close to your location.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
   it("should render a message and card requesting for user's geo location permissions if said permissions are not already granted by the user", async () => {
     const event = require("../test-data/nearme_geo_supported");
 
@@ -148,6 +169,26 @@ describe("Finding restrooms near device address", function () {
     expect(outputSpeech.type).to.equal("SSML");
   });
 
+  it("should let the user know if there are no restrooms near the user's geo location", async () => {
+    const event = require("../test-data/nearme_geo_not_supported");
+    configureAddressService(200, event.context, aDeviceAddress);
+
+    const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+    const emptyRestroomsResult = [];
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, emptyRestroomsResult);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I'm sorry. I couldn't find any restrooms near you.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
   it("should render a message and card requesting for device address permissions if said permissions are not already granted by the user", async () => {
     const event = require("../test-data/nearme_geo_not_supported");
 
@@ -233,7 +274,58 @@ describe("Finding restrooms near device address", function () {
   });
 });
 
-describe("Honor search filters", function () {
+describe("Finding restrooms at a user specified location", function () {
+  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+
+  before(async () => {
+    await zipcodes.init();
+  });
+
+  afterEach(function () {
+    decache("../test-data/atlocation");
+  });
+
+  it("should be able to find restrooms at the location specified by the user.", async () => {
+    const event = require("../test-data/atlocation");
+
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(dummyRestRooms[0])}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
+  it("should let the user know if there are no restrooms in the location they are searching for", async () => {
+    const event = require("../test-data/atlocation");
+
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+    const emptyRestroomsResult = [];
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, emptyRestroomsResult);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I'm sorry. I couldn't find any restrooms at <say-as interpret-as="digits">${zipcode}</say-as> matching your criteria.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+});
+
+describe("Honor search filters when searching for restrooms near the user's location", function () {
   const dummyRestRooms = require("../test-data/sample-RR-response.json");
 
   before(async () => {

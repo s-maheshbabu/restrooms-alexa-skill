@@ -77,7 +77,14 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
 
   const filters = getSearchFilters(handlerInput);
   const restrooms = await RR.searchRestroomsByLatLon(coordinates.latitude, coordinates.longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
-  // What if we couldn't find any matches.
+
+  if (!Array.isArray(restrooms) || !restrooms.length) {
+    return responseBuilder
+      .speak(`I'm sorry. I couldn't find any restrooms near you.`)
+      .withShouldEndSession(true)
+      .getResponse();
+  }
+
   return responseBuilder
     .speak(`I found this restroom near you. ${describeRestroom(restrooms[0])}`)
     .withShouldEndSession(true)
@@ -114,7 +121,14 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   console.log(`A valid user geo location was retrieved: ${latitude}, ${longitude}`);
   const filters = getSearchFilters(handlerInput);
   const restrooms = await RR.searchRestroomsByLatLon(latitude, longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
-  // What if we couldn't find any matches.
+
+  if (!Array.isArray(restrooms) || !restrooms.length) {
+    return responseBuilder
+      .speak(`I'm sorry. I couldn't find any restrooms close to your location.`)
+      .withShouldEndSession(true)
+      .getResponse();
+  }
+
   return responseBuilder
     .speak(`I found this restroom close to your location. ${describeRestroom(restrooms[0])}`)
     .withShouldEndSession(true)

@@ -6,13 +6,13 @@ const decache = require("decache");
 
 const context = {};
 
-describe("FindRestRoomNearMe API handler tests", function () {
+describe("FindRestroomAtLocation API handler tests", function () {
   afterEach(function () {
-    decache("../test-data/api/nearme_api");
+    decache("../test-data/api/atlocation_api");
   });
 
-  it("should delegate to skill with the right resolved search filters loaded into session attributes", async () => {
-    const event = require("../../test-data/api/nearme_api");
+  it("should delegate to skill with the right resolved search filters and zipcode loaded into session attributes", async () => {
+    const event = require("../../test-data/api/atlocation_api");
 
     const synonymsToIdMap = utilities.slotSynonymsToIdMap("RestRoomTypes");
     const allSynonyms = [...synonymsToIdMap.keys()];
@@ -20,6 +20,8 @@ describe("FindRestRoomNearMe API handler tests", function () {
     for (var i = 0; i < 1000; i++) {
       // Simulate 0 to 3 search filters randomly.
       const randomTestSetSize = Math.floor(Math.random() * Math.floor(4));
+      // Simulate a zipcode.
+      const zipcode = 10000 + Math.floor(Math.random() * Math.floor(89999));
 
       const aTestSetOfSynonyms = getRandom(allSynonyms, randomTestSetSize);
 
@@ -29,6 +31,7 @@ describe("FindRestRoomNearMe API handler tests", function () {
       )
 
       event.request.apiRequest.arguments.SearchFiltersList = aTestSetOfSynonyms;
+      event.request.apiRequest.arguments.Zipcode = zipcode;
 
       const responseContainer = await unitUnderTest.handler(event, context);
       const response = responseContainer.response;
@@ -37,13 +40,30 @@ describe("FindRestRoomNearMe API handler tests", function () {
       expect(directive.target).to.equal(`skill`);
       expect(directive.period.until).to.equal(`EXPLICIT_RETURN`);
       expect(directive.updatedRequest.type).to.equal(`IntentRequest`);
-      expect(directive.updatedRequest.intent.name).to.equal(`FindRestroomNearMeIntent`);
+      expect(directive.updatedRequest.intent.name).to.equal(`FindRestroomAtLocationIntent`);
 
       const actualResolvedEntitiesArray = context.search_filters;
       const expectedResolvedEntitiesArray = [...expectedResolvedEntitiesSet];
 
       expect(actualResolvedEntitiesArray).to.eql(expectedResolvedEntitiesArray);
+
+      expect(context.zipcode).to.equal(zipcode);
     }
+  });
+
+  it("should delegate to skill even when the zipcode is missing. We expiclity set a zipcode to null in the intent slots", async () => {
+    const event = require("../../test-data/api/atlocation_api");
+
+    const synonymsToIdMap = utilities.slotSynonymsToIdMap("RestRoomTypes");
+    const allSynonyms = [...synonymsToIdMap.keys()];
+    const aTestSetOfSynonyms = getRandom(allSynonyms, 3);
+
+    event.request.apiRequest.arguments.SearchFiltersList = aTestSetOfSynonyms;
+    delete event.request.apiRequest.arguments.Zipcode;
+
+    await unitUnderTest.handler(event, context);
+
+    expect(context.zipcode).to.equal(null);
   });
 });
 

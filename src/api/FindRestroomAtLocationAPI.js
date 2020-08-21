@@ -3,9 +3,9 @@ const utilities = require("../utilities");
 
 let synonymsToIdMap;
 
-module.exports = FindRestroomNearMeAPI = {
+module.exports = FindRestroomAtLocationAPI = {
   canHandle(handlerInput) {
-    return utilities.isApiRequest(handlerInput, 'FindRestroomsNearMeAPI');
+    return utilities.isApiRequest(handlerInput, 'FindRestroomsAtLocationAPI');
   },
   async handle(handlerInput) {
     const apiArguments = utilities.getApiArguments(handlerInput);
@@ -13,10 +13,14 @@ module.exports = FindRestroomNearMeAPI = {
     const { attributesManager } = handlerInput;
     const sessionAttributes = attributesManager.getSessionAttributes();
     sessionAttributes.search_filters = resolveEntities(apiArguments.SearchFiltersList);
+    sessionAttributes.zipcode = apiArguments.Zipcode || null;
 
     // Sticking the search filters in context just for testing purposes.
     const { context } = handlerInput;
-    if (context) context.search_filters = sessionAttributes.search_filters;
+    if (context) {
+      context.search_filters = sessionAttributes.search_filters;
+      context.zipcode = sessionAttributes.zipcode;
+    }
 
     return {
       directives: [{
@@ -28,7 +32,7 @@ module.exports = FindRestroomNearMeAPI = {
         updatedRequest: {
           type: 'IntentRequest',
           intent: {
-            name: 'FindRestroomNearMeIntent',
+            name: 'FindRestroomAtLocationIntent',
           }
         }
       }],
