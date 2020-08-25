@@ -110,12 +110,12 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   }
   else if (geoObject && geoObject.locationServices.access !== 'ENABLED') {
     return responseBuilder
-      .speak(`Please make sure device location tracking is enabled in your device.`)
+      .speak(`Please make sure device location tracking is enabled in your device, and try again later.`)
       .getResponse();
   }
   else if (!geoObject || !geoObject.coordinate) {
     return responseBuilder
-      .speak(`Location Demo is having trouble accessing your location. Please wait a moment, and try again later.`)
+      .speak(`Refugee Restrooms is having trouble accessing your location. Please wait a moment, and try again later.`)
       .getResponse();
   }
 

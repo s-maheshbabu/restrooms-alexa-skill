@@ -113,7 +113,7 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Please make sure device location tracking is enabled in your device.</speak>`
+      `<speak>Please make sure device location tracking is enabled in your device, and try again later.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -136,7 +136,7 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
 
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>Location Demo is having trouble accessing your location. Please wait a moment, and try again later.</speak>`
+        `<speak>Refugee Restrooms is having trouble accessing your location. Please wait a moment, and try again later.</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
     }
