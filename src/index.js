@@ -8,7 +8,6 @@ const FindRestroomAtLocationAPI = require("api/FindRestroomAtLocationAPI");
 const CancelAndStopIntentHandler = require("intenthandlers/CancelAndStopIntentHandler");
 const FindRestroomAtLocationIntentHandler = require("intenthandlers/FindRestroomAtLocationIntentHandler");
 const FindRestroomNearMeIntentHandler = require("intenthandlers/FindRestroomNearMeIntentHandler");
-const HelpIntentHandler = require("intenthandlers/HelpIntentHandler");
 
 const LaunchRequestHandler = require("requesthandlers/LaunchRequestHandler");
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
@@ -42,7 +41,6 @@ exports.handler = async function (event, context) {
         CancelAndStopIntentHandler,
         FindRestroomAtLocationIntentHandler,
         FindRestroomNearMeIntentHandler,
-        HelpIntentHandler,
         LaunchRequestHandler,
         SessionEndedRequestHandler,
         FindRestroomNearMeAPI,
