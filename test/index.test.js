@@ -88,6 +88,7 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
     const responseContainer = await unitUnderTest.handler(event, context);
 
     const response = responseContainer.response;
+    assert(response.shouldEndSession);
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
@@ -222,6 +223,7 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
     const responseContainer = await unitUnderTest.handler(event, context);
 
     const response = responseContainer.response;
+    assert(response.shouldEndSession);
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
@@ -243,6 +245,7 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
     const responseContainer = await unitUnderTest.handler(event, context);
 
     const response = responseContainer.response;
+    assert(response.shouldEndSession);
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(

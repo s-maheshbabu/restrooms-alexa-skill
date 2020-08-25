@@ -42,6 +42,7 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
       return responseBuilder
         .speak(messages.NOTIFY_MISSING_DEVICE_ADDRESS_PERMISSIONS)
         .withAskForPermissionsConsentCard([scopes.ADDRESS_SCOPE])
+        .withShouldEndSession(true)
         .getResponse();
     }
     throw error;
@@ -103,6 +104,7 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   if (!hasPermissions) {
     return responseBuilder
       .speak(messages.NOTIFY_MISSING_GEO_LOCATION_PERMISSIONS)
+      .withShouldEndSession(true)
       .withAskForPermissionsConsentCard([scopes.GEO_LOCATION_SCOPE])
       .getResponse();
   }
