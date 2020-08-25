@@ -6,8 +6,7 @@ module.exports = ErrorHandler = {
     console.error(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
-      .speak("Sorry, I didn't get that. Please try again.")
-      .reprompt("Sorry, I didn't get that. Please try again.")
+      .speak(`I'm Sorry, I'm having trouble helping you. Please try again later.`)
       .withShouldEndSession(true)
       .getResponse();
   }

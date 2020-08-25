@@ -30,14 +30,6 @@ module.exports = FindRestroomNearMeIntentHandler = {
 async function findRestroomsNearDeviceAddress(handlerInput) {
   const { requestEnvelope, serviceClientFactory, responseBuilder } = handlerInput;
 
-  const consentToken = requestEnvelope.context.System.apiAccessToken;
-  if (!consentToken) {
-    return responseBuilder
-      .speak(messages.NOTIFY_MISSING_PERMISSIONS)
-      .withAskForPermissionsConsentCard([scopes.ADDRESS_SCOPE])
-      .getResponse();
-  }
-
   const { deviceId } = requestEnvelope.context.System.device;
   const deviceAddressServiceClient = serviceClientFactory.getDeviceAddressServiceClient();
 
@@ -45,10 +37,12 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
   try {
     address = await deviceAddressServiceClient.getCountryAndPostalCode(deviceId);
   } catch (error) {
-    // This needs to be tested.
-    if (error.name !== 'ServiceError') {
-      const response = responseBuilder.speak(messages.ERROR).getResponse();
-      return response;
+    console.log(error)
+    if (error.statusCode === 403) {
+      return responseBuilder
+        .speak(messages.NOTIFY_MISSING_DEVICE_ADDRESS_PERMISSIONS)
+        .withAskForPermissionsConsentCard([scopes.ADDRESS_SCOPE])
+        .getResponse();
     }
     throw error;
   }

@@ -213,7 +213,11 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
     const event = require("../test-data/nearme_geo_not_supported");
 
     // Simulating lack of permissions to fetch device address.
-    event.context.System.apiAccessToken = null;
+    const accessDeniedPayload = {
+      code: 'ACCESS_DENIED',
+      message: 'access denied to requested resource'
+    };
+    configureAddressService(403, event.context, accessDeniedPayload);
 
     const responseContainer = await unitUnderTest.handler(event, context);
 
@@ -221,13 +225,30 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>${messages.NOTIFY_MISSING_PERMISSIONS}</speak>`
+      `<speak>${messages.NOTIFY_MISSING_DEVICE_ADDRESS_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.ADDRESS_SCOPE]);
+  });
+
+  it("should deliver an error message for any non-service-errors while using device address service", async () => {
+    const event = require("../test-data/nearme_geo_not_supported");
+
+    const anyErrorCodeThatIsNot400 = 500;
+    configureAddressService(anyErrorCodeThatIsNot400, event.context, {});
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I'm Sorry, I'm having trouble helping you. Please try again later.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
   });
 
   it("should render an error message when the zipcode requested by the user is invalid.", async () => {
