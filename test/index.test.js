@@ -377,7 +377,7 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
     expect(outputSpeech.type).to.equal("SSML");
   });
 
-  it("XXX should render an error message if the zipcode provided by the user is invalid.", async () => {
+  it("should render an error message if the zipcode provided by the user is invalid.", async () => {
     const event = require("../test-data/atlocation");
 
     const anInvalidZipCode = "an-invalid-zipcode";
@@ -390,7 +390,7 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Sorry. ${anInvalidZipCode} is not a valid zipcode in the US. Please try again with a valid five digit U.S. zipcode.</speak>`
+      `<speak>Sorry. <say-as interpret-as="digits">${anInvalidZipCode}</say-as> is not a valid zipcode in the US. Please try again with a valid five digit U.S. zipcode.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
