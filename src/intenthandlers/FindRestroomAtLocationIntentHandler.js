@@ -19,7 +19,7 @@ module.exports = FindRestroomAtLocationIntentHandler = {
     const coordinates = zipcodes.getCoordinates(zipcode);
     if (!coordinates) {
       return responseBuilder
-        .speak(`Sorry. ${address.postalCode} is not a valid postal code in the US. Please try again later.`)
+        .speak(`Sorry. ${zipcode} is not a valid zipcode in the US. Please try again with a valid five digit U.S. zipcode.`)
         .withShouldEndSession(true)
         .getResponse();
     }

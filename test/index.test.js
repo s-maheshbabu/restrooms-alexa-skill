@@ -10,7 +10,6 @@ const context = {};
 
 const RR = require("gateway/RefugeeRestrooms");
 const zipcodes = require("gateway/Zipcodes");
-const utilities = require("../src/utilities");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
@@ -374,6 +373,24 @@ Has Changing Table: ${dummyRestRooms[0].changing_table}`);
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
       `<speak>I'm sorry. I couldn't find any restrooms at <say-as interpret-as="digits">${zipcode}</say-as> matching your criteria.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
+  it("XXX should render an error message if the zipcode provided by the user is invalid.", async () => {
+    const event = require("../test-data/atlocation");
+
+    const anInvalidZipCode = "an-invalid-zipcode";
+    event.session.attributes.zipcode = anInvalidZipCode;
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>Sorry. ${anInvalidZipCode} is not a valid zipcode in the US. Please try again with a valid five digit U.S. zipcode.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
