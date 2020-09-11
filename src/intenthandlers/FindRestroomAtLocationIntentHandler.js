@@ -42,14 +42,7 @@ module.exports = FindRestroomAtLocationIntentHandler = {
 
     return responseBuilder
       .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restrooms[0])}`)
-      .withSimpleCard(
-        `Restroom details`,
-        `${visuallyDescribeRestroom(restrooms[0])}
-Directions: ${restrooms[0].directions}
-Accessible: ${restrooms[0].accessible}
-Unisex: ${restrooms[0].unisex}
-Has Changing Table: ${restrooms[0].changing_table}`
-      )
+      .withSimpleCard(...buildSimpleCard(zipcode, restrooms))
       .addDirective(buildAPLDirective(zipcode, restrooms[0]))
       .withShouldEndSession(true)
       .getResponse();
@@ -97,6 +90,21 @@ function describeRestroom(restroom) {
  */
 function visuallyDescribeRestroom(restroom) {
   return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
+}
+
+function buildSimpleCard(zipcode, restrooms) {
+  let content = ``;
+
+  restrooms.slice(0, 4).forEach(restroom => content += `
+${visuallyDescribeRestroom(restroom)}
+${restroom.directions ? `Directions: ${restroom.directions}` : `Not Available`}
+Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
+`);
+
+  return [
+    `Here are some restrooms at ${zipcode}`,
+    content
+  ]
 }
 
 function buildAPLDirective(zipcode, restroom) {

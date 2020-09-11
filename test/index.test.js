@@ -53,14 +53,9 @@ describe("Finding restrooms near user's geo location", function () {
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal("Restroom details");
+    expect(card.title).to.equal("Here are some restrooms near you");
     expect(card.type).to.equal("Simple");
-    expect(card.content).to.equal(
-      `${visuallyDescribeRestroom(restroomDelivered)}
-Directions: ${restroomDelivered.directions}
-Accessible: ${restroomDelivered.accessible}
-Unisex: ${restroomDelivered.unisex}
-Has Changing Table: ${restroomDelivered.changing_table}`);
+    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
@@ -198,14 +193,9 @@ describe("Finding restrooms near device address", function () {
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal("Restroom details");
+    expect(card.title).to.equal("Here are some restrooms near you");
     expect(card.type).to.equal("Simple");
-    expect(card.content).to.equal(
-      `${visuallyDescribeRestroom(restroomDelivered)}
-Directions: ${restroomDelivered.directions}
-Accessible: ${restroomDelivered.accessible}
-Unisex: ${restroomDelivered.unisex}
-Has Changing Table: ${restroomDelivered.changing_table}`);
+    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
@@ -379,14 +369,9 @@ describe("Finding restrooms at a user specified location", function () {
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal("Restroom details");
+    expect(card.title).to.equal(`Here are some restrooms at ${zipcode}`);
     expect(card.type).to.equal("Simple");
-    expect(card.content).to.equal(
-      `${visuallyDescribeRestroom(restroomDelivered)}
-Directions: ${restroomDelivered.directions}
-Accessible: ${restroomDelivered.accessible}
-Unisex: ${restroomDelivered.unisex}
-Has Changing Table: ${restroomDelivered.changing_table}`);
+    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
@@ -627,6 +612,18 @@ describe("APL directives support", function () {
     }
   });
 });
+
+function buildSimpleCardContent(restrooms) {
+  let content = ``;
+
+  restrooms.slice(0, 4).forEach(restroom => content += `
+${visuallyDescribeRestroom(restroom)}
+${restroom.directions ? `Directions: ${restroom.directions}` : `Not Available`}
+Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
+`);
+
+  return content;
+}
 
 function configureAddressService(responseCode, context, payload) {
   if (!nock.isActive()) {

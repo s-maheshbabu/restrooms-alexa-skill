@@ -88,14 +88,7 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
 
   return responseBuilder
     .speak(`I found this restroom near you. ${describeRestroom(restrooms[0])}`)
-    .withSimpleCard(
-      `Restroom details`,
-      `${visuallyDescribeRestroom(restrooms[0])}
-Directions: ${restrooms[0].directions}
-Accessible: ${restrooms[0].accessible}
-Unisex: ${restrooms[0].unisex}
-Has Changing Table: ${restrooms[0].changing_table}`
-    )
+    .withSimpleCard(...buildSimpleCard(restrooms))
     .addDirective(buildAPLDirective(restrooms[0]))
     .withShouldEndSession(true)
     .getResponse();
@@ -142,14 +135,7 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
 
   return responseBuilder
     .speak(`I found this restroom close to your location. ${describeRestroom(restrooms[0])}`)
-    .withSimpleCard(
-      `Restroom details`,
-      `${visuallyDescribeRestroom(restrooms[0])}
-Directions: ${restrooms[0].directions}
-Accessible: ${restrooms[0].accessible}
-Unisex: ${restrooms[0].unisex}
-Has Changing Table: ${restrooms[0].changing_table}`
-    )
+    .withSimpleCard(...buildSimpleCard(restrooms))
     .addDirective(buildAPLDirective(restrooms[0]))
     .withShouldEndSession(true)
     .getResponse();
@@ -187,6 +173,21 @@ function describeRestroom(restroom) {
  */
 function visuallyDescribeRestroom(restroom) {
   return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
+}
+
+function buildSimpleCard(restrooms) {
+  let content = ``;
+
+  restrooms.slice(0, 4).forEach(restroom => content += `
+${visuallyDescribeRestroom(restroom)}
+${restroom.directions ? `Directions: ${restroom.directions}` : `Not Available`}
+Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
+`);
+
+  return [
+    `Here are some restrooms near you`,
+    content
+  ]
 }
 
 function buildAPLDirective(restroom) {
