@@ -13,21 +13,21 @@ module.exports = (title, text, restroomDetails) => {
         sources: [
           {
             url:
-              "https://charity-roster-alexa-skill.s3.amazonaws.com/charity-roster-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
             size: "small",
             widthPixels: 0,
             heightPixels: 0
           },
           {
             url:
-              "https://charity-roster-alexa-skill.s3.amazonaws.com/charity-roster-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
             size: "large",
             widthPixels: 0,
             heightPixels: 0
           }
         ]
       },
-      title: "Welcome to Charity Roster",
+      title: "Welcome to Refugee Restrooms",
       image: {
         contentDescription: null,
         smallSourceUrl: null,
@@ -35,14 +35,14 @@ module.exports = (title, text, restroomDetails) => {
         sources: [
           {
             url:
-              "https://charity-roster-alexa-skill.s3.amazonaws.com/charity-roster-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
             size: "small",
             widthPixels: 0,
             heightPixels: 0
           },
           {
             url:
-              "https://charity-roster-alexa-skill.s3.amazonaws.com/charity-roster-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
             size: "large",
             widthPixels: 0,
             heightPixels: 0
