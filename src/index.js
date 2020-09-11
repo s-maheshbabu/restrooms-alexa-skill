@@ -13,6 +13,7 @@ const LaunchRequestHandler = require("requesthandlers/LaunchRequestHandler");
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
 
 const ZipcodesDataLoadInterceptor = require("interceptors/ZipcodesDataLoadInterceptor");
+const ResponseSanitizationInterceptor = require("interceptors/ResponseSanitizationInterceptor");
 
 const ErrorHandler = require("errors/ErrorHandler");
 
@@ -51,7 +52,9 @@ exports.handler = async function (event, context) {
         LogRequestInterceptor,
       )
       .addResponseInterceptors(
-        LogResponseInterceptor)
+        LogResponseInterceptor,
+        ResponseSanitizationInterceptor,
+      )
       .addErrorHandlers(ErrorHandler)
       .withApiClient(new Alexa.DefaultApiClient())
       .create();

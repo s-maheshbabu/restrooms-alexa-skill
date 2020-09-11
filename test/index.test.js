@@ -1,5 +1,4 @@
 const unitUnderTest = require("../src/index");
-const cloneDeep = require("lodash.clonedeep");
 
 const expect = require("chai").expect;
 const assert = require("chai").assert;
@@ -13,6 +12,12 @@ const zipcodes = require("gateway/Zipcodes");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
+
+const APL_CONSTANTS = require("constants/APL");
+const APL_DOCUMENT_TYPE = APL_CONSTANTS.APL_DOCUMENT_TYPE;
+const APL_DOCUMENT_VERSION = APL_CONSTANTS.APL_DOCUMENT_VERSION;
+const restroomDetailsDocument = require("apl/document/RestroomDetailsDocument.json");
+const restroomDetailsDatasource = require("apl/data/RestroomDetailsDatasource");
 
 describe("Finding restrooms near user's geo location", function () {
   const DUMMY_LATITUDE = 47.62078857421875;
@@ -40,9 +45,10 @@ describe("Finding restrooms near user's geo location", function () {
     const response = responseContainer.response;
     assert(response.shouldEndSession);
 
+    const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -50,11 +56,24 @@ describe("Finding restrooms near user's geo location", function () {
     expect(card.title).to.equal("Restroom details");
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(
-      `${visuallyDescribeRestroom(dummyRestRooms[0])}
-Directions: ${dummyRestRooms[0].directions}
-Accessible: ${dummyRestRooms[0].accessible}
-Unisex: ${dummyRestRooms[0].unisex}
-Has Changing Table: ${dummyRestRooms[0].changing_table}`);
+      `${visuallyDescribeRestroom(restroomDelivered)}
+Directions: ${restroomDelivered.directions}
+Accessible: ${restroomDelivered.accessible}
+Unisex: ${restroomDelivered.unisex}
+Has Changing Table: ${restroomDelivered.changing_table}`);
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom near you.`,
+        `${restroomDelivered.name}
+${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `It is accessible, unisex and pedha thopu`
+      )
+    );
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
@@ -172,9 +191,10 @@ describe("Finding restrooms near device address", function () {
     const response = responseContainer.response;
     assert(response.shouldEndSession);
 
+    const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -182,11 +202,24 @@ describe("Finding restrooms near device address", function () {
     expect(card.title).to.equal("Restroom details");
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(
-      `${visuallyDescribeRestroom(dummyRestRooms[0])}
-Directions: ${dummyRestRooms[0].directions}
-Accessible: ${dummyRestRooms[0].accessible}
-Unisex: ${dummyRestRooms[0].unisex}
-Has Changing Table: ${dummyRestRooms[0].changing_table}`);
+      `${visuallyDescribeRestroom(restroomDelivered)}
+Directions: ${restroomDelivered.directions}
+Accessible: ${restroomDelivered.accessible}
+Unisex: ${restroomDelivered.unisex}
+Has Changing Table: ${restroomDelivered.changing_table}`);
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom near you.`,
+        `${restroomDelivered.name}
+${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `It is accessible, unisex and pedha thopu`
+      )
+    );
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
@@ -340,9 +373,10 @@ describe("Finding restrooms at a user specified location", function () {
     const response = responseContainer.response;
     assert(response.shouldEndSession);
 
+    const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(dummyRestRooms[0])}</speak>`
+      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -350,11 +384,24 @@ describe("Finding restrooms at a user specified location", function () {
     expect(card.title).to.equal("Restroom details");
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(
-      `${visuallyDescribeRestroom(dummyRestRooms[0])}
-Directions: ${dummyRestRooms[0].directions}
-Accessible: ${dummyRestRooms[0].accessible}
-Unisex: ${dummyRestRooms[0].unisex}
-Has Changing Table: ${dummyRestRooms[0].changing_table}`);
+      `${visuallyDescribeRestroom(restroomDelivered)}
+Directions: ${restroomDelivered.directions}
+Accessible: ${restroomDelivered.accessible}
+Unisex: ${restroomDelivered.unisex}
+Has Changing Table: ${restroomDelivered.changing_table}`);
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at ${zipcode}.`,
+        `${restroomDelivered.name}
+${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `It is accessible, unisex and pedha thopu`
+      )
+    );
   });
 
   it("should let the user know if there are no restrooms in the location they are searching for", async () => {
@@ -495,6 +542,43 @@ describe("Honor search filters when searching for restrooms near the user's loca
   });
 });
 
+describe("APL directives support", function () {
+  const DUMMY_LATITUDE = 47.62078857421875;
+  const DUMMY_LONGITUDE = -122.30061853955556;
+
+  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+
+  before(async () => {
+    await zipcodes.init();
+  });
+
+  afterEach(function () {
+    decache("../test-data/nearme_geo_supported_no_apl");
+  });
+
+  it("should not include the APL directives when the device does not support APL.", async () => {
+    const event = require("../test-data/nearme_geo_supported_no_apl");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    expect(response.directives).to.be.undefined;
+  });
+});
+
 function configureAddressService(responseCode, context, payload) {
   if (!nock.isActive()) {
     nock.activate();
@@ -528,4 +612,17 @@ function describeRestroom(restroom) {
  */
 function visuallyDescribeRestroom(restroom) {
   return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
+}
+
+/**
+ * Verify the structure of the APL directives. We check that we are sending exactly
+ * one directive and that it is of the right type and version.
+ */
+function verifyAPLDirectiveStructure(directives) {
+  expect(directives).is.not.null;
+  expect(directives.length).is.equal(1);
+
+  const directive = directives[0];
+  expect(directive.type).to.equal(APL_DOCUMENT_TYPE);
+  expect(directive.version).to.equal(APL_DOCUMENT_VERSION);
 }

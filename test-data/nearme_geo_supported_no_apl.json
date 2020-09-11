@@ -59,11 +59,6 @@
       "device": {
         "deviceId": "amzn1.ask.device.AHQ5PTWSVZE4PR6Y7VI22AU5DGGDD27ZXEYXP2MY5CLQ2O2NTVMINGKZ4PUEN3JFDNCCLJJWQTIOAEJIRJ7JPMSU5YMNCE24NSGSL7VN5NW45RANMGJ5FZRCLAXMP5ULLUL2RDKZO555JIUINYBCRETCN5AL63B22DOK2LM6UUUZN4DEZH2PG",
         "supportedInterfaces": {
-          "Alexa.Presentation.APL": {
-            "runtime": {
-              "maxVersion": "1.0"
-            }
-          },
           "Geolocation": {}
         }
       },

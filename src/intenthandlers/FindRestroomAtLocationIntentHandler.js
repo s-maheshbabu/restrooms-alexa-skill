@@ -1,6 +1,12 @@
 const RR = require("gateway/RefugeeRestrooms");
 const zipcodes = require("gateway/Zipcodes");
 
+const APL_CONSTANTS = require("constants/APL");
+const APL_DOCUMENT_TYPE = APL_CONSTANTS.APL_DOCUMENT_TYPE;
+const APL_DOCUMENT_VERSION = APL_CONSTANTS.APL_DOCUMENT_VERSION;
+const restroomDetailsDocument = require("apl/document/RestroomDetailsDocument.json");
+const restroomDetailsDatasource = require("apl/data/RestroomDetailsDatasource");
+
 const searchfilters = require("constants/SearchFilters").searchfilters;
 
 module.exports = FindRestroomAtLocationIntentHandler = {
@@ -44,6 +50,7 @@ Accessible: ${restrooms[0].accessible}
 Unisex: ${restrooms[0].unisex}
 Has Changing Table: ${restrooms[0].changing_table}`
       )
+      .addDirective(buildAPLDirective(zipcode, restrooms[0]))
       .withShouldEndSession(true)
       .getResponse();
   }
@@ -90,4 +97,18 @@ function describeRestroom(restroom) {
  */
 function visuallyDescribeRestroom(restroom) {
   return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
+}
+
+function buildAPLDirective(zipcode, restroom) {
+  return {
+    type: APL_DOCUMENT_TYPE,
+    version: APL_DOCUMENT_VERSION,
+    document: restroomDetailsDocument,
+    datasources: restroomDetailsDatasource(
+      `Here is a restroom at ${zipcode}.`,
+      `${restroom.name}
+${restroom.street}, ${restroom.city}, ${restroom.state}`,
+      `It is accessible, unisex and pedha thopu`
+    )
+  }
 }
