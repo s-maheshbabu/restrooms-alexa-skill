@@ -27,7 +27,7 @@ module.exports = (title, text, restroomDetails) => {
           }
         ]
       },
-      title: "Welcome to Refugee Restrooms",
+      title: `${title}`,
       image: {
         contentDescription: null,
         smallSourceUrl: null,
@@ -52,15 +52,15 @@ module.exports = (title, text, restroomDetails) => {
       textContent: {
         title: {
           type: "PlainText",
-          text: `${title}`
+          text: text
         },
         primaryText: {
           type: "PlainText",
-          text: text
+          text: secondaryText
         },
         secondaryText: {
           type: "PlainText",
-          text: secondaryText
+          text: "I sent this one and a few more restroom details to your Alexa app."
         }
       },
       logoUrl:
