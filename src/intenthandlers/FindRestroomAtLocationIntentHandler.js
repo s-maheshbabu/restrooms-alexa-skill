@@ -106,9 +106,8 @@ function buildAPLDirective(zipcode, restroom) {
     document: restroomDetailsDocument,
     datasources: restroomDetailsDatasource(
       `Here is a restroom at ${zipcode}.`,
-      `${restroom.name}
-${restroom.street}, ${restroom.city}, ${restroom.state}`,
-      `It is accessible, unisex and pedha thopu`
+      `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
+      `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}`
     )
   }
 }

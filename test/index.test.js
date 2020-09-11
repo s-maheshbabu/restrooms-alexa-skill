@@ -69,9 +69,8 @@ Has Changing Table: ${restroomDelivered.changing_table}`);
     expect(actualDatasource).to.eql(
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
-        `${restroomDelivered.name}
-${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `It is accessible, unisex and pedha thopu`
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
       )
     );
   });
@@ -215,9 +214,8 @@ Has Changing Table: ${restroomDelivered.changing_table}`);
     expect(actualDatasource).to.eql(
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
-        `${restroomDelivered.name}
-${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `It is accessible, unisex and pedha thopu`
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
       )
     );
   });
@@ -397,9 +395,8 @@ Has Changing Table: ${restroomDelivered.changing_table}`);
     expect(actualDatasource).to.eql(
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
-        `${restroomDelivered.name}
-${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `It is accessible, unisex and pedha thopu`
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
       )
     );
   });
@@ -554,6 +551,7 @@ describe("APL directives support", function () {
 
   afterEach(function () {
     decache("../test-data/nearme_geo_supported_no_apl");
+    decache("../test-data/nearme_geo_supported");
   });
 
   it("should not include the APL directives when the device does not support APL.", async () => {
@@ -576,6 +574,57 @@ describe("APL directives support", function () {
     expect(outputSpeech.type).to.equal("SSML");
 
     expect(response.directives).to.be.undefined;
+  });
+
+  it("the features of the restroom should be accurately represented in the APL visual.", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    const NUMBER_OF_RESTROOM_FEATURES = 3;
+    const restroomFeaturePossibilities = [];
+    for (let i = 0; i < (1 << NUMBER_OF_RESTROOM_FEATURES); i++) {
+      for (let j = NUMBER_OF_RESTROOM_FEATURES - 1; j >= 0; j--) {
+        restroomFeaturePossibilities.push(Boolean(i & (1 << j)));
+      }
+    }
+
+    const restroomDelivered = dummyRestRooms[0];
+    for (let i = 0; i < restroomFeaturePossibilities.length; i++) {
+      const featureSet = restroomFeaturePossibilities[i];
+      const isUnisex = featureSet[0];
+      const isAccessible = featureSet[1];
+      const isChangingTable = featureSet[2];
+
+      restroomDelivered.unisex = isUnisex;
+      restroomDelivered.accessible = isAccessible;
+      restroomDelivered.changing_table = isChangingTable;
+
+      configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      verifyAPLDirectiveStructure(response.directives);
+      const directive = response.directives[0];
+      expect(directive.document).to.eql(restroomDetailsDocument);
+      const actualDatasource = directive.datasources;
+      expect(actualDatasource).to.eql(
+        restroomDetailsDatasource(
+          `Here is a restroom near you.`,
+          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+          `Gender Neutral: ${isUnisex ? '&#9989;' : '&#10060;'}<br>Accessible: ${isAccessible ? '&#9989;' : '&#10060;'}<br>Changing Table: ${isChangingTable ? '&#9989;' : '&#10060;'}`
+        )
+      );
+    }
   });
 });
 
