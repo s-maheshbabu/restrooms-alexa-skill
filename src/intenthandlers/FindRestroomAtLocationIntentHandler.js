@@ -1,4 +1,7 @@
+const EmailValidator = require("email-validator");
+
 const RR = require("gateway/RefugeeRestrooms");
+const Mailer = require("gateway/Mailer.js");
 const zipcodes = require("gateway/Zipcodes");
 
 const APL_CONSTANTS = require("constants/APL");
@@ -40,13 +43,46 @@ module.exports = FindRestroomAtLocationIntentHandler = {
         .getResponse();
     }
 
+    const emailAddress = await getEmailAddress(handlerInput);
+    if (emailAddress) {
+      // Is it possible to not wait on sending the email?
+      await Mailer.sendEmail(emailAddress, "at " + zipcode, restrooms);
+      console.log("We have the user's email address. An email was sent with the search results.");
+    }
+
     return responseBuilder
-      .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restrooms[0])}`)
+      .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restrooms[0])}. I also sent the details to your email.`)
       .withSimpleCard(...buildSimpleCard(zipcode, restrooms))
       .addDirective(buildAPLDirective(zipcode, restrooms[0]))
       .withShouldEndSession(true)
       .getResponse();
   }
+}
+
+async function getEmailAddress(handlerInput) {
+  const { requestEnvelope, serviceClientFactory } = handlerInput;
+
+  let emailAddress = null;
+  const consentToken = requestEnvelope.context.System.apiAccessToken;
+  if (!consentToken) {
+    // Eventually, we might want to render an error prompt and push a card to the user asking them to grant permissions.
+    // However, that makes sense only after we make sending email an explicit user approved step.
+    // Right now, we send the email by default and so just swallowing the error and moving on.
+    console.log(`Missing permissions to access user email.`);
+    return emailAddress;
+  }
+
+  try {
+    const client = serviceClientFactory.getUpsServiceClient();
+    emailAddress = await client.getProfileEmail();
+  } catch (error) {
+    // Special handle the case where consent token exists but it doesn't give access to email.
+    console.log(`Unexpected error while trying to fetch user profile: ${error}`);
+  }
+
+  console.log("Email Address: " + emailAddress);
+  if (!EmailValidator.validate(emailAddress)) return null;
+  return emailAddress;
 }
 
 /**
@@ -97,7 +133,7 @@ function buildSimpleCard(zipcode, restrooms) {
 
   restrooms.slice(0, 4).forEach(restroom => content += `
 ${visuallyDescribeRestroom(restroom)}
-${restroom.directions ? `Directions: ${restroom.directions}` : `Not Available`}
+Directions: ${restroom.directions ? `${restroom.directions}` : `Not Available`}
 Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
 `);
 

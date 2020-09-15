@@ -5,6 +5,14 @@ const assert = require("chai").assert;
 const decache = require("decache");
 const nock = require('nock')
 
+const Mailer = require("gateway/Mailer.js");
+const nodemailerMock = require('nodemailer-mock');
+const transporter = nodemailerMock.createTransport({
+  host: '127.0.0.1',
+  port: -100,
+});
+const mockery = require('mockery');
+
 const context = {};
 
 const RR = require("gateway/RefugeeRestrooms");
@@ -48,7 +56,7 @@ describe("Finding restrooms near user's geo location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -188,7 +196,7 @@ describe("Finding restrooms near device address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -364,7 +372,7 @@ describe("Finding restrooms at a user specified location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}</speak>`
+      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -453,7 +461,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -472,7 +480,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -491,7 +499,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -515,7 +523,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(firstRestroomWithChangingTable)}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(firstRestroomWithChangingTable)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -554,7 +562,7 @@ describe("APL directives support", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}</speak>`
+      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -594,7 +602,7 @@ describe("APL directives support", function () {
 
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}</speak>`
+        `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -613,12 +621,123 @@ describe("APL directives support", function () {
   });
 });
 
+describe("Sending emails", function () {
+  const FROM_EMAIL_ADDRESS = "s.maheshbabu@hotmail.com";
+  const DUMMY_EMAIL_ADDRESS = "dummy@example.com";
+
+  const DUMMY_LATITUDE = 47.62078857421875;
+  const DUMMY_LONGITUDE = -122.30061853955556;
+
+  const US_COUNTRY_CODE = "US";
+  const DUMMY_POSTAL_CODE = "77840";
+
+  const aDeviceAddress = {
+    countryCode: US_COUNTRY_CODE,
+    postalCode: DUMMY_POSTAL_CODE,
+  };
+
+  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+
+  before(async () => {
+    await zipcodes.init();
+
+    mockery.enable({ warnOnUnregistered: false });
+    mockery.registerMock('nodemailer', nodemailerMock);
+    await Mailer.init(transporter);
+  });
+
+  afterEach(function () {
+    decache("../test-data/nearme_geo_supported");
+    decache("../test-data/nearme_geo_not_supported");
+    decache("../test-data/atlocation");
+    nodemailerMock.mock.reset();
+  });
+
+  after(async () => {
+    mockery.deregisterAll();
+    mockery.disable();
+  });
+
+  it("should send an email to the user with search results when users searched for restrooms near their geo location and have granted permission to use their email.", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
+
+    await unitUnderTest.handler(event, context);
+
+    const sentMail = nodemailerMock.mock.getSentMail();
+    expect(sentMail.length).to.equal(1);
+    expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
+    expect(sentMail[0].to).to.equal(DUMMY_EMAIL_ADDRESS);
+
+    expect(sentMail[0].subject).to.equal(`Refugee Restrooms`);
+
+    const htmlBody = sentMail[0].html;
+    expect(htmlBody.includes(`near you`)).to.be.true;
+    dummyRestRooms.slice(0, 10).forEach(restroom => {
+      expect(htmlBody.includes(restroom.name)).to.be.true;
+    })
+  });
+
+  it("should send an email to the user with search results when users searched for restrooms near their device address and have granted permission to use their email.", async () => {
+    const event = require("../test-data/nearme_geo_not_supported");
+    configureAddressService(200, event.context, aDeviceAddress);
+
+    const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, dummyRestRooms);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+    await unitUnderTest.handler(event, context);
+
+    const sentMail = nodemailerMock.mock.getSentMail();
+    expect(sentMail.length).to.equal(1);
+    expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
+    expect(sentMail[0].to).to.equal(DUMMY_EMAIL_ADDRESS);
+
+    expect(sentMail[0].subject).to.equal(`Refugee Restrooms`);
+
+    const htmlBody = sentMail[0].html;
+    expect(htmlBody.includes(`near you`)).to.be.true;
+    dummyRestRooms.slice(0, 10).forEach(restroom => {
+      expect(htmlBody.includes(restroom.name)).to.be.true;
+    })
+  });
+
+  it("should send an email to the user with search results when users searched for restrooms by zipcode and have granted permission to use their email.", async () => {
+    const event = require("../test-data/atlocation");
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, dummyRestRooms);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+    await unitUnderTest.handler(event, context);
+
+    const sentMail = nodemailerMock.mock.getSentMail();
+    expect(sentMail.length).to.equal(1);
+    expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
+    expect(sentMail[0].to).to.equal(DUMMY_EMAIL_ADDRESS);
+
+    expect(sentMail[0].subject).to.equal(`Refugee Restrooms`);
+
+    const htmlBody = sentMail[0].html;
+    expect(htmlBody.includes(`at ${zipcode}`)).to.be.true;
+    dummyRestRooms.slice(0, 10).forEach(restroom => {
+      expect(htmlBody.includes(restroom.name)).to.be.true;
+    })
+  });
+});
+
 function buildSimpleCardContent(restrooms) {
   let content = ``;
 
   restrooms.slice(0, 4).forEach(restroom => content += `
 ${visuallyDescribeRestroom(restroom)}
-${restroom.directions ? `Directions: ${restroom.directions}` : `Not Available`}
+Directions: ${restroom.directions ? `${restroom.directions}` : `Not Available`}
 Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
 `);
 
@@ -632,6 +751,17 @@ function configureAddressService(responseCode, context, payload) {
 
   nock(context.System.apiEndpoint)
     .get(`/v1/devices/${context.System.device.deviceId}/settings/address/countryAndPostalCode`)
+    .query(true)
+    .reply(responseCode, JSON.stringify(payload, null, 2));
+}
+
+function configureUpsService(responseCode, context, payload) {
+  if (!nock.isActive()) {
+    nock.activate();
+  }
+
+  nock(context.System.apiEndpoint)
+    .get(`/v2/accounts/~current/settings/Profile.email`)
     .query(true)
     .reply(responseCode, JSON.stringify(payload, null, 2));
 }

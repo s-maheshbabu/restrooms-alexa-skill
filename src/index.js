@@ -12,6 +12,7 @@ const FindRestroomNearMeIntentHandler = require("intenthandlers/FindRestroomNear
 const LaunchRequestHandler = require("requesthandlers/LaunchRequestHandler");
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
 
+const SESTransporterInterceptor = require("interceptors/SESTransporterInterceptor");
 const ZipcodesDataLoadInterceptor = require("interceptors/ZipcodesDataLoadInterceptor");
 const ResponseSanitizationInterceptor = require("interceptors/ResponseSanitizationInterceptor");
 
@@ -48,6 +49,7 @@ exports.handler = async function (event, context) {
         FindRestroomAtLocationAPI,
       )
       .addRequestInterceptors(
+        SESTransporterInterceptor,
         ZipcodesDataLoadInterceptor,
         LogRequestInterceptor,
       )
