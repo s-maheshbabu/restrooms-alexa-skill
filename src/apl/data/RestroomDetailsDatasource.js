@@ -13,14 +13,14 @@ module.exports = (title, text, restroomDetails) => {
         sources: [
           {
             url:
-              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background_1.jpg",
             size: "small",
             widthPixels: 0,
             heightPixels: 0
           },
           {
             url:
-              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background_1.jpg",
             size: "large",
             widthPixels: 0,
             heightPixels: 0
@@ -35,14 +35,14 @@ module.exports = (title, text, restroomDetails) => {
         sources: [
           {
             url:
-              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background_1.jpg",
             size: "small",
             widthPixels: 0,
             heightPixels: 0
           },
           {
             url:
-              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background.jpg",
+              "https://restrooms-alexa-skill.s3.amazonaws.com/refugee-restrooms-background_1.jpg",
             size: "large",
             widthPixels: 0,
             heightPixels: 0
@@ -60,7 +60,7 @@ module.exports = (title, text, restroomDetails) => {
         },
         secondaryText: {
           type: "PlainText",
-          text: "I sent this one and a few more restroom details to your Alexa app."
+          text: "I sent this one and a few more restroom details to your Alexa app and your email."
         }
       },
       logoUrl:
