@@ -67,6 +67,31 @@ const getReadableSlotId = (requestEnvelope, slotName) => {
 };
 
 /**
+ * Helper method to find if a request is an intent request.
+ */
+const isIntentRequest = (handlerInput) => {
+    try {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest';
+    } catch (e) {
+        console.log('Error occurred: ', e);
+        return false;
+    }
+}
+
+/**
+ * Helper method to find if a request is an IntentRequest of the specified intent.
+ */
+const isIntent = (handlerInput, intentName) => {
+    try {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === intentName;
+    } catch (e) {
+        console.log('Error occurred: ', e);
+        return false;
+    }
+}
+
+/**
  * Helper method to find if a request is for a certain apiName.
  */
 const isApiRequest = (handlerInput, apiName) => {
@@ -128,6 +153,8 @@ const cleanupForVisualPresentation = (input) => {
 
 module.exports = {
     isApiRequest: isApiRequest,
+    isIntentRequest: isIntentRequest,
+    isIntent: isIntent,
     getApiArguments: getApiArguments,
     getReadableSlotValue: getReadableSlotValue,
     getReadableSlotId: getReadableSlotId,

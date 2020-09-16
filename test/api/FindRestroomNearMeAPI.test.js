@@ -9,40 +9,47 @@ const context = {};
 describe("FindRestRoomNearMe API handler tests", function () {
   afterEach(function () {
     decache("../test-data/api/nearme_api");
+    decache("../test-data/api/nearme_no_apl_api");
   });
 
   it("should delegate to skill with the right resolved search filters loaded into session attributes", async () => {
-    const event = require("../../test-data/api/nearme_api");
+    const eventWithAPL = require("../../test-data/api/nearme_api");
+    const eventWithoutAPL = require("../../test-data/api/nearme_no_apl_api");
 
     const synonymsToIdMap = utilities.slotSynonymsToIdMap("RestRoomTypes");
     const allSynonyms = [...synonymsToIdMap.keys()];
 
-    for (var i = 0; i < 1000; i++) {
-      // Simulate 0 to 3 search filters randomly.
-      const randomTestSetSize = Math.floor(Math.random() * Math.floor(4));
+    const events = [eventWithAPL, eventWithoutAPL];
+    for (var index = 0; index < events.length; index++) {
+      const event = events[index]
 
-      const aTestSetOfSynonyms = getRandom(allSynonyms, randomTestSetSize);
+      for (var i = 0; i < 1000; i++) {
+        // Simulate 0 to 3 search filters randomly.
+        const randomTestSetSize = Math.floor(Math.random() * Math.floor(4));
 
-      let expectedResolvedEntitiesSet = new Set();
-      aTestSetOfSynonyms.forEach(synonym =>
-        expectedResolvedEntitiesSet = expectedResolvedEntitiesSet.add(synonymsToIdMap.get(synonym))
-      )
+        const aTestSetOfSynonyms = getRandom(allSynonyms, randomTestSetSize);
 
-      event.request.apiRequest.arguments.SearchFiltersList = aTestSetOfSynonyms;
+        let expectedResolvedEntitiesSet = new Set();
+        aTestSetOfSynonyms.forEach(synonym =>
+          expectedResolvedEntitiesSet = expectedResolvedEntitiesSet.add(synonymsToIdMap.get(synonym))
+        )
 
-      const responseContainer = await unitUnderTest.handler(event, context);
-      const response = responseContainer.response;
-      const directive = response.directives[0];
-      expect(directive.type).to.equal(`Dialog.DelegateRequest`);
-      expect(directive.target).to.equal(`skill`);
-      expect(directive.period.until).to.equal(`EXPLICIT_RETURN`);
-      expect(directive.updatedRequest.type).to.equal(`IntentRequest`);
-      expect(directive.updatedRequest.intent.name).to.equal(`FindRestroomNearMeIntent`);
+        event.request.apiRequest.arguments.SearchFiltersList = aTestSetOfSynonyms;
 
-      const actualResolvedEntitiesArray = context.search_filters;
-      const expectedResolvedEntitiesArray = [...expectedResolvedEntitiesSet];
+        const responseContainer = await unitUnderTest.handler(event, context);
+        const response = responseContainer.response;
+        const directive = response.directives[0];
+        expect(directive.type).to.equal(`Dialog.DelegateRequest`);
+        expect(directive.target).to.equal(`skill`);
+        expect(directive.period.until).to.equal(`EXPLICIT_RETURN`);
+        expect(directive.updatedRequest.type).to.equal(`IntentRequest`);
+        expect(directive.updatedRequest.intent.name).to.equal(`FindRestroomNearMeIntent`);
 
-      expect(actualResolvedEntitiesArray).to.eql(expectedResolvedEntitiesArray);
+        const actualResolvedEntitiesArray = context.search_filters;
+        const expectedResolvedEntitiesArray = [...expectedResolvedEntitiesSet];
+
+        expect(actualResolvedEntitiesArray).to.eql(expectedResolvedEntitiesArray);
+      }
     }
   });
 });

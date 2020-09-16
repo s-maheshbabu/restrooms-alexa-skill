@@ -623,7 +623,7 @@ describe("APL directives support", function () {
 
 describe("Sending emails", function () {
   const FROM_EMAIL_ADDRESS = "s.maheshbabu@hotmail.com";
-  const DUMMY_EMAIL_ADDRESS = "dummy@example.com";
+  const DUMMY_EMAIL_ADDRESS = "success@simulator.amazonses.com";
 
   const DUMMY_LATITUDE = 47.62078857421875;
   const DUMMY_LONGITUDE = -122.30061853955556;
