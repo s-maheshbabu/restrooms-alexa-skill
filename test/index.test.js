@@ -56,12 +56,12 @@ describe("Finding restrooms near user's geo location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal("Here are some restrooms near you");
+    expect(card.title).to.equal("Here are some restrooms near you.");
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
@@ -94,7 +94,7 @@ describe("Finding restrooms near user's geo location", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I'm sorry. I couldn't find any restrooms close to your location.</speak>`
+      `<speak>I'm sorry. I couldn't find any restrooms near you.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -201,7 +201,7 @@ describe("Finding restrooms near device address", function () {
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal("Here are some restrooms near you");
+    expect(card.title).to.equal("Here are some restrooms near you.");
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
@@ -461,7 +461,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -480,7 +480,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -499,7 +499,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -523,7 +523,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(firstRestroomWithChangingTable)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(firstRestroomWithChangingTable)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -562,7 +562,7 @@ describe("APL directives support", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -602,7 +602,7 @@ describe("APL directives support", function () {
 
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom close to your location. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 

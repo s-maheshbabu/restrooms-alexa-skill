@@ -1,0 +1,122 @@
+const APL_CONSTANTS = require("constants/APL");
+const APL_DOCUMENT_TYPE = APL_CONSTANTS.APL_DOCUMENT_TYPE;
+const APL_DOCUMENT_VERSION = APL_CONSTANTS.APL_DOCUMENT_VERSION;
+const restroomDetailsDocument = require("apl/document/RestroomDetailsDocument.json");
+const restroomDetailsDatasource = require("apl/data/RestroomDetailsDatasource");
+
+const searchfilters = require("constants/SearchFilters").searchfilters;
+
+const EmailValidator = require("email-validator");
+
+/**
+ * An SSML description of the given restroom.
+ */
+function describeRestroom(restroom) {
+    return `<s>${restroom.name}</s> <say-as interpret-as="address"> ${restroom.street} </say-as>, ${restroom.city}`;
+}
+
+/**
+ * Constructs a simple Alexa companion app card using the given restrooms.
+ * 
+ * @param {*} zipcode The zipcode at which the restrooms are located.
+ * @param {*} restrooms The restrooms to be used to build the Alexa card.
+ * TODO: Validate inputs and update documentation.
+ */
+function buildSimpleCard(zipcode, restrooms) {
+    let content = ``;
+
+    restrooms.slice(0, 4).forEach(restroom => content += `
+${visuallyDescribeRestroom(restroom)}
+Directions: ${restroom.directions ? `${restroom.directions}` : `Not Available`}
+Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
+`);
+
+    return [
+        `${zipcode ? `Here are some restrooms at ${zipcode}` : `Here are some restrooms near you.`}`,
+        content
+    ]
+}
+
+/**
+ * Constructs an APL directive to display the given restroom's details.
+ *
+ * @param {*} zipcode The zipcode at which the restrooms are located.
+ * @param {*} restrooms The restrooms to be used to build the Alexa card.
+ * TODO: Validate inputs and update documentation.
+ */
+function buildAPLDirective(zipcode, restroom) {
+    return {
+        type: APL_DOCUMENT_TYPE,
+        version: APL_DOCUMENT_VERSION,
+        document: restroomDetailsDocument,
+        datasources: restroomDetailsDatasource(
+            `${zipcode ? `Here is a restroom at ${zipcode}.` : `Here is a restroom near you.`}`,
+            `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
+            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}`
+        )
+    }
+}
+
+/**
+ * Converts the search filters in the user's request to boolean search filters that
+ * can be used in the queries to refugee restrooms gateway.
+ */
+function getSearchFilters(handlerInput) {
+    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    const search_filters = sessionAttributes.search_filters || [];
+
+    let isFilterByADA = false, isFilterByUnisex = false, isFilterByChangingTable = false;
+    if (search_filters.includes(searchfilters.ACCESSIBLE)) isFilterByADA = true;
+    if (search_filters.includes(searchfilters.UNISEX)) isFilterByUnisex = true;
+    if (search_filters.includes(searchfilters.CHANGING_TABLE)) isFilterByChangingTable = true;
+
+    return {
+        isFilterByADA: isFilterByADA,
+        isFilterByUnisex: isFilterByUnisex,
+        isFilterByChangingTable: isFilterByChangingTable,
+    };
+}
+
+/**
+ * Checks for permissions to access the user's email address and returns
+ * a valid email address is available. Returns null otherwise.
+ */
+async function getEmailAddress(handlerInput) {
+    const { requestEnvelope, serviceClientFactory } = handlerInput;
+
+    let emailAddress = null;
+    const consentToken = requestEnvelope.context.System.apiAccessToken;
+    if (!consentToken) {
+        // Eventually, we might want to render an error prompt and push a card to the user asking them to grant permissions.
+        // However, that makes sense only after we make sending email an explicit user approved step.
+        // Right now, we send the email by default and so just swallowing the error and moving on.
+        console.log(`Missing permissions to access user email.`);
+        return emailAddress;
+    }
+
+    try {
+        const client = serviceClientFactory.getUpsServiceClient();
+        emailAddress = await client.getProfileEmail();
+    } catch (error) {
+        // Special handle the case where consent token exists but it doesn't give access to email.
+        console.log(`Unexpected error while trying to fetch user profile: ${error}`);
+    }
+
+    if (!EmailValidator.validate(emailAddress)) return null;
+    return emailAddress;
+}
+
+/**
+ * A displayable description of a restroom.
+ */
+function visuallyDescribeRestroom(restroom) {
+    return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
+}
+
+module.exports = {
+    buildAPLDirective: buildAPLDirective,
+    buildSimpleCard: buildSimpleCard,
+    describeRestroom: describeRestroom,
+    getEmailAddress: getEmailAddress,
+    getSearchFilters: getSearchFilters,
+};

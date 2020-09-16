@@ -5,15 +5,10 @@ const RR = require("gateway/RefugeeRestrooms");
 const Mailer = require("gateway/Mailer.js");
 const zipcodes = require("gateway/Zipcodes");
 
+const IntentHelper = require("./FindRestroomIntentHelper");
+
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
-const searchfilters = require("constants/SearchFilters").searchfilters;
-
-const APL_CONSTANTS = require("constants/APL");
-const APL_DOCUMENT_TYPE = APL_CONSTANTS.APL_DOCUMENT_TYPE;
-const APL_DOCUMENT_VERSION = APL_CONSTANTS.APL_DOCUMENT_VERSION;
-const restroomDetailsDocument = require("apl/document/RestroomDetailsDocument.json");
-const restroomDetailsDatasource = require("apl/data/RestroomDetailsDatasource");
 
 module.exports = FindRestroomNearMeIntentHandler = {
   canHandle(handlerInput) {
@@ -77,29 +72,12 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
       .getResponse();
   }
 
-  const filters = getSearchFilters(handlerInput);
-  const restrooms = await RR.searchRestroomsByLatLon(coordinates.latitude, coordinates.longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
+  const latitude = coordinates.latitude;
+  const longitude = coordinates.longitude;
+  console.log(`Zipcode ${address.postalCode} was converted to geo location: ${latitude}, ${longitude}`);
 
-  if (!Array.isArray(restrooms) || !restrooms.length) {
-    return responseBuilder
-      .speak(`I'm sorry. I couldn't find any restrooms near you.`)
-      .withShouldEndSession(true)
-      .getResponse();
-  }
-
-  const emailAddress = await getEmailAddress(handlerInput);
-  if (emailAddress) {
-    // Is it possible to not wait on sending the email?
-    Mailer.sendEmail(emailAddress, "near you", restrooms);
-    console.log("We have the user's email address. An email was sent with the search results.");
-  }
-
-  return responseBuilder
-    .speak(`I found this restroom near you. ${describeRestroom(restrooms[0])}. I also sent the details to your email.`)
-    .withSimpleCard(...buildSimpleCard(restrooms))
-    .addDirective(buildAPLDirective(restrooms[0]))
-    .withShouldEndSession(true)
-    .getResponse();
+  const restrooms = await search(handlerInput, latitude, longitude);
+  return await buildResponse(handlerInput, restrooms);
 }
 
 async function findRestroomsNearUserGeoLocation(handlerInput) {
@@ -129,114 +107,38 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
 
   const latitude = geoObject.coordinate.latitudeInDegrees;
   const longitude = geoObject.coordinate.longitudeInDegrees;
-
   console.log(`A valid user geo location was retrieved: ${latitude}, ${longitude}`);
-  const filters = getSearchFilters(handlerInput);
-  const restrooms = await RR.searchRestroomsByLatLon(latitude, longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
+
+  const restrooms = await search(handlerInput, latitude, longitude);
+  return await buildResponse(handlerInput, restrooms);
+}
+
+async function search(handlerInput, latitude, longitude) {
+  const filters = IntentHelper.getSearchFilters(handlerInput);
+  return await RR.searchRestroomsByLatLon(latitude, longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
+}
+
+async function buildResponse(handlerInput, restrooms) {
+  const { responseBuilder } = handlerInput;
 
   if (!Array.isArray(restrooms) || !restrooms.length) {
     return responseBuilder
-      .speak(`I'm sorry. I couldn't find any restrooms close to your location.`)
+      .speak(`I'm sorry. I couldn't find any restrooms near you.`)
       .withShouldEndSession(true)
       .getResponse();
   }
 
-  const emailAddress = await getEmailAddress(handlerInput);
+  const emailAddress = await IntentHelper.getEmailAddress(handlerInput);
   if (emailAddress) {
+    // Is it possible to not wait for the email to be sent?
     console.log("A valid email address was obtained. Sending the search results over email. " + `Temporary logging: ${emailAddress}`);
-    await Mailer.sendEmail(emailAddress, "near you", restrooms);
+    await Mailer.sendEmail(emailAddress, undefined, restrooms);
   }
 
   return responseBuilder
-    .speak(`I found this restroom close to your location. ${describeRestroom(restrooms[0])}. I also sent the details to your email.`)
-    .withSimpleCard(...buildSimpleCard(restrooms))
-    .addDirective(buildAPLDirective(restrooms[0]))
+    .speak(`I found this restroom near you. ${IntentHelper.describeRestroom(restrooms[0])}. I also sent the details to your email.`)
+    .withSimpleCard(...IntentHelper.buildSimpleCard(undefined, restrooms))
+    .addDirective(IntentHelper.buildAPLDirective(undefined, restrooms[0]))
     .withShouldEndSession(true)
     .getResponse();
-}
-
-async function getEmailAddress(handlerInput) {
-  const { requestEnvelope, serviceClientFactory } = handlerInput;
-
-  let emailAddress = null;
-  const consentToken = requestEnvelope.context.System.apiAccessToken;
-  if (!consentToken) {
-    // Eventually, we might want to render an error prompt and push a card to the user asking them to grant permissions.
-    // However, that makes sense only after we make sending email an explicit user approved step.
-    // Right now, we send the email by default and so just swallowing the error and moving on.
-    console.log(`Missing permissions to access user email.`);
-    return emailAddress;
-  }
-
-  try {
-    const client = serviceClientFactory.getUpsServiceClient();
-    emailAddress = await client.getProfileEmail();
-  } catch (error) {
-    console.log(`Unexpected error while trying to fetch user profile: ${error}`);
-  }
-
-  if (!EmailValidator.validate(emailAddress)) return null;
-  return emailAddress;
-}
-
-/**
- * Converts the search filters in the user's request to boolean search filters that
- * can be used in the queries to refugee restrooms gateway.
- */
-function getSearchFilters(handlerInput) {
-  const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-  const search_filters = sessionAttributes.search_filters || [];
-
-  let isFilterByADA = false, isFilterByUnisex = false, isFilterByChangingTable = false;
-  if (search_filters.includes(searchfilters.ACCESSIBLE)) isFilterByADA = true;
-  if (search_filters.includes(searchfilters.UNISEX)) isFilterByUnisex = true;
-  if (search_filters.includes(searchfilters.CHANGING_TABLE)) isFilterByChangingTable = true;
-
-  return {
-    isFilterByADA: isFilterByADA,
-    isFilterByUnisex: isFilterByUnisex,
-    isFilterByChangingTable: isFilterByChangingTable,
-  };
-}
-
-/**
- * An SSML description of the given restroom.
- */
-function describeRestroom(restroom) {
-  return `<s>${restroom.name}</s> <say-as interpret-as="address"> ${restroom.street} </say-as>, ${restroom.city}`;
-}
-
-/**
- * An SSML description of the given restroom.
- */
-function visuallyDescribeRestroom(restroom) {
-  return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
-}
-
-function buildSimpleCard(restrooms) {
-  let content = ``;
-
-  restrooms.slice(0, 4).forEach(restroom => content += `
-${visuallyDescribeRestroom(restroom)}
-Directions: ${restroom.directions ? `${restroom.directions}` : `Not Available`}
-Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
-`);
-
-  return [
-    `Here are some restrooms near you`,
-    content
-  ]
-}
-
-function buildAPLDirective(restroom) {
-  return {
-    type: APL_DOCUMENT_TYPE,
-    version: APL_DOCUMENT_VERSION,
-    document: restroomDetailsDocument,
-    datasources: restroomDetailsDatasource(
-      `Here is a restroom near you.`,
-      `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
-      `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}`
-    )
-  }
 }

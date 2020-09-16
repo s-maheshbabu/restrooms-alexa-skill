@@ -10,27 +10,26 @@ const MAXIMUM_RESULTS = 10;
 // Nodemailer SES transporter
 let transporter;
 
-async function sendEmail(toAddress, subject, restrooms) {
+async function sendEmail(toAddress, zipcode, restrooms) {
     // Disable emails for now.
     // return;
-
+    // TODO Properly validate the toAddress.
     if (!toAddress) return;
-    if (!subject) return;
 
     let info = await transporter.sendMail({
         from: FROM_ADDRESS,
         to: toAddress,
         subject: SUBJECT_LINE,
-        html: buildBody(subject, restrooms.slice(0, MAXIMUM_RESULTS)),
+        html: buildBody(zipcode, restrooms.slice(0, MAXIMUM_RESULTS)),
     });
     console.log(`Email sent. Id: ${info.messageId}.`);
 
     // What happens if sending email fails?
 }
 
-function buildBody(subject, restrooms) {
+function buildBody(zipcode, restrooms) {
     let body = `<b>Hello,<br/>
-Here are some restrooms ${subject}.</b><br/>`
+Here are some restrooms ${zipcode ? `at ${zipcode}` : `near you`}.</b><br/>`
 
     restrooms.forEach(restroom => {
         body += `<hr />
