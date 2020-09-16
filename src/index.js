@@ -9,7 +9,6 @@ const CancelAndStopIntentHandler = require("intenthandlers/CancelAndStopIntentHa
 const FindRestroomAtLocationIntentHandler = require("intenthandlers/FindRestroomAtLocationIntentHandler");
 const FindRestroomNearMeIntentHandler = require("intenthandlers/FindRestroomNearMeIntentHandler");
 
-const LaunchRequestHandler = require("requesthandlers/LaunchRequestHandler");
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
 
 const SESTransporterInterceptor = require("interceptors/SESTransporterInterceptor");
@@ -43,7 +42,6 @@ exports.handler = async function (event, context) {
         CancelAndStopIntentHandler,
         FindRestroomAtLocationIntentHandler,
         FindRestroomNearMeIntentHandler,
-        LaunchRequestHandler,
         SessionEndedRequestHandler,
         FindRestroomNearMeAPI,
         FindRestroomAtLocationAPI,
