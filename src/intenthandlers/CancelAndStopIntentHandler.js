@@ -1,12 +1,9 @@
+const utilities = require("../utilities");
+
 module.exports = CancelAndStopIntentHandler = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === "IntentRequest" &&
-      (handlerInput.requestEnvelope.request.intent.name ===
-        "AMAZON.CancelIntent" ||
-        handlerInput.requestEnvelope.request.intent.name ===
-        "AMAZON.StopIntent")
-    );
+    return utilities.isIntent(handlerInput, 'AMAZON.CancelIntent') ||
+      utilities.isIntent(handlerInput, 'AMAZON.StopIntent');
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder

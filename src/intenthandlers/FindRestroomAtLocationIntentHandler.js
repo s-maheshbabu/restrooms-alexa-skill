@@ -1,4 +1,5 @@
 const EmailValidator = require("email-validator");
+const utilities = require("../utilities");
 
 const RR = require("gateway/RefugeeRestrooms");
 const Mailer = require("gateway/Mailer.js");
@@ -14,10 +15,7 @@ const searchfilters = require("constants/SearchFilters").searchfilters;
 
 module.exports = FindRestroomAtLocationIntentHandler = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === "IntentRequest" &&
-      (handlerInput.requestEnvelope.request.intent.name === "FindRestroomAtLocationIntent")
-    );
+    return utilities.isIntent(handlerInput, 'FindRestroomAtLocationIntent');
   },
   async handle(handlerInput) {
     const { responseBuilder } = handlerInput;

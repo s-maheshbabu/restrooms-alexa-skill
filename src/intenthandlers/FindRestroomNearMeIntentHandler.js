@@ -1,4 +1,5 @@
 const EmailValidator = require("email-validator");
+const utilities = require("../utilities");
 
 const RR = require("gateway/RefugeeRestrooms");
 const Mailer = require("gateway/Mailer.js");
@@ -16,10 +17,7 @@ const restroomDetailsDatasource = require("apl/data/RestroomDetailsDatasource");
 
 module.exports = FindRestroomNearMeIntentHandler = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === "IntentRequest" &&
-      (handlerInput.requestEnvelope.request.intent.name === "FindRestroomNearMeIntent")
-    );
+    return utilities.isIntent(handlerInput, 'FindRestroomNearMeIntent');
   },
   async handle(handlerInput) {
     const { requestEnvelope } = handlerInput;
