@@ -682,7 +682,7 @@ describe("Sending emails", function () {
     expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
     expect(sentMail[0].to).to.equal(DUMMY_EMAIL_ADDRESS);
 
-    expect(sentMail[0].subject).to.equal(`Refugee Restrooms`);
+    expect(sentMail[0].subject).to.equal(`Refugee Restrooms - Alexa Skill`);
 
     const htmlBody = sentMail[0].html;
     expect(htmlBody.includes(`near you`)).to.be.true;
@@ -716,7 +716,7 @@ describe("Sending emails", function () {
     expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
     expect(sentMail[0].to).to.equal(DUMMY_EMAIL_ADDRESS);
 
-    expect(sentMail[0].subject).to.equal(`Refugee Restrooms`);
+    expect(sentMail[0].subject).to.equal(`Refugee Restrooms - Alexa Skill`);
 
     const htmlBody = sentMail[0].html;
     expect(htmlBody.includes(`near you`)).to.be.true;
@@ -749,7 +749,7 @@ describe("Sending emails", function () {
     expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
     expect(sentMail[0].to).to.equal(DUMMY_EMAIL_ADDRESS);
 
-    expect(sentMail[0].subject).to.equal(`Refugee Restrooms`);
+    expect(sentMail[0].subject).to.equal(`Refugee Restrooms - Alexa Skill`);
 
     const htmlBody = sentMail[0].html;
     expect(htmlBody.includes(`at ${zipcode}`)).to.be.true;
@@ -851,6 +851,35 @@ describe("Sending emails", function () {
       const sentMail = nodemailerMock.mock.getSentMail();
       expect(sentMail.length).to.equal(0);
     }
+  });
+
+  it("should not send an email with search results if the email returned by Alexa is invalid.", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    const invalid_email_addresses = ["invalid@email@address.com", null, undefined, "invalid@email", "invalidEmailAddress"];
+    for (var index = 0; index < invalid_email_addresses.length; index++) {
+      const invalid_email_address = invalid_email_addresses[index];
+
+      configureUpsService(200, event.context, invalid_email_address);
+      configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+      const response = responseContainer.response;
+
+      assert(response.shouldEndSession);
+      const restroomDelivered = dummyRestRooms[0];
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      expect(sentMail.length).to.equal(0);
+    }
+
   });
 });
 

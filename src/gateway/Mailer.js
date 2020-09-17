@@ -3,16 +3,21 @@ let AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 
 const FROM_ADDRESS = "s.maheshbabu@hotmail.com";
-const SUBJECT_LINE = "Refugee Restrooms";
+const SUBJECT_LINE = "Refugee Restrooms - Alexa Skill";
 
 const MAXIMUM_RESULTS = 10;
 
-// Nodemailer SES transporter
 let transporter;
 
+/**
+ * Composes an email with the given restrooms and sends it to the user.
+ * 
+ * @param {*} toAddress The address to send the email to. This has to be a valid email
+ * address. Will throw otherwise.
+ * @param {*} zipcode The zipcode the user searched in.
+ * @param {*} restrooms The restrooms whose details needs to be composed into an email.
+ */
 async function sendEmail(toAddress, zipcode, restrooms) {
-    // Disable emails for now.
-    // return;
     // TODO Properly validate the toAddress.
     if (!toAddress) return;
 
