@@ -41,8 +41,9 @@ module.exports = FindRestroomAtLocationIntentHandler = {
       console.log("We have the user's email address. An email was sent with the search results.");
     }
 
+    // TODO: We can always say 'this and more results'. What if there was only one result?
     return responseBuilder
-      .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${IntentHelper.describeRestroom(restrooms[0])}. I also sent the details to your email.`)
+      .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` I also sent more results to your Alexa app.`}`)
       .withSimpleCard(...IntentHelper.buildSimpleCard(zipcode, restrooms))
       .addDirective(IntentHelper.buildAPLDirective(zipcode, restrooms[0]))
       .withShouldEndSession(true)

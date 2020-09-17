@@ -101,7 +101,7 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   }
   else if (!geoObject || !geoObject.coordinate) {
     return responseBuilder
-      .speak(`Refugee Restrooms is having trouble accessing your location. Please wait a moment, and try again later.`)
+      .speak(`Refugee Restrooms is having trouble accessing your location. Please make sure device location tracking is enabled in your device, and try again later.`)
       .getResponse();
   }
 
@@ -135,8 +135,9 @@ async function buildResponse(handlerInput, restrooms) {
     await Mailer.sendEmail(emailAddress, undefined, restrooms);
   }
 
+  // TODO: We can always say 'this and more results'. What if there was only one result?
   return responseBuilder
-    .speak(`I found this restroom near you. ${IntentHelper.describeRestroom(restrooms[0])}. I also sent the details to your email.`)
+    .speak(`I found this restroom near you. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` I also sent more results to your Alexa app.`}`)
     .withSimpleCard(...IntentHelper.buildSimpleCard(undefined, restrooms))
     .addDirective(IntentHelper.buildAPLDirective(undefined, restrooms[0]))
     .withShouldEndSession(true)

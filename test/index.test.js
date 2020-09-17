@@ -56,7 +56,7 @@ describe("Finding restrooms near user's geo location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -156,7 +156,7 @@ describe("Finding restrooms near user's geo location", function () {
 
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>Refugee Restrooms is having trouble accessing your location. Please wait a moment, and try again later.</speak>`
+        `<speak>Refugee Restrooms is having trouble accessing your location. Please make sure device location tracking is enabled in your device, and try again later.</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
     }
@@ -196,7 +196,7 @@ describe("Finding restrooms near device address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -372,7 +372,7 @@ describe("Finding restrooms at a user specified location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -461,7 +461,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -480,7 +480,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -499,7 +499,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -523,7 +523,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(firstRestroomWithChangingTable)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(firstRestroomWithChangingTable)}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -562,7 +562,7 @@ describe("APL directives support", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -602,7 +602,7 @@ describe("APL directives support", function () {
 
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent the details to your email.</speak>`
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -666,7 +666,16 @@ describe("Sending emails", function () {
     configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
     configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
 
-    await unitUnderTest.handler(event, context);
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    assert(response.shouldEndSession);
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
 
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
@@ -679,7 +688,7 @@ describe("Sending emails", function () {
     expect(htmlBody.includes(`near you`)).to.be.true;
     dummyRestRooms.slice(0, 10).forEach(restroom => {
       expect(htmlBody.includes(restroom.name)).to.be.true;
-    })
+    });
   });
 
   it("should send an email to the user with search results when users searched for restrooms near their device address and have granted permission to use their email.", async () => {
@@ -691,7 +700,16 @@ describe("Sending emails", function () {
 
     configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
 
-    await unitUnderTest.handler(event, context);
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    assert(response.shouldEndSession);
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
 
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
@@ -704,7 +722,7 @@ describe("Sending emails", function () {
     expect(htmlBody.includes(`near you`)).to.be.true;
     dummyRestRooms.slice(0, 10).forEach(restroom => {
       expect(htmlBody.includes(restroom.name)).to.be.true;
-    })
+    });
   });
 
   it("should send an email to the user with search results when users searched for restrooms by zipcode and have granted permission to use their email.", async () => {
@@ -715,7 +733,16 @@ describe("Sending emails", function () {
 
     configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
 
-    await unitUnderTest.handler(event, context);
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    assert(response.shouldEndSession);
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
 
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
@@ -728,7 +755,102 @@ describe("Sending emails", function () {
     expect(htmlBody.includes(`at ${zipcode}`)).to.be.true;
     dummyRestRooms.slice(0, 10).forEach(restroom => {
       expect(htmlBody.includes(restroom.name)).to.be.true;
-    })
+    });
+  });
+
+  it("should not send an email with search results when users searched for restrooms near their geo location but hasn't granted permissions to use their email address or we failed to fetch email address due to other service errors.", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+
+    // Simulating lack of permissions to fetch user profile information.
+    const errorPayload = {
+      code: 'ERROR_CODE',
+      message: 'some message to indicate the request was not successful',
+    };
+    const error_codes = [204, 401, 403, 429, 500]
+    for (var index = 0; index < error_codes.length; index++) {
+      configureUpsService(error_codes[index], event.context, errorPayload);
+      configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+      const response = responseContainer.response;
+
+      assert(response.shouldEndSession);
+      const restroomDelivered = dummyRestRooms[0];
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      expect(sentMail.length).to.equal(0);
+    }
+  });
+
+  it("should not send an email with search results when users searched for restrooms near their device address but hasn't granted permissions to use their email address or we failed to fetch email address due to other service errors.", async () => {
+    const event = require("../test-data/nearme_geo_not_supported");
+
+    const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+
+    // Simulating lack of permissions to fetch user profile information.
+    const errorPayload = {
+      code: 'ERROR_CODE',
+      message: 'some message to indicate the request was not successful',
+    };
+    const error_codes = [204, 401, 403, 429, 500]
+    for (var index = 0; index < error_codes.length; index++) {
+      configureUpsService(error_codes[index], event.context, errorPayload);
+      configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, dummyRestRooms);
+      configureAddressService(200, event.context, aDeviceAddress);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+      const response = responseContainer.response;
+
+      assert(response.shouldEndSession);
+      const restroomDelivered = dummyRestRooms[0];
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      expect(sentMail.length).to.equal(0);
+    }
+  });
+
+  it("should not send an email with search results when users searched for restrooms by zipcode but hasn't granted permissions to use their email address or we failed to fetch email address due to other service errors.", async () => {
+    const event = require("../test-data/atlocation");
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+
+    // Simulating lack of permissions to fetch user profile information.
+    const errorPayload = {
+      code: 'ERROR_CODE',
+      message: 'some message to indicate the request was not successful',
+    };
+    const error_codes = [204, 401, 403, 429, 500]
+    for (var index = 0; index < error_codes.length; index++) {
+      configureUpsService(error_codes[index], event.context, errorPayload);
+      configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, dummyRestRooms);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+      const response = responseContainer.response;
+
+      assert(response.shouldEndSession);
+      const restroomDelivered = dummyRestRooms[0];
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      expect(sentMail.length).to.equal(0);
+    }
   });
 });
 
@@ -771,6 +893,7 @@ function configureRRService(responseCode, latitude, longitude, isFilterByADA, is
     nock.activate();
   }
 
+  console.log("whatwhat" + `/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`);
   nock(RR.BASE_URL)
     .get(`/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`)
     .reply(responseCode, JSON.stringify(payload, null, 2));

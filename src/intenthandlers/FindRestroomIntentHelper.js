@@ -98,8 +98,10 @@ async function getEmailAddress(handlerInput) {
         const client = serviceClientFactory.getUpsServiceClient();
         emailAddress = await client.getProfileEmail();
     } catch (error) {
-        // Special handle the case where consent token exists but it doesn't give access to email.
-        console.log(`Unexpected error while trying to fetch user profile: ${error}`);
+        if (error.statusCode === 403)
+            console.log(`User hasn't granted permissions to access their profile information. Error: ${error}`);
+        else
+            console.log(`An unexpected error occurred while trying to fetch user profile: ${error}`);
     }
 
     if (!EmailValidator.validate(emailAddress)) return null;
