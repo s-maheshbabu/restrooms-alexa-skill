@@ -1,4 +1,6 @@
 const nodemailer = require("nodemailer");
+const EmailValidator = require("email-validator");
+
 let AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 
@@ -18,8 +20,8 @@ let transporter;
  * @param {*} restrooms The restrooms whose details needs to be composed into an email.
  */
 async function sendEmail(toAddress, zipcode, restrooms) {
-    // TODO Properly validate the toAddress.
-    if (!toAddress) return;
+    if (!EmailValidator.validate(toAddress)) throw new Error(`Invalid email address provided: ${toAddress}`);
+    if (!Array.isArray(restrooms) || restrooms.length == 0) throw new Error(`At least one restroom should be provided as an array: ${restrooms}`);
 
     let info = await transporter.sendMail({
         from: FROM_ADDRESS,
@@ -27,11 +29,12 @@ async function sendEmail(toAddress, zipcode, restrooms) {
         subject: SUBJECT_LINE,
         html: buildBody(zipcode, restrooms.slice(0, MAXIMUM_RESULTS)),
     });
-    console.log(`Email sent. Id: ${info.messageId}.`);
+    console.log(`Email successfully sent. Email Id: ${info.messageId}.`);
 
     // What happens if sending email fails?
 }
 
+// TODO: This still needs to be tested.
 function buildBody(zipcode, restrooms) {
     let body = `<b>Hello,<br/>
 Here are some restrooms ${zipcode ? `at ${zipcode}` : `near you`}.</b><br/>`
@@ -49,11 +52,17 @@ Here are some restrooms ${zipcode ? `at ${zipcode}` : `near you`}.</b><br/>`
     body += `The Google Maps links above are based on latitude/longitude of the restroom. It should take you very close to the destination but you might then want to use the restroom name and address to actually locate it.`;
     return body;
 }
-const init = (input) => {
+
+/**
+ * Initializes the email transporter.
+ * 
+ * @param {*} transporterForTesting A mock transporter to be injected for testing.
+ * In production paths, transporter need not be provided.
+ */
+const init = (transporterForTesting) => {
     return new Promise((resolve, reject) => {
-        if (input) {
-            // TODO: Hack for testing. Needs to be fixed.
-            transporter = input;
+        if (transporterForTesting) {
+            transporter = transporterForTesting;
             resolve();
         }
         else if (!transporter) {

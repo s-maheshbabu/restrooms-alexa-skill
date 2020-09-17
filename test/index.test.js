@@ -879,7 +879,6 @@ describe("Sending emails", function () {
       const sentMail = nodemailerMock.mock.getSentMail();
       expect(sentMail.length).to.equal(0);
     }
-
   });
 });
 
