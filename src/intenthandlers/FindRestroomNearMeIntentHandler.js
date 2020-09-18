@@ -135,7 +135,7 @@ async function buildResponse(handlerInput, restrooms) {
     await Mailer.sendEmail(emailAddress, undefined, restrooms);
   }
 
-  // TODO: We can always say 'this and more results'. What if there was only one result?
+  // TODO: We can't always say 'this and more results'. What if there was only one result?
   return responseBuilder
     .speak(`I found this restroom near you. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` I also sent more results to your Alexa app.`}`)
     .withSimpleCard(...IntentHelper.buildSimpleCard(undefined, restrooms))
