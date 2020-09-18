@@ -4,6 +4,9 @@ const RR = require("gateway/RefugeeRestrooms");
 const Mailer = require("gateway/Mailer.js");
 const zipcodes = require("gateway/Zipcodes");
 
+const messages = require("constants/Messages").messages;
+const scopes = require("constants/Scopes").scopes;
+
 const IntentHelper = require("./FindRestroomIntentHelper");
 
 module.exports = FindRestroomAtLocationIntentHandler = {
@@ -42,12 +45,15 @@ module.exports = FindRestroomAtLocationIntentHandler = {
     }
 
     // TODO: We can't always say 'this and more results'. What if there was only one result?
-    return responseBuilder
-      .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` I also sent more results to your Alexa app.`}`)
-      .withSimpleCard(...IntentHelper.buildSimpleCard(zipcode, restrooms))
+    const builder = responseBuilder
+      .speak(`I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
       .addDirective(IntentHelper.buildAPLDirective(zipcode, restrooms[0]))
-      .withShouldEndSession(true)
-      .getResponse();
+      .withShouldEndSession(true);
+
+    if (!emailAddress) builder.withAskForPermissionsConsentCard([scopes.EMAIL_SCOPE]);
+    else builder.withSimpleCard(...IntentHelper.buildSimpleCard(zipcode, restrooms));
+
+    return builder.getResponse();
   }
 }
 

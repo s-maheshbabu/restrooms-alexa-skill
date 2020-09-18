@@ -5,6 +5,8 @@ const assert = require("chai").assert;
 const decache = require("decache");
 const nock = require('nock')
 
+const cloneDeep = require("lodash.clonedeep");
+
 const Mailer = require("gateway/Mailer.js");
 const nodemailerMock = require('nodemailer-mock');
 const transporter = nodemailerMock.createTransport({
@@ -56,14 +58,13 @@ describe("Finding restrooms near user's geo location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal("Here are some restrooms near you.");
-    expect(card.type).to.equal("Simple");
-    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
@@ -196,14 +197,13 @@ describe("Finding restrooms near device address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal("Here are some restrooms near you.");
-    expect(card.type).to.equal("Simple");
-    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
@@ -372,14 +372,13 @@ describe("Finding restrooms at a user specified location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
     const card = response.card;
-    expect(card.title).to.equal(`Here are some restrooms at ${zipcode}`);
-    expect(card.type).to.equal("Simple");
-    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
@@ -461,7 +460,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -480,7 +479,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -499,7 +498,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -523,7 +522,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(firstRestroomWithChangingTable)}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(firstRestroomWithChangingTable)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -562,7 +561,7 @@ describe("APL directives support", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -577,12 +576,16 @@ describe("APL directives support", function () {
     const NUMBER_OF_RESTROOM_FEATURES = 3;
     const restroomFeaturePossibilities = [];
     for (let i = 0; i < (1 << NUMBER_OF_RESTROOM_FEATURES); i++) {
+      const featureSet = [];
       for (let j = NUMBER_OF_RESTROOM_FEATURES - 1; j >= 0; j--) {
-        restroomFeaturePossibilities.push(Boolean(i & (1 << j)));
+        featureSet.push(Boolean(i & (1 << j)));
       }
+      restroomFeaturePossibilities.push(featureSet);
     }
 
-    const restroomDelivered = dummyRestRooms[0];
+    // Make a copy since we will be modifying the restroom to arrange for test.
+    const clonedDummyRestRooms = cloneDeep(dummyRestRooms);
+    const restroomDelivered = clonedDummyRestRooms[0];
     for (let i = 0; i < restroomFeaturePossibilities.length; i++) {
       const featureSet = restroomFeaturePossibilities[i];
       const isUnisex = featureSet[0];
@@ -593,7 +596,8 @@ describe("APL directives support", function () {
       restroomDelivered.accessible = isAccessible;
       restroomDelivered.changing_table = isChangingTable;
 
-      configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, dummyRestRooms);
+      configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+      configureUpsService(403, event.context, {});
 
       const responseContainer = await unitUnderTest.handler(event, context);
 
@@ -602,7 +606,7 @@ describe("APL directives support", function () {
 
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -677,6 +681,23 @@ describe("Sending emails", function () {
     );
     expect(outputSpeech.type).to.equal("SSML");
 
+    const card = response.card;
+    expect(card.title).to.equal("Here are some restrooms near you.");
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom near you.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+      )
+    );
+
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
     expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
@@ -711,6 +732,23 @@ describe("Sending emails", function () {
     );
     expect(outputSpeech.type).to.equal("SSML");
 
+    const card = response.card;
+    expect(card.title).to.equal("Here are some restrooms near you.");
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom near you.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+      )
+    );
+
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
     expect(sentMail[0].from).to.equal(FROM_EMAIL_ADDRESS);
@@ -743,6 +781,23 @@ describe("Sending emails", function () {
       `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.title).to.equal(`Here are some restrooms at ${zipcode}`);
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at ${zipcode}.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+      )
+    );
 
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
@@ -781,9 +836,13 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.type).to.equal("AskForPermissionsConsent");
+      expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       expect(sentMail.length).to.equal(0);
@@ -813,9 +872,13 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.type).to.equal("AskForPermissionsConsent");
+      expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       expect(sentMail.length).to.equal(0);
@@ -844,9 +907,13 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+        `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.type).to.equal("AskForPermissionsConsent");
+      expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       expect(sentMail.length).to.equal(0);
@@ -872,7 +939,7 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent more results to your Alexa app.</speak>`
+        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -921,7 +988,6 @@ function configureRRService(responseCode, latitude, longitude, isFilterByADA, is
     nock.activate();
   }
 
-  console.log("whatwhat" + `/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`);
   nock(RR.BASE_URL)
     .get(`/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`)
     .reply(responseCode, JSON.stringify(payload, null, 2));
