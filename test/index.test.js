@@ -74,7 +74,8 @@ describe("Finding restrooms near user's geo location", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
   });
@@ -213,7 +214,8 @@ describe("Finding restrooms near device address", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
   });
@@ -388,7 +390,8 @@ describe("Finding restrooms at a user specified location", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
   });
@@ -618,7 +621,8 @@ describe("APL directives support", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `Gender Neutral: ${isUnisex ? '&#9989;' : '&#10060;'}<br>Accessible: ${isAccessible ? '&#9989;' : '&#10060;'}<br>Changing Table: ${isChangingTable ? '&#9989;' : '&#10060;'}`
+          `Gender Neutral: ${isUnisex ? '&#9989;' : '&#10060;'}<br>Accessible: ${isAccessible ? '&#9989;' : '&#10060;'}<br>Changing Table: ${isChangingTable ? '&#9989;' : '&#10060;'}`,
+          messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
         )
       );
     }
@@ -694,7 +698,8 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps navigation links in the email.`,
       )
     );
 
@@ -745,7 +750,8 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps navigation links in the email.`,
       )
     );
 
@@ -795,7 +801,8 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps navigation links in the email.`,
       )
     );
 

@@ -1,7 +1,5 @@
-module.exports = (title, text, restroomDetails) => {
-  const secondaryText = restroomDetails
-    ? restroomDetails
-    : "Please try again if I misheard you";
+module.exports = (title, restroomLocation, restroomFeatures, additionalInfo) => {
+  //TODO: Input validation and testing?
   return {
     bodyTemplate2Data: {
       type: "object",
@@ -52,15 +50,15 @@ module.exports = (title, text, restroomDetails) => {
       textContent: {
         title: {
           type: "PlainText",
-          text: text
+          text: restroomLocation
         },
         primaryText: {
           type: "PlainText",
-          text: secondaryText
+          text: restroomFeatures
         },
         secondaryText: {
           type: "PlainText",
-          text: "I sent this one and a few more restroom details to your Alexa app and your email."
+          text: additionalInfo
         }
       },
       logoUrl:

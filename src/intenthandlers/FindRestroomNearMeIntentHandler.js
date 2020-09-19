@@ -138,7 +138,7 @@ async function buildResponse(handlerInput, restrooms) {
   // TODO: We can't always say 'this and more results'. What if there was only one result?
   const builder = responseBuilder
     .speak(`I found this restroom near you. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
-    .addDirective(IntentHelper.buildAPLDirective(undefined, restrooms[0]))
+    .addDirective(IntentHelper.buildAPLDirective(undefined, restrooms[0], !emailAddress))
     .withShouldEndSession(true);
 
   if (!emailAddress) builder.withAskForPermissionsConsentCard([scopes.EMAIL_SCOPE]);

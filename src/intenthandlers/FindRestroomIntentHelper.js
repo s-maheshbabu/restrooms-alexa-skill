@@ -7,6 +7,7 @@ const restroomDetailsDatasource = require("apl/data/RestroomDetailsDatasource");
 const searchfilters = require("constants/SearchFilters").searchfilters;
 
 const EmailValidator = require("email-validator");
+const messages = require("constants/Messages").messages;
 
 /**
  * An SSML description of the given restroom.
@@ -42,9 +43,11 @@ Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? '
  *
  * @param {*} zipcode The zipcode at which the restrooms are located.
  * @param {*} restrooms The restrooms to be used to build the Alexa card.
+ * @param {*} isRequestEmailAccess true if we should render information advertising
+ * the email capabilities and requesting the user to consider granting permission.
  * TODO: Validate inputs and update documentation.
  */
-function buildAPLDirective(zipcode, restroom) {
+function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
     return {
         type: APL_DOCUMENT_TYPE,
         version: APL_DOCUMENT_VERSION,
@@ -52,7 +55,8 @@ function buildAPLDirective(zipcode, restroom) {
         datasources: restroomDetailsDatasource(
             `${zipcode ? `Here is a restroom at ${zipcode}.` : `Here is a restroom near you.`}`,
             `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
-            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}`
+            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}`,
+            `${!isRequestEmailAccess ? `I also sent this and other restrooms I found to your email. I also included Google Maps navigation links in the email.` : `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`,
         )
     }
 }
