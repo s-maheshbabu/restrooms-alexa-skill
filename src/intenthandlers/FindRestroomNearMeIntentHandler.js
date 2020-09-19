@@ -1,4 +1,3 @@
-const EmailValidator = require("email-validator");
 const utilities = require("../utilities");
 
 const RR = require("gateway/RefugeeRestrooms");
