@@ -56,9 +56,10 @@ describe("Finding restrooms near user's geo location", function () {
     assert(response.shouldEndSession);
 
     const restroomDelivered = dummyRestRooms[0];
+    const distance = roundDownDistance(restroomDelivered.distance);
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -74,7 +75,7 @@ describe("Finding restrooms near user's geo location", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -197,8 +198,9 @@ describe("Finding restrooms near device address", function () {
 
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
+    const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -214,7 +216,7 @@ describe("Finding restrooms near device address", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -463,7 +465,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -482,7 +484,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -501,7 +503,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -525,7 +527,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(firstRestroomWithChangingTable)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this restroom ${roundDownDistance(firstRestroomWithChangingTable.distance)} miles away. ${describeRestroom(firstRestroomWithChangingTable)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -564,7 +566,7 @@ describe("APL directives support", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -608,8 +610,9 @@ describe("APL directives support", function () {
       assert(response.shouldEndSession);
 
       const outputSpeech = response.outputSpeech;
+      const distance = roundDownDistance(restroomDelivered.distance);
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -621,7 +624,7 @@ describe("APL directives support", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `Gender Neutral: ${isUnisex ? '&#9989;' : '&#10060;'}<br>Accessible: ${isAccessible ? '&#9989;' : '&#10060;'}<br>Changing Table: ${isChangingTable ? '&#9989;' : '&#10060;'}`,
+          `Gender Neutral: ${isUnisex ? '&#9989;' : '&#10060;'}<br>Accessible: ${isAccessible ? '&#9989;' : '&#10060;'}<br>Changing Table: ${isChangingTable ? '&#9989;' : '&#10060;'}<br>Distance: ${distance} miles.`,
           messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
         )
       );
@@ -680,8 +683,9 @@ describe("Sending emails", function () {
     assert(response.shouldEndSession);
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
+    const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -698,7 +702,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -732,8 +736,9 @@ describe("Sending emails", function () {
     assert(response.shouldEndSession);
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
+    const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -750,7 +755,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -843,7 +848,7 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -879,7 +884,7 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -946,7 +951,7 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom near you. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -955,6 +960,10 @@ describe("Sending emails", function () {
     }
   });
 });
+
+function roundDownDistance(distance) {
+  return Math.round((distance + Number.EPSILON) * 100) / 100
+}
 
 function buildSimpleCardContent(restrooms) {
   let content = ``;

@@ -48,6 +48,7 @@ Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? '
  * TODO: Validate inputs and update documentation.
  */
 function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
+    const distance = zipcode ? `` : `\<br\>Distance: ${restroom.distance} miles.`;
     return {
         type: APL_DOCUMENT_TYPE,
         version: APL_DOCUMENT_VERSION,
@@ -55,7 +56,7 @@ function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
         datasources: restroomDetailsDatasource(
             `${zipcode ? `Here is a restroom at ${zipcode}.` : `Here is a restroom near you.`}`,
             `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
-            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}`,
+            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}${distance}`,
             `${!isRequestEmailAccess ? `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.` : `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`,
         )
     }

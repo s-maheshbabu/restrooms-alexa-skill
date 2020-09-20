@@ -43,6 +43,7 @@ Here are some restrooms ${zipcode ? `at ${zipcode}` : `near you`}.</b><br/>`
         body += `<hr />
     <b>${restroom.name}</b><br/>
     Address: ${restroom.street}, ${restroom.city}, ${restroom.state}<br/>
+    Distance: ${restroom.distance} miles.<br/>
     Directions: <a href="https://www.google.com/maps/dir/?api=1&destination=${restroom.latitude},${restroom.longitude}">Google Maps</a><br/>
     Notes: ${restroom.directions ? `${restroom.directions}` : `Not Available`}<br/>
     Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}, Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}, Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}<br/>

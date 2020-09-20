@@ -17,6 +17,9 @@ async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFil
     if (isFilterByChangingTable) {
         restroomsArray = restroomsArray.filter((value) => { return value.changing_table; });
     }
+
+    // Round down distance to two decimal places.
+    restroomsArray.forEach(restroom => restroom.distance = Math.round((restroom.distance + Number.EPSILON) * 100) / 100);
     return restroomsArray;
 }
 

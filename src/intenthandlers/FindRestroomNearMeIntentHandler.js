@@ -134,9 +134,12 @@ async function buildResponse(handlerInput, restrooms) {
     await Mailer.sendEmail(emailAddress, undefined, restrooms);
   }
 
+  // TODO: We probably shouldn't render distance for 'device address' based queries because it uses the center of user's zipcode and not their actual location.
+  // TODO: Add tests to not render distance message, show distance on APL or send distance in emails if distance is not available.
+  const distanceInMiles = restrooms[0].distance;
   // TODO: We can't always say 'this and more results'. What if there was only one result?
   const builder = responseBuilder
-    .speak(`I found this restroom near you. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
+    .speak(`I found this restroom ${distanceInMiles} miles away. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
     .addDirective(IntentHelper.buildAPLDirective(undefined, restrooms[0], !emailAddress))
     .withShouldEndSession(true);
 
