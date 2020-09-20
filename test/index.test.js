@@ -699,7 +699,7 @@ describe("Sending emails", function () {
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
         `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps navigation links in the email.`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
 
@@ -751,7 +751,7 @@ describe("Sending emails", function () {
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
         `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps navigation links in the email.`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
 
@@ -802,7 +802,7 @@ describe("Sending emails", function () {
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
         `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps navigation links in the email.`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
 
