@@ -1,4 +1,5 @@
 const unitUnderTest = require("../src/index");
+const determinePositiveRatingPercentage = require("../src/utilities").determinePositiveRatingPercentage;
 
 const expect = require("chai").expect;
 const assert = require("chai").assert;
@@ -59,7 +60,7 @@ describe("Finding restrooms near user's geo location", function () {
     const distance = roundDownDistance(restroomDelivered.distance);
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -67,6 +68,7 @@ describe("Finding restrooms near user's geo location", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
     expect(directive.document).to.eql(restroomDetailsDocument);
@@ -75,7 +77,7 @@ describe("Finding restrooms near user's geo location", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -200,7 +202,7 @@ describe("Finding restrooms near device address", function () {
     const outputSpeech = response.outputSpeech;
     const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -208,6 +210,7 @@ describe("Finding restrooms near device address", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
     expect(directive.document).to.eql(restroomDetailsDocument);
@@ -216,7 +219,7 @@ describe("Finding restrooms near device address", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -376,7 +379,7 @@ describe("Finding restrooms at a user specified location", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -384,6 +387,7 @@ describe("Finding restrooms at a user specified location", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
     expect(directive.document).to.eql(restroomDetailsDocument);
@@ -392,7 +396,7 @@ describe("Finding restrooms at a user specified location", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Rating: ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -465,7 +469,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -484,7 +488,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -503,7 +507,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom ${roundDownDistance(dummyRestRooms[0].distance)} miles away. ${describeRestroom(dummyRestRooms[0])}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -566,7 +570,7 @@ describe("APL directives support", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -612,10 +616,11 @@ describe("APL directives support", function () {
       const outputSpeech = response.outputSpeech;
       const distance = roundDownDistance(restroomDelivered.distance);
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
+      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
       verifyAPLDirectiveStructure(response.directives);
       const directive = response.directives[0];
       expect(directive.document).to.eql(restroomDetailsDocument);
@@ -624,7 +629,7 @@ describe("APL directives support", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `Gender Neutral: ${isUnisex ? '&#9989;' : '&#10060;'}<br>Accessible: ${isAccessible ? '&#9989;' : '&#10060;'}<br>Changing Table: ${isChangingTable ? '&#9989;' : '&#10060;'}<br>Distance: ${distance} miles.`,
+          `Gender Neutral: ${isUnisex ? '&#9989;' : '&#10060;'}<br>Accessible: ${isAccessible ? '&#9989;' : '&#10060;'}<br>Changing Table: ${isChangingTable ? '&#9989;' : '&#10060;'}<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
           messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
         )
       );
@@ -685,7 +690,7 @@ describe("Sending emails", function () {
     const outputSpeech = response.outputSpeech;
     const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -694,6 +699,7 @@ describe("Sending emails", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
     expect(directive.document).to.eql(restroomDetailsDocument);
@@ -702,7 +708,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -738,7 +744,7 @@ describe("Sending emails", function () {
     const outputSpeech = response.outputSpeech;
     const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -747,6 +753,7 @@ describe("Sending emails", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
     expect(directive.document).to.eql(restroomDetailsDocument);
@@ -755,7 +762,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -789,7 +796,7 @@ describe("Sending emails", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -798,6 +805,7 @@ describe("Sending emails", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
     verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
     expect(directive.document).to.eql(restroomDetailsDocument);
@@ -806,7 +814,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Rating: ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -848,7 +856,7 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this positively rated restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -884,7 +892,7 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this positively rated restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -919,7 +927,7 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
@@ -951,13 +959,513 @@ describe("Sending emails", function () {
       const restroomDelivered = dummyRestRooms[0];
       const outputSpeech = response.outputSpeech;
       expect(outputSpeech.ssml).to.equal(
-        `<speak>I found this restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+        `<speak>I found this positively rated restroom ${roundDownDistance(restroomDelivered.distance)} miles away. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
       );
       expect(outputSpeech.type).to.equal("SSML");
 
       const sentMail = nodemailerMock.mock.getSentMail();
       expect(sentMail.length).to.equal(0);
     }
+  });
+});
+
+describe("Convey ratings of the restrooms", function () {
+  const DUMMY_LATITUDE = 47.62078857421875;
+  const DUMMY_LONGITUDE = -122.30061853955556; const US_COUNTRY_CODE = "US";
+  const DUMMY_POSTAL_CODE = "77840";
+
+  const aDeviceAddress = {
+    countryCode: US_COUNTRY_CODE,
+    postalCode: DUMMY_POSTAL_CODE,
+  };
+
+  const DUMMY_EMAIL_ADDRESS = "success@simulator.amazonses.com";
+
+  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+
+  before(async () => {
+    await zipcodes.init();
+
+    mockery.enable({ warnOnUnregistered: false });
+    mockery.registerMock('nodemailer', nodemailerMock);
+    await Mailer.init(transporter);
+  });
+
+  let clonedDummyRestRooms;
+  beforeEach(async () => {
+    clonedDummyRestRooms = cloneDeep(dummyRestRooms);
+  });
+
+  afterEach(function () {
+    decache("../test-data/nearme_geo_supported");
+    decache("../test-data/nearme_geo_not_supported");
+    decache("../test-data/atlocation");
+
+    nodemailerMock.mock.reset();
+  });
+
+  after(async () => {
+    mockery.deregisterAll();
+    mockery.disable();
+  });
+
+  it("should convey the information when we find a highly rated restrooms when searching for restrooms by geo location.", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    const highlyRatedRestRoomVoteCombinations = [[70, 30], [71, 30], [1, 0], [1000, 0]];
+    for (const combination of highlyRatedRestRoomVoteCombinations) {
+      restroomDelivered.upvote = combination[0];
+      restroomDelivered.downvote = combination[1];
+      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+      configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+
+      configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const distance = roundDownDistance(restroomDelivered.distance);
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.title).to.equal("Here are some restrooms near you.");
+      expect(card.type).to.equal("Simple");
+      expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+      verifyAPLDirectiveStructure(response.directives);
+      const directive = response.directives[0];
+      expect(directive.document).to.eql(restroomDetailsDocument);
+      const actualDatasource = directive.datasources;
+      expect(actualDatasource).to.eql(
+        restroomDetailsDatasource(
+          `Here is a restroom near you.`,
+          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+          `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
+          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+        )
+      );
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      const htmlBody = sentMail[0].html;
+      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+    }
+  });
+
+  it("should not call out rating in  prompts if we find a not so highly rated restroom when searching for restrooms by geo location. We should still show the rating in visual results.", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    const highlyRatedRestRoomVoteCombinations = [[69, 30], [30, 30], [0, 1000]];
+    for (const combination of highlyRatedRestRoomVoteCombinations) {
+      console.log(combination)
+      restroomDelivered.upvote = combination[0];
+      restroomDelivered.downvote = combination[1];
+      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+
+      configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+
+      configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const distance = roundDownDistance(restroomDelivered.distance);
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.title).to.equal("Here are some restrooms near you.");
+      expect(card.type).to.equal("Simple");
+      expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+      verifyAPLDirectiveStructure(response.directives);
+      const directive = response.directives[0];
+      expect(directive.document).to.eql(restroomDetailsDocument);
+      const actualDatasource = directive.datasources;
+      expect(actualDatasource).to.eql(
+        restroomDetailsDatasource(
+          `Here is a restroom near you.`,
+          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+          `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
+          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+        )
+      );
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      const htmlBody = sentMail[0].html;
+      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+
+      nodemailerMock.mock.reset();
+    }
+  });
+
+  it("should not call out rating in  prompts if we find an unrated restroom when searching for restrooms by geo location. We should still show that the restroom is unreated in visual results.", async () => {
+    const event = require("../test-data/nearme_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    restroomDelivered.upvote = 0;
+    restroomDelivered.downvote = 0;
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const distance = roundDownDistance(restroomDelivered.distance);
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.title).to.equal("Here are some restrooms near you.");
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom near you.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: Not Rated`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+      )
+    );
+
+    const sentMail = nodemailerMock.mock.getSentMail();
+    const htmlBody = sentMail[0].html;
+    expect(htmlBody.includes(`Rating: Not Rated`)).to.be.true;
+  });
+
+  it("should convey the information when we find a highly rated restrooms when searching for restrooms by device address.", async () => {
+    const event = require("../test-data/nearme_geo_not_supported");
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    const highlyRatedRestRoomVoteCombinations = [[70, 30], [71, 30], [1, 0], [1000, 0]];
+    for (const combination of highlyRatedRestRoomVoteCombinations) {
+      restroomDelivered.upvote = combination[0];
+      restroomDelivered.downvote = combination[1];
+      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+
+      const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+      configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+      configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+      configureAddressService(200, event.context, aDeviceAddress);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const distance = roundDownDistance(restroomDelivered.distance);
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.title).to.equal("Here are some restrooms near you.");
+      expect(card.type).to.equal("Simple");
+      expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+      verifyAPLDirectiveStructure(response.directives);
+      const directive = response.directives[0];
+      expect(directive.document).to.eql(restroomDetailsDocument);
+      const actualDatasource = directive.datasources;
+      expect(actualDatasource).to.eql(
+        restroomDetailsDatasource(
+          `Here is a restroom near you.`,
+          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+          `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${positiveRatingPercentage}% positive`,
+          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+        )
+      );
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      const htmlBody = sentMail[0].html;
+      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+    }
+  });
+
+  it("should not call out rating in  prompts if we find a not so highly rated restroom when searching for restrooms by device address. We should still show the rating in visual results.", async () => {
+    const event = require("../test-data/nearme_geo_not_supported");
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    const highlyRatedRestRoomVoteCombinations = [[69, 30], [30, 30], [0, 0], [0, 1000]];
+    for (const combination of highlyRatedRestRoomVoteCombinations) {
+      restroomDelivered.upvote = combination[0];
+      restroomDelivered.downvote = combination[1];
+      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+
+      const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+      configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+      configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+      configureAddressService(200, event.context, aDeviceAddress);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const distance = roundDownDistance(restroomDelivered.distance);
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.title).to.equal("Here are some restrooms near you.");
+      expect(card.type).to.equal("Simple");
+      expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+      verifyAPLDirectiveStructure(response.directives);
+      const directive = response.directives[0];
+      expect(directive.document).to.eql(restroomDetailsDocument);
+      const actualDatasource = directive.datasources;
+      expect(actualDatasource).to.eql(
+        restroomDetailsDatasource(
+          `Here is a restroom near you.`,
+          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+          `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
+          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+        )
+      );
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      const htmlBody = sentMail[0].html;
+      expect(htmlBody.includes(`Rating: ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
+
+      nodemailerMock.mock.reset();
+    }
+  });
+
+  it("should not call out rating in  prompts if we find an unrated restroom when searching for restrooms by device address. We should still show that the restroom is unreated in visual results.", async () => {
+    const event = require("../test-data/nearme_geo_not_supported");
+    configureAddressService(200, event.context, aDeviceAddress);
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    restroomDelivered.upvote = 0;
+    restroomDelivered.downvote = 0;
+
+    const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const distance = roundDownDistance(restroomDelivered.distance);
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.title).to.equal("Here are some restrooms near you.");
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom near you.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Distance: ${distance} miles.<br>Rating: Not Rated`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+      )
+    );
+
+    const sentMail = nodemailerMock.mock.getSentMail();
+    const htmlBody = sentMail[0].html;
+    expect(htmlBody.includes(`Rating: Not Rated`)).to.be.true;
+  });
+
+  it("should convey the information when we find a highly rated restrooms when searching for restrooms by location.", async () => {
+    const event = require("../test-data/atlocation");
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    const highlyRatedRestRoomVoteCombinations = [[70, 30], [71, 30], [1, 0], [1000, 0]];
+    for (const combination of highlyRatedRestRoomVoteCombinations) {
+      restroomDelivered.upvote = combination[0];
+      restroomDelivered.downvote = combination[1];
+      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+
+      const zipcode = event.session.attributes.zipcode;
+      const coordinates = zipcodes.getCoordinates(zipcode);
+      configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+      configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.title).to.equal(`Here are some restrooms at ${zipcode}`);
+      expect(card.type).to.equal("Simple");
+      expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+      verifyAPLDirectiveStructure(response.directives);
+      const directive = response.directives[0];
+      expect(directive.document).to.eql(restroomDetailsDocument);
+      const actualDatasource = directive.datasources;
+      expect(actualDatasource).to.eql(
+        restroomDetailsDatasource(
+          `Here is a restroom at ${zipcode}.`,
+          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+          `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Rating: ${positiveRatingPercentage}% positive`,
+          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+        )
+      );
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      const htmlBody = sentMail[0].html;
+      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+    }
+  });
+
+  it("should not call out rating in  prompts if we find a not so highly rated restroom when searching for restrooms by location. We should still show the rating in visual results.", async () => {
+    const event = require("../test-data/atlocation");
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    const highlyRatedRestRoomVoteCombinations = [[69, 30], [30, 30], [0, 0], [0, 1000]];
+    for (const combination of highlyRatedRestRoomVoteCombinations) {
+      restroomDelivered.upvote = combination[0];
+      restroomDelivered.downvote = combination[1];
+      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+
+      const zipcode = event.session.attributes.zipcode;
+      const coordinates = zipcodes.getCoordinates(zipcode);
+      configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+      configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+
+      const card = response.card;
+      expect(card.title).to.equal(`Here are some restrooms at ${zipcode}`);
+      expect(card.type).to.equal("Simple");
+      expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+      verifyAPLDirectiveStructure(response.directives);
+      const directive = response.directives[0];
+      expect(directive.document).to.eql(restroomDetailsDocument);
+      const actualDatasource = directive.datasources;
+      expect(actualDatasource).to.eql(
+        restroomDetailsDatasource(
+          `Here is a restroom at ${zipcode}.`,
+          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+          `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Rating: ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
+          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+        )
+      );
+
+      const sentMail = nodemailerMock.mock.getSentMail();
+      const htmlBody = sentMail[0].html;
+      expect(htmlBody.includes(`Rating: ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
+
+      nodemailerMock.mock.reset();
+    }
+  });
+
+  it("should not call out rating in  prompts if we find an unrated restroom when searching for restrooms by location. We should still show that the restroom is unreated in visual results.", async () => {
+    const event = require("../test-data/atlocation");
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    restroomDelivered.upvote = 0;
+    restroomDelivered.downvote = 0;
+
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.title).to.equal(`Here are some restrooms at ${zipcode}`);
+    expect(card.type).to.equal("Simple");
+    expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
+
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at ${zipcode}.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `Gender Neutral: &#9989;<br>Accessible: &#9989;<br>Changing Table: &#10060;<br>Rating: Not Rated`,
+        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
+      )
+    );
+
+    const sentMail = nodemailerMock.mock.getSentMail();
+    const htmlBody = sentMail[0].html;
+    expect(htmlBody.includes(`Rating: Not Rated`)).to.be.true;
   });
 });
 
@@ -968,11 +1476,15 @@ function roundDownDistance(distance) {
 function buildSimpleCardContent(restrooms) {
   let content = ``;
 
-  restrooms.slice(0, 4).forEach(restroom => content += `
+  restrooms.slice(0, 4).forEach(restroom => {
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroom);
+
+    content += `
 ${visuallyDescribeRestroom(restroom)}
+Rating: ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}
 Directions: ${restroom.directions ? `${restroom.directions}` : `Not Available`}
 Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
-`);
+`});
 
   return content;
 }

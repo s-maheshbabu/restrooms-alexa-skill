@@ -151,15 +151,30 @@ const cleanupForVisualPresentation = (input) => {
     return input.replace(regex, '');
 };
 
+/**
+ * Calculates the percentage of positive votes. 
+ * Returns null if there are no votes registered for the restroom or if
+ * either of upvote/downvote field is missing.
+ */
+function determinePositiveRatingPercentage(restroom) {
+    const upvotes = restroom.upvote;
+    const downvotes = restroom.downvote;
+
+    if (isNaN(upvotes) || isNaN(downvotes)) return null;
+    if (upvotes === 0 && downvotes === 0) return null;
+    return Math.floor((upvotes / (upvotes + downvotes)) * 100);
+}
+
 module.exports = {
-    isApiRequest: isApiRequest,
-    isIntentRequest: isIntentRequest,
-    isIntent: isIntent,
-    getApiArguments: getApiArguments,
-    getReadableSlotValue: getReadableSlotValue,
-    getReadableSlotId: getReadableSlotId,
-    getSlots: getSlots,
     cleanupForVisualPresentation: cleanupForVisualPresentation,
+    determinePositiveRatingPercentage: determinePositiveRatingPercentage,
+    getApiArguments: getApiArguments,
+    getReadableSlotId: getReadableSlotId,
+    getReadableSlotValue: getReadableSlotValue,
+    getSlots: getSlots,
+    isApiRequest: isApiRequest,
+    isIntent: isIntent,
+    isIntentRequest: isIntentRequest,
     shuffle: shuffle,
     slotSynonymsToIdMap: slotSynonymsToIdMap,
 };

@@ -1,9 +1,13 @@
 const fetch = require("node-fetch");
+const determinePositiveRatingPercentage = require("../utilities").determinePositiveRatingPercentage;
 
 const BASE_URL = `https://www.refugerestrooms.org`;
 
 async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFilterByUnisex, isFilterByChangingTable) {
-    const URL = `${BASE_URL}/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`;
+    if (!latitude || !longitude)
+        throw TypeError(`Latitide and Longitude are required fields. Latitide: ${latitude} and Longitude: ${longitude}`);
+
+    let URL = `${BASE_URL}/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA === true ? `true` : `false`}&unisex=${isFilterByUnisex === true ? `true` : `false`}&lat=${latitude}&lng=${longitude}`;
     console.log(`Endpoint ${URL}`);
 
     var restroomsArray = [];
@@ -14,13 +18,29 @@ async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFil
         console.log(error);
     }
 
-    if (isFilterByChangingTable) {
-        restroomsArray = restroomsArray.filter((value) => { return value.changing_table; });
+    if (isFilterByChangingTable === true) {
+        filterInPlace(restroomsArray, value => value.changing_table);
     }
 
-    // Round down distance to two decimal places.
-    restroomsArray.forEach(restroom => restroom.distance = Math.round((restroom.distance + Number.EPSILON) * 100) / 100);
+    // Round down distance to two decimal places and calculate postive rating percentage.
+    restroomsArray.forEach(restroom => {
+        restroom.distance = Math.round((restroom.distance + Number.EPSILON) * 100) / 100;
+        restroom.positive_rating = determinePositiveRatingPercentage(restroom);
+    });
     return restroomsArray;
+}
+
+function filterInPlace(a, condition, thisArg) {
+    let j = 0;
+    a.forEach((e, i) => {
+        if (condition.call(thisArg, e, i, a)) {
+            if (i !== j) a[j] = e;
+            j++;
+        }
+    });
+
+    a.length = j;
+    return a;
 }
 
 module.exports = {

@@ -8,6 +8,7 @@ const searchfilters = require("constants/SearchFilters").searchfilters;
 
 const EmailValidator = require("email-validator");
 const messages = require("constants/Messages").messages;
+const ratings = require("constants/Constants").ratings;
 
 /**
  * An SSML description of the given restroom.
@@ -28,6 +29,7 @@ function buildSimpleCard(zipcode, restrooms) {
 
     restrooms.slice(0, 4).forEach(restroom => content += `
 ${visuallyDescribeRestroom(restroom)}
+Rating: ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}
 Directions: ${restroom.directions ? `${restroom.directions}` : `Not Available`}
 Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? 'Yes' : 'No'}, Changing Table: ${restroom.changing_table ? 'Yes' : 'No'}
 `);
@@ -49,6 +51,8 @@ Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? '
  */
 function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
     const distance = zipcode ? `` : `\<br\>Distance: ${restroom.distance} miles.`;
+    const rating = `\<br\>Rating: ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}`
+
     return {
         type: APL_DOCUMENT_TYPE,
         version: APL_DOCUMENT_VERSION,
@@ -56,12 +60,16 @@ function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
         datasources: restroomDetailsDatasource(
             `${zipcode ? `Here is a restroom at ${zipcode}.` : `Here is a restroom near you.`}`,
             `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
-            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}${distance}`,
+            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}${distance}${rating}`,
             `${!isRequestEmailAccess ? `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.` : `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`,
         )
     }
 }
 
+function isPositivelyRated(restroom) {
+    if (!restroom) return false;
+    return !isNaN(restroom.positive_rating) && restroom.positive_rating >= ratings.POSITIVE ? true : false;
+}
 /**
  * Converts the search filters in the user's request to boolean search filters that
  * can be used in the queries to refugee restrooms gateway.
@@ -123,4 +131,5 @@ module.exports = {
     describeRestroom: describeRestroom,
     getEmailAddress: getEmailAddress,
     getSearchFilters: getSearchFilters,
+    isPositivelyRated: isPositivelyRated,
 };
