@@ -50,7 +50,7 @@ Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? '
  * TODO: Validate inputs and update documentation.
  */
 function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
-    const distance = zipcode ? `` : `\<br\>Distance: ${restroom.distance} miles.`;
+    const distance = zipcode ? `` : `\<br\>&#128663; ${restroom.distance} miles`;
     const rating = `\<br\>&#10084; ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}`
 
     return {
