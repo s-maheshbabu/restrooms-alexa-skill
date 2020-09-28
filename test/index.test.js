@@ -77,7 +77,7 @@ describe("Finding restrooms near user's geo location", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -219,7 +219,7 @@ describe("Finding restrooms near device address", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -396,7 +396,7 @@ describe("Finding restrooms at a user specified location", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128077; ${positiveRatingPercentage}% positive`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -629,7 +629,7 @@ describe("APL directives support", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${isUnisex ? '&#9989;' : '&#10060;'} Gender Neutral<br>${isAccessible ? '&#9989;' : '&#10060;'} Accessible<br>${isChangingTable ? '&#9989;' : '&#10060;'} Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+          `${isUnisex ? '&#9989;' : '&#10060;'} Gender Neutral<br>${isAccessible ? '&#9989;' : '&#10060;'} Accessible<br>${isChangingTable ? '&#9989;' : '&#10060;'} Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
           messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
         )
       );
@@ -708,7 +708,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -762,7 +762,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -814,7 +814,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128077; ${positiveRatingPercentage}% positive`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -1049,7 +1049,7 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
@@ -1102,7 +1102,7 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
@@ -1153,7 +1153,7 @@ describe("Convey ratings of the restrooms", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; Not Rated`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; Not Rated`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -1204,7 +1204,7 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${positiveRatingPercentage}% positive`,
+          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
@@ -1256,7 +1256,7 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
+          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
@@ -1307,7 +1307,7 @@ describe("Convey ratings of the restrooms", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#128077; Not Rated`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>Distance: ${distance} miles.<br>&#10084; Not Rated`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -1357,7 +1357,7 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom at ${zipcode}.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128077; ${positiveRatingPercentage}% positive`,
+          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
@@ -1408,7 +1408,7 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom at ${zipcode}.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128077; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
+          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
@@ -1458,7 +1458,7 @@ describe("Convey ratings of the restrooms", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128077; Not Rated`,
+        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; Not Rated`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
