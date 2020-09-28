@@ -60,7 +60,7 @@ function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
         datasources: restroomDetailsDatasource(
             `${zipcode ? `Here is a restroom at ${zipcode}.` : `Here is a restroom near you.`}`,
             `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
-            `Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}\<br\>Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}\<br\>Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}${distance}${rating}`,
+            `${restroom.unisex ? '&\#9989;' : '&\#10060;'} Gender Neutral\<br\>${restroom.accessible ? '&\#9989;' : '&\#10060;'} Accessible\<br\>${restroom.changing_table ? '&\#9989;' : '&\#10060;'} Changing Table${distance}${rating}`,
             `${!isRequestEmailAccess ? `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.` : `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`,
         )
     }
