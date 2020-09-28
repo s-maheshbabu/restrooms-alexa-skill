@@ -1056,7 +1056,7 @@ describe("Convey ratings of the restrooms", function () {
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
     }
   });
 
@@ -1109,7 +1109,7 @@ describe("Convey ratings of the restrooms", function () {
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
 
       nodemailerMock.mock.reset();
     }
@@ -1160,7 +1160,7 @@ describe("Convey ratings of the restrooms", function () {
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
-    expect(htmlBody.includes(`Rating: Not Rated`)).to.be.true;
+    expect(htmlBody.includes(`&#10084; Not Rated`)).to.be.true;
   });
 
   it("should convey the information when we find a highly rated restrooms when searching for restrooms by device address.", async () => {
@@ -1211,7 +1211,7 @@ describe("Convey ratings of the restrooms", function () {
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
     }
   });
 
@@ -1263,7 +1263,7 @@ describe("Convey ratings of the restrooms", function () {
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`Rating: ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
+      expect(htmlBody.includes(`&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
 
       nodemailerMock.mock.reset();
     }
@@ -1314,7 +1314,7 @@ describe("Convey ratings of the restrooms", function () {
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
-    expect(htmlBody.includes(`Rating: Not Rated`)).to.be.true;
+    expect(htmlBody.includes(`&#10084; Not Rated`)).to.be.true;
   });
 
   it("should convey the information when we find a highly rated restrooms when searching for restrooms by location.", async () => {
@@ -1364,7 +1364,7 @@ describe("Convey ratings of the restrooms", function () {
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`Rating: ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
     }
   });
 
@@ -1415,7 +1415,7 @@ describe("Convey ratings of the restrooms", function () {
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`Rating: ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
+      expect(htmlBody.includes(`&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
 
       nodemailerMock.mock.reset();
     }
@@ -1465,7 +1465,7 @@ describe("Convey ratings of the restrooms", function () {
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
-    expect(htmlBody.includes(`Rating: Not Rated`)).to.be.true;
+    expect(htmlBody.includes(`&#10084; Not Rated`)).to.be.true;
   });
 });
 

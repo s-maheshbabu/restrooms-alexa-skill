@@ -42,12 +42,10 @@ Here are some restrooms ${zipcode ? `at ${zipcode}` : `near you`}.</b><br/>`
     restrooms.forEach(restroom => {
         body += `<hr />
     <b>${restroom.name}</b><br/>
-    Address: ${restroom.street}, ${restroom.city}, ${restroom.state}<br/>
-    Rating: ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}
-    Distance: ${restroom.distance} miles.<br/>
-    Directions: <a href="https://www.google.com/maps/dir/?api=1&destination=${restroom.latitude},${restroom.longitude}">Google Maps</a><br/>
+    Address: ${restroom.street}, ${restroom.city}, ${restroom.state} (<a href="https://www.google.com/maps/dir/?api=1&destination=${restroom.latitude},${restroom.longitude}">directions</a>)<br/>
     Notes: ${restroom.directions ? `${restroom.directions}` : `Not Available`}<br/>
-    Gender Neutral: ${restroom.unisex ? '&\#9989;' : '&\#10060;'}, Accessible: ${restroom.accessible ? '&\#9989;' : '&\#10060;'}, Changing Table: ${restroom.changing_table ? '&\#9989;' : '&\#10060;'}<br/>
+    &#10084; ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`} | &#128663; ${restroom.distance} miles<br/>
+    ${restroom.unisex ? '&\#9989;' : '&\#10060;'} Gender Neutral | ${restroom.accessible ? '&\#9989;' : '&\#10060;'} Accessible | ${restroom.changing_table ? '&\#9989;' : '&\#10060;'} Changing Table<br/>
     `
     });
 
