@@ -4,7 +4,7 @@ const EmailValidator = require("email-validator");
 let AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 
-const FROM_ADDRESS = "s.maheshbabu@hotmail.com";
+const FROM_ADDRESS = "Refugee Restrooms <refugee.restrooms@gmail.com>";
 const SUBJECT_LINE = "Refugee Restrooms - Alexa Skill";
 
 const MAXIMUM_RESULTS = 10;
