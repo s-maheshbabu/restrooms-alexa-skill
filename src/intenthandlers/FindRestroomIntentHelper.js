@@ -9,6 +9,7 @@ const searchfilters = require("constants/SearchFilters").searchfilters;
 const EmailValidator = require("email-validator");
 const messages = require("constants/Messages").messages;
 const ratings = require("constants/Constants").ratings;
+const icons = require("constants/Icons").icons;
 
 /**
  * An SSML description of the given restroom.
@@ -50,8 +51,8 @@ Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? '
  * TODO: Validate inputs and update documentation.
  */
 function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
-    const distance = zipcode ? `` : `\<br\>&#128663; ${restroom.distance} miles`;
-    const rating = `\<br\>&#10084; ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}`
+    const distance = zipcode ? `` : `\<br\>${icons.DISTANCE} ${restroom.distance} miles`;
+    const rating = `\<br\>${icons.RATINGS} ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}`
 
     return {
         type: APL_DOCUMENT_TYPE,
@@ -60,7 +61,7 @@ function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
         datasources: restroomDetailsDatasource(
             `${zipcode ? `Here is a restroom at ${zipcode}.` : `Here is a restroom near you.`}`,
             `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
-            `${restroom.unisex ? '&\#9989;' : '&\#10060;'} Gender Neutral\<br\>${restroom.accessible ? '&\#9989;' : '&\#10060;'} Accessible\<br\>${restroom.changing_table ? '&\#9989;' : '&\#10060;'} Changing Table${distance}${rating}`,
+            `${restroom.unisex ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Gender Neutral\<br\>${restroom.accessible ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Accessible\<br\>${restroom.changing_table ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Changing Table${distance}${rating}`,
             `${!isRequestEmailAccess ? `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.` : `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`,
         )
     }

@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const EmailValidator = require("email-validator");
+const icons = require("constants/Icons").icons;
 
 let AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
@@ -44,8 +45,8 @@ Here are some restrooms ${zipcode ? `at ${zipcode}` : `near you`}.</b><br/>`
     <b>${restroom.name}</b><br/>
     Address: ${restroom.street}, ${restroom.city}, ${restroom.state} (<a href="https://www.google.com/maps/dir/?api=1&destination=${restroom.latitude},${restroom.longitude}">directions</a>)<br/>
     ${restroom.directions ? `Notes: ${restroom.directions}<br/>` : ``}
-    &#10084; ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`} | &#128663; ${restroom.distance} miles<br/>
-    ${restroom.unisex ? '&\#9989;' : '&\#10060;'} Gender Neutral | ${restroom.accessible ? '&\#9989;' : '&\#10060;'} Accessible | ${restroom.changing_table ? '&\#9989;' : '&\#10060;'} Changing Table<br/>
+    ${icons.RATINGS} ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`} | ${icons.DISTANCE} ${restroom.distance} miles<br/>
+    ${restroom.unisex ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Gender Neutral | ${restroom.accessible ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Accessible | ${restroom.changing_table ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Changing Table<br/>
     `
     });
 

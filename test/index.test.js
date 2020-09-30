@@ -23,6 +23,7 @@ const zipcodes = require("gateway/Zipcodes");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
+const icons = require("constants/Icons").icons;
 
 const APL_CONSTANTS = require("constants/APL");
 const APL_DOCUMENT_TYPE = APL_CONSTANTS.APL_DOCUMENT_TYPE;
@@ -77,7 +78,7 @@ describe("Finding restrooms near user's geo location", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -219,7 +220,7 @@ describe("Finding restrooms near device address", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -396,7 +397,7 @@ describe("Finding restrooms at a user specified location", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${positiveRatingPercentage}% positive`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
         messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
       )
     );
@@ -629,7 +630,7 @@ describe("APL directives support", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${isUnisex ? '&#9989;' : '&#10060;'} Gender Neutral<br>${isAccessible ? '&#9989;' : '&#10060;'} Accessible<br>${isChangingTable ? '&#9989;' : '&#10060;'} Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+          `${isUnisex ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Gender Neutral<br>${isAccessible ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Accessible<br>${isChangingTable ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
           messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
         )
       );
@@ -708,7 +709,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -762,7 +763,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -814,7 +815,7 @@ describe("Sending emails", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${positiveRatingPercentage}% positive`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
@@ -1049,14 +1050,14 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`${icons.RATINGS} ${positiveRatingPercentage}% positive`)).to.be.true;
     }
   });
 
@@ -1102,14 +1103,14 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`${icons.RATINGS} ${positiveRatingPercentage}% positive`)).to.be.true;
 
       nodemailerMock.mock.reset();
     }
@@ -1153,14 +1154,14 @@ describe("Convey ratings of the restrooms", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; Not Rated`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} Not Rated`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
-    expect(htmlBody.includes(`&#10084; Not Rated`)).to.be.true;
+    expect(htmlBody.includes(`${icons.RATINGS} Not Rated`)).to.be.true;
   });
 
   it("should convey the information when we find a highly rated restrooms when searching for restrooms by device address.", async () => {
@@ -1204,14 +1205,14 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${positiveRatingPercentage}% positive`,
+          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`${icons.RATINGS} ${positiveRatingPercentage}% positive`)).to.be.true;
     }
   });
 
@@ -1256,14 +1257,14 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom near you.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
+          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
+      expect(htmlBody.includes(`${icons.RATINGS} ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
 
       nodemailerMock.mock.reset();
     }
@@ -1307,14 +1308,14 @@ describe("Convey ratings of the restrooms", function () {
       restroomDetailsDatasource(
         `Here is a restroom near you.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#128663; ${distance} miles<br>&#10084; Not Rated`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} Not Rated`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
-    expect(htmlBody.includes(`&#10084; Not Rated`)).to.be.true;
+    expect(htmlBody.includes(`${icons.RATINGS} Not Rated`)).to.be.true;
   });
 
   it("should convey the information when we find a highly rated restrooms when searching for restrooms by location.", async () => {
@@ -1357,14 +1358,14 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom at ${zipcode}.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${positiveRatingPercentage}% positive`,
+          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`&#10084; ${positiveRatingPercentage}% positive`)).to.be.true;
+      expect(htmlBody.includes(`${icons.RATINGS} ${positiveRatingPercentage}% positive`)).to.be.true;
     }
   });
 
@@ -1408,14 +1409,14 @@ describe("Convey ratings of the restrooms", function () {
         restroomDetailsDatasource(
           `Here is a restroom at ${zipcode}.`,
           `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
+          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
           `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
         )
       );
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
-      expect(htmlBody.includes(`&#10084; ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
+      expect(htmlBody.includes(`${icons.RATINGS} ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`)).to.be.true;
 
       nodemailerMock.mock.reset();
     }
@@ -1458,14 +1459,14 @@ describe("Convey ratings of the restrooms", function () {
       restroomDetailsDatasource(
         `Here is a restroom at ${zipcode}.`,
         `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `&#9989; Gender Neutral<br>&#9989; Accessible<br>&#10060; Changing Table<br>&#10084; Not Rated`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} Not Rated`,
         `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
       )
     );
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
-    expect(htmlBody.includes(`&#10084; Not Rated`)).to.be.true;
+    expect(htmlBody.includes(`${icons.RATINGS} Not Rated`)).to.be.true;
   });
 });
 
