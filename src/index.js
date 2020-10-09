@@ -4,9 +4,11 @@ const Alexa = require("ask-sdk-core");
 
 const FindRestroomNearMeAPI = require("api/FindRestroomNearMeAPI");
 const FindRestroomAtLocationAPI = require("api/FindRestroomAtLocationAPI");
+const FindRestroomAtAddressAPI = require("api/FindRestroomAtAddressAPI");
 
 const CancelAndStopIntentHandler = require("intenthandlers/CancelAndStopIntentHandler");
 const FindRestroomAtLocationIntentHandler = require("intenthandlers/FindRestroomAtLocationIntentHandler");
+const FindRestroomAtAddressIntentHandler = require("intenthandlers/FindRestroomAtAddressIntentHandler");
 const FindRestroomNearMeIntentHandler = require("intenthandlers/FindRestroomNearMeIntentHandler");
 
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
@@ -41,9 +43,11 @@ exports.handler = async function (event, context) {
       .addRequestHandlers(
         CancelAndStopIntentHandler,
         FindRestroomAtLocationIntentHandler,
+        FindRestroomAtAddressIntentHandler,
         FindRestroomNearMeIntentHandler,
         SessionEndedRequestHandler,
         FindRestroomNearMeAPI,
+        FindRestroomAtAddressAPI,
         FindRestroomAtLocationAPI,
       )
       .addRequestInterceptors(
