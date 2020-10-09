@@ -1,0 +1,152 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "refugee restrooms",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "DummyIntent",
+                    "slots": [],
+                    "samples": [
+                        "dummy utterance"
+                    ]
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                }
+            ],
+            "types": [
+                {
+                    "values": [
+                        {
+                            "id": "ALL",
+                            "name": {
+                                "value": "All",
+                                "synonyms": [
+                                    "any restroom",
+                                    "anything works for me",
+                                    "anything",
+                                    "doesn't matter to me",
+                                    "doesn't matter",
+                                    "i can use any restroom",
+                                    "i can use anything",
+                                    "i don't have any preferences",
+                                    "just about anything works for me",
+                                    "just about anything",
+                                    "just find a restroom",
+                                    "no filters",
+                                    "no particular preferences",
+                                    "no preferences",
+                                    "no restrictions",
+                                    "no search filters",
+                                    "all of them",
+                                    "all restrooms"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "CHANGING_TABLE",
+                            "name": {
+                                "value": "ChangingTable",
+                                "synonyms": [
+                                    "baby changing station",
+                                    "baby friendly",
+                                    "changing station",
+                                    "diaper change friendly",
+                                    "diaper changing friendly",
+                                    "diaper changing station",
+                                    "diaper friendly",
+                                    "diaper station",
+                                    "diaper table",
+                                    "father friendly",
+                                    "fathers friendly",
+                                    "fathers",
+                                    "have changing table",
+                                    "infant friendly",
+                                    "kid friendly",
+                                    "mom friendly",
+                                    "moms friendly",
+                                    "moms",
+                                    "mother friendly",
+                                    "mothers friendly",
+                                    "mothers",
+                                    "parent friendly",
+                                    "parents friendly",
+                                    "toddler friendly"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "UNISEX",
+                            "name": {
+                                "value": "Unisex",
+                                "synonyms": [
+                                    "queer friendly",
+                                    "gender neutral",
+                                    "unisex friendly",
+                                    "lgbtq",
+                                    "lgbt",
+                                    "trans friendly",
+                                    "transgender",
+                                    "unisex"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "ACCESSIBLE",
+                            "name": {
+                                "value": "Accessible",
+                                "synonyms": [
+                                    "ada compliant",
+                                    "accessible",
+                                    "wheel chair friendly",
+                                    "wheelchair friendly",
+                                    "wheel chair access",
+                                    "wheelchair",
+                                    "handicapped friendly",
+                                    "handicapped",
+                                    "disabled friendly",
+                                    "disabled",
+                                    "ada"
+                                ]
+                            }
+                        }
+                    ],
+                    "name": "RestRoomTypes"
+                },
+                {
+                    "values": [
+                        {
+                            "name": {
+                                "value": "dummy value for api response literal property"
+                            }
+                        }
+                    ],
+                    "name": "StringLiteral"
+                }
+            ],
+            "modelConfiguration": {
+                "fallbackIntentSensitivity": {
+                    "level": "LOW"
+                }
+            }
+        }
+    },
+    "version": "71"
+}

@@ -1,0 +1,136 @@
+{
+  "manifest": {
+    "apis": {
+      "custom": {
+        "dialogManagement": {
+          "dialogManagers": [
+            {
+              "type": "AMAZON.Conversations"
+            }
+          ],
+          "sessionStartDelegationStrategy": {
+            "target": "AMAZON.Conversations"
+          }
+        },
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:837603326872:function:restrooms-alexa-skill:beta"
+        },
+        "interfaces": [
+          {
+            "supportedViewports": [
+              {
+                "maxHeight": 480,
+                "maxWidth": 480,
+                "minHeight": 480,
+                "minWidth": 480,
+                "mode": "HUB",
+                "shape": "ROUND"
+              },
+              {
+                "maxHeight": 600,
+                "maxWidth": 1024,
+                "minHeight": 600,
+                "minWidth": 1024,
+                "mode": "HUB",
+                "shape": "RECTANGLE"
+              },
+              {
+                "maxHeight": 800,
+                "maxWidth": 1280,
+                "minHeight": 800,
+                "minWidth": 1280,
+                "mode": "HUB",
+                "shape": "RECTANGLE"
+              },
+              {
+                "maxHeight": 540,
+                "maxWidth": 960,
+                "minHeight": 540,
+                "minWidth": 960,
+                "mode": "TV",
+                "shape": "RECTANGLE"
+              },
+              {
+                "maxHeight": 480,
+                "maxWidth": 960,
+                "minHeight": 480,
+                "minWidth": 960,
+                "mode": "HUB",
+                "shape": "RECTANGLE"
+              }
+            ],
+            "type": "ALEXA_PRESENTATION_APL"
+          }
+        ]
+      }
+    },
+    "manifestVersion": "1.0",
+    "permissions": [
+      {
+        "name": "alexa:devices:all:address:country_and_postal_code:read"
+      },
+      {
+        "name": "alexa::profile:email:read"
+      },
+      {
+        "name": "alexa::devices:all:geolocation:read"
+      }
+    ],
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "containsAds": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": "https://github.com/s-maheshbabu/restrooms-alexa-skill/wiki/Privacy-Policy",
+          "termsOfUseUrl": ""
+        }
+      },
+      "usesPersonalInfo": false
+    },
+    "publishingInformation": {
+      "automaticDistribution": {
+        "isActive": false
+      },
+      "category": "NAVIGATION_AND_TRIP_PLANNER",
+      "distributionCountries": [],
+      "isAvailableWorldwide": true,
+      "locales": {
+        "en-US": {
+          "description": "The primary goal of Refuge Restrooms is to provide safe restroom access for transgender, intersex, and gender nonconforming individuals while traveling within the United States. We leverage a user generated/rated database of thousands of restrooms across the country to find safe and inclusive restrooms for transgender people. \n\nWe also support looking up accessible and parent friendly (changing table) restrooms.\n\nYou can search for restrooms by proximity to your search location or search for restrooms at a specific zip-code if you want to investigate safe restroom access before you travel. You can also get an email with the restroom search results.\n\nWhat's the motivation to build a restroom searching skill?\nOne of the biggest battlefields upon which the fight for transgender rights is taking place daily are restrooms. It seems that every other week a transgender child is made the center of a national news story because they used the restroom assigned to the gender they identify with. Obviously, every transgender person should have the right to use the restroom they want to. However, we also realize that despite legislative victories in recent years regarding restroom usage, many transgender individuals still face both verbal and physical harassment simply for using the restroom. Nobody should have to face that - and that is why this skill exists.\n\nWhy support searching for accessible and parent friendly restrooms?\nWhile our primary focus has been and will be providing safe restroom access to transgender individuals, we also realize that disabled people and parents traveling with kids do face a similar problem around finding restrooms that meet their needs. For that reason, we extended the skill to also support searching for accessible restrooms and restrooms with changing tables.\n\nWhy do you need my location and email?\nLocation: The skill requests your location so it can search for restrooms near your current location. The skill accesses your location just before searching for the restrooms and discards the information once you exit the skill. The skill does not store or log your location. If you choose to not grant access to your location, you can still use the skill but you will have to manually provide the zip code where you want the skill to search for restrooms.\n\nEmail: The skill requests your email so it can send you the restroom search results to your email. The email will contain up to 10 results and contains rich information like Google Maps navigation links, restroom features etc. The skill accesses your email just before sending an email and discards the information once you exit the skill. The skill does not store or log your email address. If you choose to not grant access to your email address, you can still use the skill but will just get results delivered via voice.",
+          "examplePhrases": [
+            "Alexa, open refugee restrooms",
+            "Alexa, open refugee restrooms and help me find gender neutral restrooms near me",
+            "Alexa, open refugee restrooms and look for restrooms at 77840"
+          ],
+          "keywords": [
+            "restrooms",
+            "bathrooms",
+            "trip",
+            "planner",
+            "transgender",
+            "gender",
+            "neutral",
+            "lgbt",
+            "lgbtq",
+            "accessibility",
+            "ADA",
+            "changing",
+            "table",
+            "diapers",
+            "queer",
+            "gender",
+            "non",
+            "conforming"
+          ],
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/9e46/33ac983169c949029f659dfdeb00c359/APP_ICON_LARGE?versionId=wky7.6y.LfZ2_5ozeq3CKXtMX8SbV9cA&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201009T045024Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAWBV6LQ4QHAYALYJ7%2F20201009%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=a691fa7a76d079ddde03d4ded0054c9b7fa21fe7629c2ee90824b0da33289f49",
+          "name": "Refugee Restrooms",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/bd7e/299c806215874d77b8b6dfb2df003377/APP_ICON?versionId=NLmK0e3iANWL4foq.odCzdNXB2sbo4bs&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201009T045024Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIAWBV6LQ4QHAYALYJ7%2F20201009%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=cfd47a8003ed77e88fa81c148e08e08752455c6b94993a1743c0a58d29612685",
+          "summary": "Refuge Restrooms provides safe restroom access for transgender and gender nonconforming people. We can also look for accessible and parent friendly restrooms."
+        }
+      },
+      "testingInstructions": "Search for restrooms near you.\nSearch for restrooms near a specific zip-code.\nSearch for restrooms by gender neutrality, accessibility and parent friendliness. Mix and match the three search filters.\nSearch for restrooms with email access granted and denied. Please note that the skill, by design, does not contain any messaging requesting the user to grant email permissions. If the user doesn't grant email permissions when the enabled the skill, we won't ask them again. If they granted permissions, we will use it to send search results to email."
+    }
+  }
+}
