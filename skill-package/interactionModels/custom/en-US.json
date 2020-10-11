@@ -20,6 +20,14 @@
                     "samples": []
                 },
                 {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
                     "name": "DummyIntent",
                     "slots": [],
                     "samples": [

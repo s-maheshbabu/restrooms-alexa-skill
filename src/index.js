@@ -7,11 +7,14 @@ const FindRestroomAtLocationAPI = require("api/FindRestroomAtLocationAPI");
 const FindRestroomAtAddressAPI = require("api/FindRestroomAtAddressAPI");
 
 const CancelAndStopIntentHandler = require("intenthandlers/CancelAndStopIntentHandler");
+const NoIntentHandler = require("intenthandlers/NoIntentHandler");
+const YesIntentHandler = require("intenthandlers/YesIntentHandler");
 const FindRestroomAtLocationIntentHandler = require("intenthandlers/FindRestroomAtLocationIntentHandler");
 const FindRestroomAtAddressIntentHandler = require("intenthandlers/FindRestroomAtAddressIntentHandler");
 const FindRestroomNearMeIntentHandler = require("intenthandlers/FindRestroomNearMeIntentHandler");
 
 const SessionEndedRequestHandler = require("requesthandlers/SessionEndedRequestHandler");
+const SessionResumedRequestHandler = require("requesthandlers/SessionResumedRequestHandler");
 
 const SESTransporterInterceptor = require("interceptors/SESTransporterInterceptor");
 const ZipcodesDataLoadInterceptor = require("interceptors/ZipcodesDataLoadInterceptor");
@@ -42,13 +45,17 @@ exports.handler = async function (event, context) {
     skill = Alexa.SkillBuilders.custom()
       .addRequestHandlers(
         CancelAndStopIntentHandler,
-        FindRestroomAtLocationIntentHandler,
-        FindRestroomAtAddressIntentHandler,
-        FindRestroomNearMeIntentHandler,
-        SessionEndedRequestHandler,
-        FindRestroomNearMeAPI,
         FindRestroomAtAddressAPI,
+        FindRestroomAtAddressIntentHandler,
         FindRestroomAtLocationAPI,
+        FindRestroomAtLocationAPI,
+        FindRestroomAtLocationIntentHandler,
+        FindRestroomNearMeAPI,
+        FindRestroomNearMeIntentHandler,
+        NoIntentHandler,
+        SessionEndedRequestHandler,
+        SessionResumedRequestHandler,
+        YesIntentHandler,
       )
       .addRequestInterceptors(
         SESTransporterInterceptor,
@@ -56,8 +63,8 @@ exports.handler = async function (event, context) {
         LogRequestInterceptor,
       )
       .addResponseInterceptors(
-        LogResponseInterceptor,
         ResponseSanitizationInterceptor,
+        LogResponseInterceptor,
       )
       .addErrorHandlers(ErrorHandler)
       .withApiClient(new Alexa.DefaultApiClient())

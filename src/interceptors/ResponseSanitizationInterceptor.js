@@ -1,5 +1,5 @@
 const hasIn = require("immutable").hasIn;
-const utilities = require("../utilities");
+const APL_CONSTANTS = require("constants/APL");
 
 /**
  * Sanitize the response. Retains the APL directives only if the
@@ -19,10 +19,10 @@ module.exports = ResponseSanitizationInterceptor = {
         "device",
         "supportedInterfaces",
         "Alexa.Presentation.APL"
-      ]) && utilities.isIntentRequest(handlerInput)
+      ]) && Array.isArray(response.directives)
     ) {
-      console.log('Stripping')
-      response.directives = undefined;
+      console.log(`Stripping APL directives.`);
+      response.directives = response.directives.filter(directive => directive.type !== APL_CONSTANTS.APL_DOCUMENT_TYPE)
     }
 
     return Promise.resolve();

@@ -23,9 +23,12 @@ const zipcodes = require("gateway/Zipcodes");
 const GoogleMaps = require("gateway/GoogleMaps");
 const DUMMY_GOOGLE_MAPS_API_KEY = "dummyGoogleMapsAPIKey";
 
+const states = require("constants/Constants").states;
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
 const icons = require("constants/Icons").icons;
+const ios = require("constants/Constants").ios;
+const android = require("constants/Constants").android;
 
 const APL_CONSTANTS = require("constants/APL");
 const APL_DOCUMENT_TYPE = APL_CONSTANTS.APL_DOCUMENT_TYPE;
@@ -41,6 +44,10 @@ describe("Finding restrooms near user's geo location", function () {
 
   before(async () => {
     await zipcodes.init();
+  });
+
+  after(async () => {
+    decache("../test-data/sample-RR-response.json");
   });
 
   afterEach(function () {
@@ -72,8 +79,9 @@ describe("Finding restrooms near user's geo location", function () {
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
     const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -185,6 +193,10 @@ describe("Finding restrooms near device address", function () {
     await zipcodes.init();
   });
 
+  after(async () => {
+    decache("../test-data/sample-RR-response.json");
+  });
+
   afterEach(function () {
     decache("../test-data/nearme_geo_not_supported");
   });
@@ -214,8 +226,9 @@ describe("Finding restrooms near device address", function () {
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
     const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -363,6 +376,10 @@ describe("Finding restrooms at a user specified location", function () {
     await zipcodes.init();
   });
 
+  after(async () => {
+    decache("../test-data/sample-RR-response.json");
+  });
+
   afterEach(function () {
     decache("../test-data/atlocation");
   });
@@ -391,8 +408,9 @@ describe("Finding restrooms at a user specified location", function () {
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
     const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -489,8 +507,8 @@ describe("Finding restrooms at a user specified address", function () {
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
     const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    verifyAPLDirectiveStructure(response.directives);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -585,6 +603,10 @@ describe("Honor search filters when searching for restrooms near the user's loca
 
   before(async () => {
     await zipcodes.init();
+  });
+
+  after(async () => {
+    decache("../test-data/sample-RR-response.json");
   });
 
   afterEach(function () {
@@ -689,6 +711,10 @@ describe("APL directives support", function () {
     await zipcodes.init();
   });
 
+  after(async () => {
+    decache("../test-data/sample-RR-response.json");
+  });
+
   afterEach(function () {
     decache("../test-data/nearme_geo_supported_no_apl");
     decache("../test-data/nearme_geo_supported");
@@ -713,7 +739,7 @@ describe("APL directives support", function () {
     );
     expect(outputSpeech.type).to.equal("SSML");
 
-    expect(response.directives).to.be.undefined;
+    expect(response.directives.length).to.eql(0);
   });
 
   it("the features of the restroom should be accurately represented in the APL visual.", async () => {
@@ -760,8 +786,9 @@ describe("APL directives support", function () {
       expect(outputSpeech.type).to.equal("SSML");
 
       const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-      verifyAPLDirectiveStructure(response.directives);
+      expect(response.directives.length).is.equal(1);
       const directive = response.directives[0];
+      verifyAPLDirectiveStructure(directive);
       expect(directive.document).to.eql(restroomDetailsDocument);
       const actualDatasource = directive.datasources;
       expect(actualDatasource).to.eql(
@@ -809,6 +836,8 @@ describe("Sending emails", function () {
   });
 
   after(async () => {
+    decache("../test-data/sample-RR-response.json");
+
     mockery.deregisterAll();
     mockery.disable();
   });
@@ -839,8 +868,9 @@ describe("Sending emails", function () {
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
     const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -893,8 +923,9 @@ describe("Sending emails", function () {
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
     const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -945,8 +976,9 @@ describe("Sending emails", function () {
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
     const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -1144,6 +1176,8 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   after(async () => {
+    decache("../test-data/sample-RR-response.json");
+
     mockery.deregisterAll();
     mockery.disable();
   });
@@ -1180,8 +1214,9 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      verifyAPLDirectiveStructure(response.directives);
+      expect(response.directives.length).is.equal(1);
       const directive = response.directives[0];
+      verifyAPLDirectiveStructure(directive);
       expect(directive.document).to.eql(restroomDetailsDocument);
       const actualDatasource = directive.datasources;
       expect(actualDatasource).to.eql(
@@ -1233,8 +1268,9 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      verifyAPLDirectiveStructure(response.directives);
+      expect(response.directives.length).is.equal(1);
       const directive = response.directives[0];
+      verifyAPLDirectiveStructure(directive);
       expect(directive.document).to.eql(restroomDetailsDocument);
       const actualDatasource = directive.datasources;
       expect(actualDatasource).to.eql(
@@ -1263,7 +1299,6 @@ describe("Convey ratings of the restrooms", function () {
     restroomDelivered.upvote = 0;
     restroomDelivered.downvote = 0;
     configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
-    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
 
     configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
 
@@ -1284,8 +1319,9 @@ describe("Convey ratings of the restrooms", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -1335,8 +1371,9 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      verifyAPLDirectiveStructure(response.directives);
+      expect(response.directives.length).is.equal(1);
       const directive = response.directives[0];
+      verifyAPLDirectiveStructure(directive);
       expect(directive.document).to.eql(restroomDetailsDocument);
       const actualDatasource = directive.datasources;
       expect(actualDatasource).to.eql(
@@ -1387,8 +1424,9 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      verifyAPLDirectiveStructure(response.directives);
+      expect(response.directives.length).is.equal(1);
       const directive = response.directives[0];
+      verifyAPLDirectiveStructure(directive);
       expect(directive.document).to.eql(restroomDetailsDocument);
       const actualDatasource = directive.datasources;
       expect(actualDatasource).to.eql(
@@ -1438,8 +1476,9 @@ describe("Convey ratings of the restrooms", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -1488,8 +1527,9 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      verifyAPLDirectiveStructure(response.directives);
+      expect(response.directives.length).is.equal(1);
       const directive = response.directives[0];
+      verifyAPLDirectiveStructure(directive);
       expect(directive.document).to.eql(restroomDetailsDocument);
       const actualDatasource = directive.datasources;
       expect(actualDatasource).to.eql(
@@ -1539,8 +1579,9 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      verifyAPLDirectiveStructure(response.directives);
+      expect(response.directives.length).is.equal(1);
       const directive = response.directives[0];
+      verifyAPLDirectiveStructure(directive);
       expect(directive.document).to.eql(restroomDetailsDocument);
       const actualDatasource = directive.datasources;
       expect(actualDatasource).to.eql(
@@ -1589,8 +1630,9 @@ describe("Convey ratings of the restrooms", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-    verifyAPLDirectiveStructure(response.directives);
+    expect(response.directives.length).is.equal(1);
     const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
     expect(directive.document).to.eql(restroomDetailsDocument);
     const actualDatasource = directive.datasources;
     expect(actualDatasource).to.eql(
@@ -1607,6 +1649,218 @@ describe("Convey ratings of the restrooms", function () {
     expect(htmlBody.includes(`${icons.RATINGS} Not Rated`)).to.be.true;
   });
 });
+
+describe("Punching out to Maps navigation", function () {
+  const DUMMY_EMAIL_ADDRESS = "success@simulator.amazonses.com";
+
+  const DUMMY_LATITUDE = 47.62078857421875;
+  const DUMMY_LONGITUDE = -122.30061853955556;
+
+  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+
+  before(async () => {
+  });
+
+  let clonedDummyRestRooms;
+  beforeEach(async () => {
+    clonedDummyRestRooms = cloneDeep(dummyRestRooms);
+  });
+
+  afterEach(function () {
+    decache("../test-data/nearme_geo_supported_android_applinks_supported");
+    decache("../test-data/nearme_geo_supported_applinks_not_supported");
+    decache("../test-data/nearme_geo_supported_ios_applinks_supported");
+    decache("../test-data/yes_android");
+    decache("../test-data/yes_ios");
+  });
+
+  after(async () => {
+    decache("../test-data/sample-RR-response.json");
+  });
+
+  it("should punch out to Apple Maps directions for the top search result in the happy path on iOS devices.", async () => {
+    const event = require("../test-data/yes_ios");
+    const latitude = event.session.attributes.latitude;
+    const longitude = event.session.attributes.longitude;
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    expect(response.shouldEndSession).to.be.undefined;
+
+    expect(response.directives.length).to.eql(1);
+    expect(response.directives[0]).to.eql(iOSMapsAppLinkDirective(`https://maps.apple.com/?daddr=${latitude},${longitude}`, 'Okay.', 'Please unlock your device to see the directions.'));
+  });
+
+  it("should punch out to Google Maps directions for the top search result in the happy path on Android devices.", async () => {
+    const event = require("../test-data/yes_android");
+    const latitude = event.session.attributes.latitude;
+    const longitude = event.session.attributes.longitude;
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    expect(response.shouldEndSession).to.be.undefined;
+
+    expect(response.directives.length).to.eql(1);
+    expect(response.directives[0]).to.eql(androidMapsAppLinkDirective(`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`, 'Okay.', 'Please unlock your device to see the directions.'));
+  });
+
+  it("should offer to punch out to Apple Maps directions on iOS devices that support AppLinks.", async () => {
+    const event = require("../test-data/nearme_geo_supported_ios_applinks_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    expect(response.shouldEndSession).to.be.false;
+
+    const sessionAttributes = responseContainer.sessionAttributes;
+    expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
+    expect(sessionAttributes.latitude).to.eql(DUMMY_LATITUDE);
+    expect(sessionAttributes.longitude).to.eql(DUMMY_LONGITUDE);
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    console.log(JSON.stringify(restroomDelivered))
+    const outputSpeech = response.outputSpeech;
+    const distance = roundDownDistance(restroomDelivered.distance);
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    expect(response.directives.length).to.eql(1);
+    verifyAPLDirectiveStructure(response.directives[0]);
+  });
+
+  it("should offer to punch out to Google Maps directions on Android devices that support AppLinks.", async () => {
+    const event = require("../test-data/nearme_geo_supported_android_applinks_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    expect(response.shouldEndSession).to.be.false;
+
+    const sessionAttributes = responseContainer.sessionAttributes;
+    expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
+    expect(sessionAttributes.latitude).to.eql(DUMMY_LATITUDE);
+    expect(sessionAttributes.longitude).to.eql(DUMMY_LONGITUDE);
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    console.log(JSON.stringify(restroomDelivered))
+    const outputSpeech = response.outputSpeech;
+    const distance = roundDownDistance(restroomDelivered.distance);
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    expect(response.directives.length).to.eql(1);
+    verifyAPLDirectiveStructure(response.directives[0]);
+  });
+
+  it("should not offer to punch out to Maps directions if the device does not support AppLinks.", async () => {
+    const event = require("../test-data/nearme_geo_supported_applinks_not_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+    configureRRService(200, DUMMY_LATITUDE, DUMMY_LONGITUDE, false, false, clonedDummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    assert(response.shouldEndSession);
+    const restroomDelivered = clonedDummyRestRooms[0];
+    console.log(JSON.stringify(restroomDelivered))
+    const outputSpeech = response.outputSpeech;
+    const distance = roundDownDistance(restroomDelivered.distance);
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    expect(response.directives.length).to.eql(1);
+    verifyAPLDirectiveStructure(response.directives[0]);
+  });
+});
+
+function androidMapsAppLinkDirective(link, unlockedScreenSpeech, lockedScreenSpeech) {
+  return {
+    type: "Connections.StartConnection",
+    uri: "connection://AMAZON.LinkApp/1",
+    input: {
+      catalogInfo: {
+        identifier: android.GOOGLE_MAPS_IDENTIFIER,
+        type: android.STORE_TYPE,
+      },
+      actions: {
+        primary: {
+          type: "UNIVERSAL_LINK",
+          link: link
+        }
+      },
+      prompts: {
+        onAppLinked: {
+          prompt: {
+            ssml: `<speak>${unlockedScreenSpeech}</speak>`,
+            type: "SSML"
+          },
+          defaultPromptBehavior: "SPEAK"
+        },
+        onScreenLocked: {
+          prompt: {
+            ssml: `<speak>${lockedScreenSpeech}</speak>`,
+            type: "SSML"
+          }
+        }
+      }
+    }
+  }
+}
+
+function iOSMapsAppLinkDirective(link, unlockedScreenSpeech, lockedScreenSpeech) {
+  return {
+    type: "Connections.StartConnection",
+    uri: "connection://AMAZON.LinkApp/1",
+    input: {
+      catalogInfo: {
+        identifier: ios.APPLE_MAPS_IDENTIFIER,
+        type: ios.STORE_TYPE,
+      },
+      actions: {
+        primary: {
+          type: "UNIVERSAL_LINK",
+          link: link
+        }
+      },
+      prompts: {
+        onAppLinked: {
+          prompt: {
+            ssml: `<speak>${unlockedScreenSpeech}</speak>`,
+            type: "SSML"
+          },
+          defaultPromptBehavior: "SPEAK"
+        },
+        onScreenLocked: {
+          prompt: {
+            ssml: `<speak>${lockedScreenSpeech}</speak>`,
+            type: "SSML"
+          }
+        }
+      }
+    }
+  }
+}
 
 function roundDownDistance(distance) {
   return Math.round((distance + Number.EPSILON) * 100) / 100
@@ -1685,14 +1939,11 @@ function visuallyDescribeRestroom(restroom) {
 }
 
 /**
- * Verify the structure of the APL directives. We check that we are sending exactly
- * one directive and that it is of the right type and version.
+ * Verify the structure of the APL directives.
  */
-function verifyAPLDirectiveStructure(directives) {
-  expect(directives).is.not.null;
-  expect(directives.length).is.equal(1);
+function verifyAPLDirectiveStructure(directive) {
+  expect(directive).is.not.null;
 
-  const directive = directives[0];
   expect(directive.type).to.equal(APL_DOCUMENT_TYPE);
   expect(directive.version).to.equal(APL_DOCUMENT_VERSION);
 }

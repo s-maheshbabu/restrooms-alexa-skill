@@ -17,6 +17,9 @@
         },
         "interfaces": [
           {
+            "type": "APP_LINKS"
+          },
+          {
             "supportedViewports": [
               {
                 "maxHeight": 480,
@@ -61,7 +64,35 @@
             ],
             "type": "ALEXA_PRESENTATION_APL"
           }
-        ]
+        ],
+        "appLink": {
+          "linkedApplications": [
+            {
+              "catalogInfo": {
+                "identifier": "com.google.android.apps.maps",
+                "type": "GOOGLE_PLAY_STORE"
+              },
+              "domains": [
+                "google.com"
+              ],
+              "friendlyName": {
+                "default": "Google Maps"
+              }
+            },
+            {
+              "catalogInfo": {
+                "identifier": "id915056765",
+                "type": "IOS_APP_STORE"
+              },
+              "domains": [
+                "maps.apple.com"
+              ],
+              "friendlyName": {
+                "default": "Apple Maps"
+              }
+            }
+          ]
+        }
       }
     },
     "manifestVersion": "1.0",

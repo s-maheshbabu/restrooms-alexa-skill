@@ -9,6 +9,7 @@ const isPositivelyRated = require("./FindRestroomIntentHelper").isPositivelyRate
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
+const states = require("constants/Constants").states;
 
 module.exports = FindRestroomNearMeIntentHandler = {
   canHandle(handlerInput) {
@@ -27,7 +28,7 @@ module.exports = FindRestroomNearMeIntentHandler = {
 }
 
 /**
- * Documentation.
+ * TODO Documentation.
  */
 async function findRestroomsNearDeviceAddress(handlerInput) {
   const { requestEnvelope, serviceClientFactory, responseBuilder } = handlerInput;
@@ -82,7 +83,7 @@ async function findRestroomsNearDeviceAddress(handlerInput) {
 
 async function findRestroomsNearUserGeoLocation(handlerInput) {
   const { context } = handlerInput.requestEnvelope;
-  const { responseBuilder } = handlerInput;
+  const { attributesManager, responseBuilder } = handlerInput;
 
   const geoObject = context.Geolocation;
 
@@ -110,7 +111,16 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   console.log(`A valid user geo location was retrieved: ${latitude}, ${longitude}`);
 
   const restrooms = await search(handlerInput, latitude, longitude);
-  return await buildResponse(handlerInput, restrooms);
+
+  const offerDirections = utilities.isAppLinksSupported(handlerInput);
+  if (offerDirections) {
+    const attributes = attributesManager.getSessionAttributes() || {};
+    attributes.state = states.OFFER_DIRECTIONS;
+    attributes.latitude = latitude;
+    attributes.longitude = longitude;
+    attributesManager.setSessionAttributes(attributes);
+  }
+  return await buildResponse(handlerInput, restrooms, offerDirections);
 }
 
 async function search(handlerInput, latitude, longitude) {
@@ -118,7 +128,7 @@ async function search(handlerInput, latitude, longitude) {
   return await RR.searchRestroomsByLatLon(latitude, longitude, filters.isFilterByADA, filters.isFilterByUnisex, filters.isFilterByChangingTable);
 }
 
-async function buildResponse(handlerInput, restrooms) {
+async function buildResponse(handlerInput, restrooms, offerDirections = false) {
   const { responseBuilder } = handlerInput;
 
   if (!Array.isArray(restrooms) || !restrooms.length) {
@@ -140,9 +150,9 @@ async function buildResponse(handlerInput, restrooms) {
   const distanceInMiles = restrooms[0].distance;
   // TODO: We can't always say 'this and more results'. What if there was only one result?
   const builder = responseBuilder
-    .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom ${distanceInMiles} miles away. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
+    .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom ${distanceInMiles} miles away. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email. ${offerDirections ? `Shall I load a map with directions to this restroom?` : ``}` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
     .addDirective(IntentHelper.buildAPLDirective(undefined, restrooms[0], !emailAddress))
-    .withShouldEndSession(true);
+    .withShouldEndSession(!offerDirections);
 
   if (!emailAddress) builder.withAskForPermissionsConsentCard([scopes.EMAIL_SCOPE]);
   else builder.withSimpleCard(...IntentHelper.buildSimpleCard(undefined, restrooms));

@@ -1,7 +1,8 @@
 const Alexa = require('ask-sdk-core');
 const { hasIn } = require('immutable');
+const applinks = require("constants/Constants").applinks;
 
-const skill_model = require("../model/en_US");
+const skill_model = require("../skill-package/interactionModels/custom/en-US");
 
 const slotSynonymsToIdMap = (slotTypeName) => {
     if (!hasIn(skill_model, ['interactionModel', 'languageModel', 'types'])) throw new ReferenceError("Unexpected skill model. Unable to find path to slots.");
@@ -105,6 +106,13 @@ const isApiRequest = (handlerInput, apiName) => {
 }
 
 /**
+ * Helper method to determine if AppLinks interface is supported.
+ */
+const isAppLinksSupported = (handlerInput) => {
+    return handlerInput.requestEnvelope.context[applinks.APP_LINK_INTERFACE] !== undefined;
+}
+
+/**
  * Helper method to get API arguments from the request envelope.
  */
 const getApiArguments = (handlerInput) => {
@@ -173,6 +181,7 @@ module.exports = {
     getReadableSlotValue: getReadableSlotValue,
     getSlots: getSlots,
     isApiRequest: isApiRequest,
+    isAppLinksSupported: isAppLinksSupported,
     isIntent: isIntent,
     isIntentRequest: isIntentRequest,
     shuffle: shuffle,
