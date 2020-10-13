@@ -2,12 +2,13 @@ const utilities = require("../utilities");
 
 const RR = require("gateway/RefugeeRestrooms");
 const Mailer = require("gateway/Mailer.js");
-const zipcodes = require("gateway/Zipcodes");
+const GoogleMaps = require("gateway/GoogleMaps");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
 
 const IntentHelper = require("./FindRestroomIntentHelper");
+const InvalidAddressError = require("../errors/InvalidAddressError");
 const isPositivelyRated = require("./FindRestroomIntentHelper").isPositivelyRated;
 
 module.exports = FindRestroomAtAddressIntentHandler = {
@@ -17,13 +18,20 @@ module.exports = FindRestroomAtAddressIntentHandler = {
   async handle(handlerInput) {
     const { responseBuilder } = handlerInput;
 
-    const zipcode = 10001; //getZipcode(handlerInput);
-    // If zipcode is missing or invalid, render error messages.
-    console.log(`Searching for restrooms in zipcode: ${zipcode}`);
-    const coordinates = zipcodes.getCoordinates(zipcode);
+    const address = getAddress(handlerInput);
+    let coordinates;
+    try {
+      coordinates = await GoogleMaps.getCoordinates(address);
+    } catch (error) {
+      if (error instanceof InvalidAddressError) {
+        console.log(error);
+      }
+      // Bubble up any other error to render a generic error message.
+      else throw error;
+    }
     if (!coordinates) {
       return responseBuilder
-        .speak(`Sorry. <say-as interpret-as="digits">${zipcode}</say-as> is not a valid zipcode in the US. Please try again with a valid five digit U.S. zipcode.`)
+        .speak(`Sorry. Given address is not a valid address in the US. Please try again with a valid US based address.`)
         .withShouldEndSession(true)
         .getResponse();
     }
@@ -33,7 +41,7 @@ module.exports = FindRestroomAtAddressIntentHandler = {
 
     if (!Array.isArray(restrooms) || !restrooms.length) {
       return responseBuilder
-        .speak(`I'm sorry. I couldn't find any restrooms at <say-as interpret-as="digits">${zipcode}</say-as> matching your criteria.`)
+        .speak(`I'm sorry. I couldn't find any restrooms at given address matching your criteria.`)
         .withShouldEndSession(true)
         .getResponse();
     }
@@ -41,28 +49,37 @@ module.exports = FindRestroomAtAddressIntentHandler = {
     const emailAddress = await IntentHelper.getEmailAddress(handlerInput);
     if (emailAddress) {
       // Is it possible to not wait on sending the email?
-      await Mailer.sendEmail(emailAddress, zipcode, restrooms);
+      await Mailer.sendEmail(emailAddress, 'given address', restrooms);
       console.log("We have the user's email address. An email was sent with the search results.");
     }
 
     // TODO: We can't always say 'this and more results'. What if there was only one result?
     const builder = responseBuilder
-      .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
-      .addDirective(IntentHelper.buildAPLDirective(zipcode, restrooms[0], !emailAddress))
+      .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom at given address. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
+      .addDirective(IntentHelper.buildAPLDirective('given address', restrooms[0], !emailAddress))
       .withShouldEndSession(true);
 
     if (!emailAddress) builder.withAskForPermissionsConsentCard([scopes.EMAIL_SCOPE]);
-    else builder.withSimpleCard(...IntentHelper.buildSimpleCard(zipcode, restrooms));
+    else builder.withSimpleCard(...IntentHelper.buildSimpleCard('given address', restrooms));
 
     return builder.getResponse();
   }
 }
 
 /**
- * TODO doc
+ * Construct address from the street, city and state fields
+ * in the session attributes.
+ * TODO: Add spaces and commas to make it easier for Google
+ * TODO: Convert input like 'six zero one', 'six oh one' etc to 601.
  */
-function getZipcode(handlerInput) {
+function getAddress(handlerInput) {
   const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-  //TODO validate zipcode
-  return sessionAttributes.zipcode;
+  const street = sessionAttributes.street;
+  const city = sessionAttributes.city || '';
+  const state = sessionAttributes.state || '';
+
+  const address = street + city + state;
+  // TODO: Test this.
+  if (!address) throw new Error("Address was empty. Address should include at least the street name.");
+  return address;
 }

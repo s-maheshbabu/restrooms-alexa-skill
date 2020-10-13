@@ -3,7 +3,7 @@ const determinePositiveRatingPercentage = require("../src/utilities").determineP
 
 const expect = require("chai").expect;
 const assert = require("chai").assert;
-const decache = require("decache");
+const decache = require("decache"); // TODO: Repplace this with importFresh
 const nock = require('nock')
 
 const cloneDeep = require("lodash.clonedeep");
@@ -20,6 +20,8 @@ const context = {};
 
 const RR = require("gateway/RefugeeRestrooms");
 const zipcodes = require("gateway/Zipcodes");
+const GoogleMaps = require("gateway/GoogleMaps");
+const DUMMY_GOOGLE_MAPS_API_KEY = "dummyGoogleMapsAPIKey";
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
@@ -439,6 +441,142 @@ describe("Finding restrooms at a user specified location", function () {
       `<speak>Sorry. <say-as interpret-as="digits">${anInvalidZipCode}</say-as> is not a valid zipcode in the US. Please try again with a valid five digit U.S. zipcode.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
+  });
+});
+
+describe("Finding restrooms at a user specified address", function () {
+  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyGoogleMapsResponse = require("../test-data/sample-GoogleMaps-response.json");
+
+  before(async () => {
+    process.env.GOOGLE_MAPS_API_KEY = DUMMY_GOOGLE_MAPS_API_KEY;
+  });
+
+  afterEach(function () {
+    decache("../test-data/atAddress");
+  });
+
+  after(function () {
+    delete process.env.GOOGLE_MAPS_API_KEY;
+  });
+
+  it("should be able to find restrooms at the full address specified by the user.", async () => {
+    const event = require("../test-data/atAddress");
+
+    const street = event.session.attributes.street;
+    const city = event.session.attributes.city;
+    const state = event.session.attributes.state;
+
+    configureGoogleMapsService(200, street + city + state, dummyGoogleMapsResponse);
+    const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
+    const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
+    configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
+
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+    verifyAPLDirectiveStructure(response.directives);
+    const directive = response.directives[0];
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at given address.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
+      )
+    );
+  });
+
+  it("should let the user know if there are no restrooms in the address they are searching for", async () => {
+    const event = require("../test-data/atAddress");
+
+    const street = event.session.attributes.street;
+    const city = event.session.attributes.city;
+    const state = event.session.attributes.state;
+
+    configureGoogleMapsService(200, street + city + state, dummyGoogleMapsResponse);
+    const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
+    const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
+    const emptyRestroomsResult = [];
+    configureRRService(200, latitude, longitude, false, true, emptyRestroomsResult);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I'm sorry. I couldn't find any restrooms at given address matching your criteria.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
+  it("should render an error message if we are unable to locate the address. Google Maps almost always returns results even if the address is invalid using partial matches. If Google Maps did not return any results, the address is incomprehensibly wrong. Probably a misrecognition by Alexa.", async () => {
+    const event = require("../test-data/atAddress");
+    const street = event.session.attributes.street = "some";
+    const city = event.session.attributes.city = "incomprehensibly wrong";
+    const state = event.session.attributes.state = "address";
+
+    const emptyGoogleMapsResponse = {
+      results: [],
+      status: "ZERO_RESULTS"
+    };
+    configureGoogleMapsService(200, `${street}${city}${state}`, emptyGoogleMapsResponse);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>Sorry. Given address is not a valid address in the US. Please try again with a valid US based address.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
+  it("should render an error message to the user if we get an error from Google Maps", async () => {
+    const event = require("../test-data/atAddress");
+
+    const street = event.session.attributes.street;
+    const city = event.session.attributes.city;
+    const state = event.session.attributes.state;
+
+    const error_codes = [400, 401, 403, 404, 409, 429, 500, 501, 503, 504];
+    for (var i = 0; i < error_codes.length; i++) {
+      configureGoogleMapsService(error_codes[i], street + city + state, {});
+      // Error codes above 409 are retried automatically. So mock it one more time so Nock won't complain about not having a matching mock on retry.
+      if (error_codes[i] > 409)
+        configureGoogleMapsService(error_codes[i], street + city + state, {});
+
+      const responseContainer = await unitUnderTest.handler(event, context);
+
+      const response = responseContainer.response;
+      assert(response.shouldEndSession);
+
+      const outputSpeech = response.outputSpeech;
+      expect(outputSpeech.ssml).to.equal(
+        `<speak>I'm Sorry, I'm having trouble helping you. Please try again later.</speak>`
+      );
+      expect(outputSpeech.type).to.equal("SSML");
+    }
   });
 });
 
@@ -1519,6 +1657,16 @@ function configureRRService(responseCode, latitude, longitude, isFilterByADA, is
 
   nock(RR.BASE_URL)
     .get(`/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA}&unisex=${isFilterByUnisex}&lat=${latitude}&lng=${longitude}`)
+    .reply(responseCode, JSON.stringify(payload, null, 2));
+}
+
+function configureGoogleMapsService(responseCode, address, payload) {
+  if (!nock.isActive()) {
+    nock.activate();
+  }
+
+  nock(GoogleMaps.BASE_URL)
+    .get(`/api/geocode/json?address=${address}&key=${DUMMY_GOOGLE_MAPS_API_KEY}`)
     .reply(responseCode, JSON.stringify(payload, null, 2));
 }
 

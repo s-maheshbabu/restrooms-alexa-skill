@@ -3,6 +3,7 @@ const utilities = require("../utilities");
 
 let synonymsToIdMap;
 
+// TODO Tests for this.
 module.exports = FindRestroomAtAddressAPI = {
   canHandle(handlerInput) {
     return utilities.isApiRequest(handlerInput, 'FindRestroomsAtAddressAPI');
@@ -13,6 +14,7 @@ module.exports = FindRestroomAtAddressAPI = {
     const { attributesManager } = handlerInput;
     const sessionAttributes = attributesManager.getSessionAttributes();
     sessionAttributes.search_filters = resolveEntities(apiArguments.SearchFiltersList);
+    // TODO: Street is a mandatory field and so assert on its presence instead of defaulting to null.
     sessionAttributes.street = apiArguments.Street || null;
     sessionAttributes.city = apiArguments.City || null;
     sessionAttributes.state = apiArguments.State || null;

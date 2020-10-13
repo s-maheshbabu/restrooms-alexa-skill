@@ -5,7 +5,7 @@ const BASE_URL = `https://www.refugerestrooms.org`;
 
 async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFilterByUnisex, isFilterByChangingTable) {
     if (!latitude || !longitude)
-        throw TypeError(`Latitide and Longitude are required fields. Latitide: ${latitude} and Longitude: ${longitude}`);
+        throw TypeError(`Latitude and Longitude are required fields. Latitude: ${latitude} and Longitude: ${longitude}`);
 
     let URL = `${BASE_URL}/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA === true ? `true` : `false`}&unisex=${isFilterByUnisex === true ? `true` : `false`}&lat=${latitude}&lng=${longitude}`;
     console.log(`Endpoint ${URL}`);

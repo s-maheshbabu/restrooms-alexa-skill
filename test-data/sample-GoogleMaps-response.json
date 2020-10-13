@@ -1,0 +1,109 @@
+{
+    "results": [
+        {
+            "address_components": [
+                {
+                    "long_name": "Two Union Square",
+                    "short_name": "Two Union Square",
+                    "types": [
+                        "premise"
+                    ]
+                },
+                {
+                    "long_name": "601",
+                    "short_name": "601",
+                    "types": [
+                        "street_number"
+                    ]
+                },
+                {
+                    "long_name": "Union Street",
+                    "short_name": "Union St",
+                    "types": [
+                        "route"
+                    ]
+                },
+                {
+                    "long_name": "Downtown Seattle",
+                    "short_name": "Downtown Seattle",
+                    "types": [
+                        "neighborhood",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Seattle",
+                    "short_name": "Seattle",
+                    "types": [
+                        "locality",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "King County",
+                    "short_name": "King County",
+                    "types": [
+                        "administrative_area_level_2",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "Washington",
+                    "short_name": "WA",
+                    "types": [
+                        "administrative_area_level_1",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "United States",
+                    "short_name": "US",
+                    "types": [
+                        "country",
+                        "political"
+                    ]
+                },
+                {
+                    "long_name": "98101",
+                    "short_name": "98101",
+                    "types": [
+                        "postal_code"
+                    ]
+                }
+            ],
+            "formatted_address": "Two Union Square, 601 Union St, Seattle, WA 98101, USA",
+            "geometry": {
+                "bounds": {
+                    "northeast": {
+                        "lat": 47.610704,
+                        "lng": -122.3317365
+                    },
+                    "southwest": {
+                        "lat": 47.6097038,
+                        "lng": -122.3333536
+                    }
+                },
+                "location": {
+                    "lat": 47.6101545,
+                    "lng": -122.332374
+                },
+                "location_type": "ROOFTOP",
+                "viewport": {
+                    "northeast": {
+                        "lat": 47.6115528802915,
+                        "lng": -122.3311960697085
+                    },
+                    "southwest": {
+                        "lat": 47.6088549197085,
+                        "lng": -122.3338940302915
+                    }
+                }
+            },
+            "place_id": "ChIJLe_Cb7RqkFQRfGi0gg_6qes",
+            "types": [
+                "premise"
+            ]
+        }
+    ],
+    "status": "OK"
+}

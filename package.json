@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/s-maheshbabu/restrooms-alexa-skill#readme",
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.1.13",
     "app-module-path": "^2.2.0",
     "ask-sdk-core": "^2.9.0",
     "ask-sdk-model": "^1.29.0",
@@ -34,7 +35,8 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "decache": "^4.5.1",
+    "decache": "^4.6.0",
+    "import-fresh": "^3.2.1",
     "grunt": "^1.0.4",
     "grunt-aws-lambda": "^0.13.0",
     "lodash.clonedeep": "^4.5.0",
