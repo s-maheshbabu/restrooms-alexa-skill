@@ -1,8 +1,6 @@
 const unitUnderTest = require("../../src/gateway/RefugeeRestrooms");
 
 const expect = require("chai").expect;
-const assert = require("chai").assert;
-const decache = require("decache");
 const nock = require('nock')
 
 const cloneDeep = require("lodash.clonedeep");
