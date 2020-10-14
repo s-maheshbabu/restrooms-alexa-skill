@@ -9,6 +9,7 @@ const scopes = require("constants/Scopes").scopes;
 
 const IntentHelper = require("./FindRestroomIntentHelper");
 const InvalidAddressError = require("../errors/InvalidAddressError");
+const UnparseableError = require('../errors/UnparseableError');
 const isPositivelyRated = require("./FindRestroomIntentHelper").isPositivelyRated;
 
 module.exports = FindRestroomAtAddressIntentHandler = {
@@ -18,7 +19,17 @@ module.exports = FindRestroomAtAddressIntentHandler = {
   async handle(handlerInput) {
     const { responseBuilder } = handlerInput;
 
-    const address = getAddress(handlerInput);
+    let address;
+    try {
+      address = getAddress(handlerInput);
+    } catch (error) {
+      if (error instanceof UnparseableError)
+        return responseBuilder
+          .speak(`I am sorry but I currently do not support addresses with numbered streets like twenty fourth avenue, eigth street etc. Please try with a different address. Or, you can also search by zipcode or your current location.`)
+          .withShouldEndSession(true)
+          .getResponse();
+    }
+
     let coordinates;
     try {
       coordinates = await GoogleMaps.getCoordinates(address);
@@ -74,7 +85,7 @@ module.exports = FindRestroomAtAddressIntentHandler = {
  */
 function getAddress(handlerInput) {
   const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-  const street = sessionAttributes.street;
+  const street = utilities.sanitizeAddress(sessionAttributes.street);
   const city = sessionAttributes.city || '';
   const state = sessionAttributes.state || '';
 

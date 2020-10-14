@@ -30,7 +30,8 @@
     "immutable": "^4.0.0-rc.12",
     "node-fetch": "^2.6.0",
     "nodemailer": "^6.4.11",
-    "ramda": "0.27.0"
+    "ramda": "0.27.0",
+    "words-to-numbers": "^1.5.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",

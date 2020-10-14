@@ -4,6 +4,7 @@ const determinePositiveRatingPercentage = require("../src/utilities").determineP
 const expect = require("chai").expect;
 const assert = require("chai").assert;
 const decache = require("decache"); // TODO: Repplace this with importFresh
+const importFresh = require('import-fresh');
 const nock = require('nock')
 
 const cloneDeep = require("lodash.clonedeep");
@@ -478,14 +479,16 @@ describe("Finding restrooms at a user specified address", function () {
     delete process.env.GOOGLE_MAPS_API_KEY;
   });
 
+  // TODO Should we test the combinations of street+city and street+state addresses?
   it("should be able to find restrooms at the full address specified by the user.", async () => {
-    const event = require("../test-data/atAddress");
+    const event = importFresh("../test-data/atAddress");
+    event.session.attributes.street = "six oh one union street";
+    const sanitizedStreetAddress = "601 union street";
 
-    const street = event.session.attributes.street;
     const city = event.session.attributes.city;
     const state = event.session.attributes.state;
 
-    configureGoogleMapsService(200, street + city + state, dummyGoogleMapsResponse);
+    configureGoogleMapsService(200, sanitizedStreetAddress + city + state, dummyGoogleMapsResponse);
     const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
     const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
     configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
@@ -521,8 +524,24 @@ describe("Finding restrooms at a user specified address", function () {
     );
   });
 
+  it("should let the user know if the address they provided is not parseable.", async () => {
+    const event = importFresh("../test-data/atAddress");
+    event.session.attributes.street = "two one forty eighth avenue";
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I am sorry but I currently do not support addresses with numbered streets like twenty fourth avenue, eigth street etc. Please try with a different address. Or, you can also search by zipcode or your current location.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+  });
+
   it("should let the user know if there are no restrooms in the address they are searching for", async () => {
-    const event = require("../test-data/atAddress");
+    const event = importFresh("../test-data/atAddress");
 
     const street = event.session.attributes.street;
     const city = event.session.attributes.city;

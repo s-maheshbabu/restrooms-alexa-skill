@@ -1,8 +1,10 @@
 const Alexa = require('ask-sdk-core');
 const { hasIn } = require('immutable');
+var wordsToNumbers = require('words-to-numbers').wordsToNumbers;
 const applinks = require("constants/Constants").applinks;
 
 const skill_model = require("../skill-package/interactionModels/custom/en-US");
+const UnparseableError = require('./errors/UnparseableError');
 
 const slotSynonymsToIdMap = (slotTypeName) => {
     if (!hasIn(skill_model, ['interactionModel', 'languageModel', 'types'])) throw new ReferenceError("Unexpected skill model. Unable to find path to slots.");
@@ -160,6 +162,52 @@ const cleanupForVisualPresentation = (input) => {
 };
 
 /**
+ * Alexa Conversations currently just gives a raw address string which cannot be 
+ * used on Google Maps as is. So, we need to sanitize it a little bit so its looks
+ * like a normal address.
+ * For ex, 'six oh one union street' will be converted to '601 union street'.
+ * @param {*} address to be sanitized.
+ */
+// This is a temporary measure until Alexa Conversations starts returning entity resolved addresses. 
+const sanitizeAddress = (address) => {
+    const unparseable_address_strings = [
+        "first",
+        "second",
+        "third",
+        "thirteenth",
+        "fourth",
+        "fourteenth",
+        "fifteenth",
+        "fifth",
+        "sixth",
+        "sixteenth",
+        "seventeenth",
+        "seventh",
+        "eighteenth",
+        "eighth",
+        "nineteenth",
+        "ninth",
+        "tenth",
+        "eleventh",
+        "twelfth",
+    ];
+
+    if (!address) return '';
+
+    if (unparseable_address_strings.some(unparseable => address.includes(unparseable))) {
+        throw new UnparseableError(`${address} is not parseable`);
+    }
+
+    // Replace 'oh' with 'zero'
+    address = address.replace(/ oh /gi, ' zero ');
+
+    address = wordsToNumbers(address);
+
+    // Remove spaces between adjacent digits.
+    return address.replace(/(\d)\s+(?=\d)/g, '$1');
+};
+
+/**
  * Calculates the percentage of positive votes. 
  * Returns null if there are no votes registered for the restroom or if
  * either of upvote/downvote field is missing.
@@ -184,7 +232,7 @@ module.exports = {
     isAppLinksSupported: isAppLinksSupported,
     isIntent: isIntent,
     isIntentRequest: isIntentRequest,
+    sanitizeAddress: sanitizeAddress,
     shuffle: shuffle,
     slotSynonymsToIdMap: slotSynonymsToIdMap,
 };
-
