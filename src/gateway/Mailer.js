@@ -47,7 +47,7 @@ Here are some restrooms ${zipcode ? `at ${zipcode}` : `near you`}.</b><br/>`
     ${restroom.directions ? `Notes: ${restroom.directions}<br/>` : ``}
     ${icons.RATINGS} ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`} | ${icons.DISTANCE} ${restroom.distance} miles<br/>
     ${restroom.unisex ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Gender Neutral | ${restroom.accessible ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Accessible | ${restroom.changing_table ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Changing Table<br/>
-    `
+    <br/>`
     });
 
     body += `The Google Maps links above are based on latitude/longitude of the restroom. It should take you very close to the destination but you might then want to use the restroom name and address to actually locate it.`;
