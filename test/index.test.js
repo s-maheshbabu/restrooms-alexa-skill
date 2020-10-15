@@ -1725,7 +1725,7 @@ describe("Punching out to Maps navigation", function () {
     expect(response.directives[0]).to.eql(androidMapsAppLinkDirective(`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`, 'Okay.', 'Please unlock your device to see the directions.'));
   });
 
-  it("should offer to punch out to Apple Maps directions on iOS devices that support AppLinks.", async () => {
+  it.skip("should offer to punch out to Apple Maps directions on iOS devices that support AppLinks.", async () => {
     const event = require("../test-data/nearme_geo_supported_ios_applinks_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
@@ -1756,7 +1756,7 @@ describe("Punching out to Maps navigation", function () {
     verifyAPLDirectiveStructure(response.directives[0]);
   });
 
-  it("should offer to punch out to Google Maps directions on Android devices that support AppLinks.", async () => {
+  it.skip("should offer to punch out to Google Maps directions on Android devices that support AppLinks.", async () => {
     const event = require("../test-data/nearme_geo_supported_android_applinks_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;

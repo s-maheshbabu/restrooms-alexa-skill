@@ -112,7 +112,7 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
 
   const restrooms = await search(handlerInput, latitude, longitude);
 
-  const offerDirections = utilities.isAppLinksSupported(handlerInput);
+  const offerDirections = false; //utilities.isAppLinksSupported(handlerInput);
   if (offerDirections) {
     const attributes = attributesManager.getSessionAttributes() || {};
     attributes.state = states.OFFER_DIRECTIONS;
