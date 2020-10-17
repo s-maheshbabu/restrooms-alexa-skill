@@ -25,7 +25,7 @@ module.exports = FindRestroomAtAddressIntentHandler = {
     } catch (error) {
       if (error instanceof UnparseableError)
         return responseBuilder
-          .speak(`I am sorry but I currently do not support addresses with numbered streets like twenty fourth avenue, eigth street etc. Please try with a different address. Or, you can also search by zipcode or your current location.`)
+          .speak(`I am sorry but I currently do not support addresses with numbered streets like twenty fourth avenue, eigth street etc. Good bye.`)
           .withShouldEndSession(true)
           .getResponse();
     }

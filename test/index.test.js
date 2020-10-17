@@ -457,7 +457,7 @@ describe("Finding restrooms at a user specified location", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Sorry. <say-as interpret-as="digits">${anInvalidZipCode}</say-as> is not a valid zipcode in the US. Please try again with a valid five digit U.S. zipcode.</speak>`
+      `<speak>Sorry. I'm unable to find any restrooms at <say-as interpret-as="digits">${anInvalidZipCode}</say-as>. Good bye.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -535,7 +535,7 @@ describe("Finding restrooms at a user specified address", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I am sorry but I currently do not support addresses with numbered streets like twenty fourth avenue, eigth street etc. Please try with a different address. Or, you can also search by zipcode or your current location.</speak>`
+      `<speak>I am sorry but I currently do not support addresses with numbered streets like twenty fourth avenue, eigth street etc. Good bye.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
