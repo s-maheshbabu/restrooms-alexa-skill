@@ -20,13 +20,35 @@
                 "consentToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjVlMDBhZjAwLWRjYmEtNGE5Yi1iMThlLTc5YmQwYTYwZTFhYSIsImV4cCI6MTYwMjQ1Nzc1MCwiaWF0IjoxNjAyNDU0MTUwLCJuYmYiOjE2MDI0NTQxNTAsInByaXZhdGVDbGFpbXMiOnsiaXNEZXByZWNhdGVkIjoidHJ1ZSIsImNvbnNlbnRUb2tlbiI6IkF0emF8SXdFQklQMGhFdGx6X25POFZJeWJQY3hSU3lwcEJUeHZlV0VmUURER2trb0E3dFYzamVpY3A3MjV6X2UzRkg1bm5Cc1ozZzU5N3k3NC0wbTcyYnFNd1ZhY040M2lnbENQMVdyNkp3ZUtpVXlIbkJHMUt2a3dOZEYwaFh4VXFINmhYSnNTbG1VWE9lN0U0d2pGSVQ3Smt0aVg1eTFibFBwZXlLS2tuSkUxRXZIVktUcjJ4N05PTV9fNE5UWHY1YzRCOEFwdVJkUHRIZGo1YzhmdUkyY25EMUNaZFRWMnNnUnphV0kwSmg2STVONDFFcnluSnU5MjBncDZtRmpGOXFxRWItXzRiZ2NUWk9MU1JTcG0xTENTakJlRGZPTUhCb3ZkMGlxMVE3Z2RTTnFUd0NYYnJlN0JOTlFmMlkxUzBtZnBiTUNLZUJ4R2xjNUl0NkJRZ0tzaTJrSjlDbHhZaGV5NGl4a1ZlLUg3czREOUJ1dnVTSl9UQTlZNXdsSG1OTkVYQjRBY0RYayIsImRldmljZUlkIjoiYW16bjEuYXNrLmRldmljZS5BRURVVjdWRzNFVFZLT0RCQ0lSTFlTS09RNVJCTVlTSlRKTzJYRkpOWVJIU1dMUzdCUk01UkdXN1VCSElTWEc1SVNDRzNSNzJUVkgzRTVKT01XV0NHS05KQ1lGT0xFNUMyMjVFREg0S1A2NURINEhBWTVOVTc3UDdRVTJZMlBVNFNJUzNTMk0zQktWREhGUlpKQUZaNVdZVE5KRkEiLCJ1c2VySWQiOiJhbXpuMS5hc2suYWNjb3VudC5BR0ZPWVNDNDczSUlUUVBDQ0hYSEhSMlVTUVdDVENaNVBIT0Q2T1NXSllETko3WjQyUUxCTkpMWUFQVVhVM0pFTFE1WElYTU42N0RVNDdMRktMR1RKT1VMRlg1WVRBTEVXQ0lOMzNGVEJTUFpFV1M2T1JIV0pGV1g1WElENkNYUlpRNFhQQks2QzJUUDRRU1RGTVlFTVY3QjVLNVpNSlYyUTNXSUo2MkpOS0NXREc3TElNWlBDSk0yU1lDRTI2NUtKSFhMM0pFTlE2S1FCM0kifX0.Pibe0WSeSwteOBkRy8RzlGn7R-SLRyeoG3m3T6KqBe_BOgK14X9WvfLWAVvg4SxQmSobqs9EALKuVYwPppFCMTRr3m5gY_u7IuHmjQwvppz6bOndzsS1qsLQR6bMQ3uwcEb-a47a3gKjBhfhlfrbokTv-uA6TgQA0N9SoxHeHe6KwFbOUm_Ss3rx960YCkiN32vJMHFnE2QKwy0YNYqaCob9s52z4Uzh6TCEfavVaf3lnTKrHd2D32agcKzzzSx4VDeAwzH8MZUSCNx9VMwxI1eGjEGCGcpoq54r-OmRxmKceWNjeEI53Cx3CNSjrPEs2ISHxaE33a1qzDIeNOY8Ow",
                 "scopes": {
                     "alexa::devices:all:geolocation:read": {
-                        "status": "DENIED"
+                        "status": "GRANTED"
                     }
                 }
             }
         }
     },
     "context": {
+        "Geolocation": {
+            "locationServices": {
+                "status": "RUNNING",
+                "access": "ENABLED"
+            },
+            "timestamp": "2020-08-14T23:49:07Z",
+            "coordinate": {
+                "latitudeInDegrees": 47.62078857421875,
+                "longitudeInDegrees": -122.30061853955556,
+                "accuracyInMeters": 10
+            },
+            "altitude": {
+                "altitudeInMeters": 83.92568778991699,
+                "accuracyInMeters": 10
+            },
+            "heading": {
+                "directionInDegrees": 155.25836181640625
+            },
+            "speed": {
+                "speedInMetersPerSecond": 1
+            }
+        },
         "Viewports": [
             {
                 "type": "APL",
@@ -106,7 +128,8 @@
                         "runtime": {
                             "maxVersion": "1.4"
                         }
-                    }
+                    },
+                    "Geolocation": {}
                 }
             },
             "apiEndpoint": "https://api.amazonalexa.com",

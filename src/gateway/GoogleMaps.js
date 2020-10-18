@@ -18,19 +18,26 @@ const BASE_URL = `https://maps.googleapis.com/maps`;
 const ZERO_RESULTS_STATUS = `ZERO_RESULTS`;
 
 /**
- * Returns latitude/longitude for the given address. The coordinates are usually
- * but not necessarily close to the center of the zipcode.
+ * Returns latitude/longitude for the given address. If latitude and longitude are
+ * given, the results are biased to be closer to those bounds.
  * 
  * @param {*} address The address to lookup geocodes for.
+ * @param {*} latitude The latitude to be used to bound the results. Only valid if
+ * longitude is also provided.
+ * @param {*} longitude The longitude to be used to bound the results. Only valid if
+ * latitude is also provided.
  */
-const getCoordinates = async address => {
-    console.log(`Fetching geocodes for ${address}`);
+const getCoordinates = async (address, latitude, longitude) => {
+    console.log(`Fetching geocodes for ${address}. Bounds are Latitude: ${latitude}, Longitude: ${longitude}`);
     if (!API_KEY) await init();
 
-    // TODO: This search needs to be bounded by user location.
+    let bounds = undefined;
+    if (latitude && longitude) bounds = `${latitude},${longitude}|${latitude},${longitude}`;
     const response = await client.geocode({
         params: {
             address: address,
+            ...(bounds && { bounds: bounds }),
+            components: 'country:US',
             key: API_KEY,
         },
         // TODO: Can this be tested?

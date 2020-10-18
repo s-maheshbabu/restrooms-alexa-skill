@@ -464,11 +464,23 @@ describe("Finding restrooms at a user specified location", function () {
 });
 
 describe("Finding restrooms at a user specified address", function () {
+  const DUMMY_LATITUDE = 47.62078857421875;
+  const DUMMY_LONGITUDE = -122.30061853955556;
+
+  const US_COUNTRY_CODE = "US";
+  const DUMMY_POSTAL_CODE = "77840";
+
+  const aDeviceAddress = {
+    countryCode: US_COUNTRY_CODE,
+    postalCode: DUMMY_POSTAL_CODE,
+  };
+
   const dummyRestRooms = require("../test-data/sample-RR-response.json");
   const dummyGoogleMapsResponse = require("../test-data/sample-GoogleMaps-response.json");
 
   before(async () => {
     process.env.GOOGLE_MAPS_API_KEY = DUMMY_GOOGLE_MAPS_API_KEY;
+    await zipcodes.init();
   });
 
   afterEach(function () {
@@ -480,8 +492,8 @@ describe("Finding restrooms at a user specified address", function () {
   });
 
   // TODO Should we test the combinations of street+city and street+state addresses?
-  it("should be able to find restrooms at the full address specified by the user.", async () => {
-    const event = importFresh("../test-data/atAddress");
+  it("should be able to find restrooms at the full address specified by the user. Even if we have the users geocoordinates and device address, we should not place any bounds on the geocode lookup of the specified address.", async () => {
+    const event = importFresh("../test-data/atAddress_geo_supported");
     event.session.attributes.street = "six oh one union street";
     const sanitizedStreetAddress = "601 union street";
 
@@ -489,6 +501,203 @@ describe("Finding restrooms at a user specified address", function () {
     const state = event.session.attributes.state;
 
     configureGoogleMapsService(200, sanitizedStreetAddress + city + state, dummyGoogleMapsResponse);
+    const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
+    const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
+    configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
+
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+    const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at given address.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
+      )
+    );
+  });
+
+  it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a mobile device, we should use their geo coordinates to influence the search for restrooms.", async () => {
+    const event = importFresh("../test-data/atAddress_geo_supported");
+    event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
+    event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
+
+    event.session.attributes.street = "six oh one union street";
+    const sanitizedStreetAddress = "601 union street";
+
+    event.session.attributes.city = undefined;
+    event.session.attributes.state = undefined;
+
+    configureGoogleMapsServiceWithBounds(200, sanitizedStreetAddress, DUMMY_LATITUDE, DUMMY_LONGITUDE, dummyGoogleMapsResponse);
+    const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
+    const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
+    configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
+
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+    const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at given address.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
+      )
+    );
+  });
+
+  it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a mobile device, we should use their geo coordinates to influence the search for restrooms. However, if we don't have permissions to use the coordinates, we should still move forward with an unbounded search.", async () => {
+    const event = importFresh("../test-data/atAddress");
+
+    // Simulating lack of permissions to fetch user's geo address.
+    event.context.System.user.permissions.scopes['alexa::devices:all:geolocation:read'].status = "any value except GRANTED";
+
+    event.session.attributes.street = "six oh one union street";
+    const sanitizedStreetAddress = "601 union street";
+
+    event.session.attributes.city = undefined;
+    event.session.attributes.state = undefined;
+
+    configureGoogleMapsService(200, sanitizedStreetAddress, dummyGoogleMapsResponse);
+    const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
+    const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
+    configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
+
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+    const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at given address.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
+      )
+    );
+  });
+
+  it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a home device like Echo Dot, we should use their zipcode to influence the search for restrooms.", async () => {
+    const event = importFresh("../test-data/atAddress");
+
+    event.session.attributes.street = "six oh one union street";
+    const sanitizedStreetAddress = "601 union street";
+
+    event.session.attributes.city = undefined;
+    event.session.attributes.state = undefined;
+
+    configureAddressService(200, event.context, aDeviceAddress);
+    const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
+    configureGoogleMapsServiceWithBounds(200, sanitizedStreetAddress, coordinates.latitude, coordinates.longitude, dummyGoogleMapsResponse);
+
+    const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
+    const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
+    configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+
+    const response = responseContainer.response;
+    assert(response.shouldEndSession);
+
+    const restroomDelivered = dummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    const card = response.card;
+    expect(card.type).to.equal("AskForPermissionsConsent");
+    expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
+
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
+    const directive = response.directives[0];
+    verifyAPLDirectiveStructure(directive);
+    expect(directive.document).to.eql(restroomDetailsDocument);
+    const actualDatasource = directive.datasources;
+    expect(actualDatasource).to.eql(
+      restroomDetailsDatasource(
+        `Here is a restroom at given address.`,
+        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
+        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
+        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
+      )
+    );
+  });
+
+  it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a home device like Echo Dot, we should use their zipcode to influence the search for restrooms. However, if we don't have permissions to use the zipcode, we should still move forward with an unbounded search.", async () => {
+    const event = importFresh("../test-data/atAddress");
+
+    // Simulating lack of permissions to fetch device address.
+    const accessDeniedPayload = {
+      code: 'ACCESS_DENIED',
+      message: 'access denied to requested resource'
+    };
+    configureAddressService(403, event.context, accessDeniedPayload);
+
+    event.session.attributes.street = "six oh one union street";
+    const sanitizedStreetAddress = "601 union street";
+
+    event.session.attributes.city = undefined;
+    event.session.attributes.state = undefined;
+
+    configureAddressService(200, event.context, aDeviceAddress);
+    configureGoogleMapsService(200, sanitizedStreetAddress, dummyGoogleMapsResponse);
+
     const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
     const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
     configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
@@ -1939,7 +2148,17 @@ function configureGoogleMapsService(responseCode, address, payload) {
   }
 
   nock(GoogleMaps.BASE_URL)
-    .get(`/api/geocode/json?address=${address}&key=${DUMMY_GOOGLE_MAPS_API_KEY}`)
+    .get(`/api/geocode/json?address=${address}&components=country:US&key=${DUMMY_GOOGLE_MAPS_API_KEY}`)
+    .reply(responseCode, JSON.stringify(payload, null, 2));
+}
+
+function configureGoogleMapsServiceWithBounds(responseCode, address, latitude, longitude, payload) {
+  if (!nock.isActive()) {
+    nock.activate();
+  }
+
+  nock(GoogleMaps.BASE_URL)
+    .get(`/api/geocode/json?address=${address}&bounds=${latitude},${longitude}|${latitude},${longitude}&components=country:US&key=${DUMMY_GOOGLE_MAPS_API_KEY}`)
     .reply(responseCode, JSON.stringify(payload, null, 2));
 }
 
