@@ -134,8 +134,6 @@ async function getBoundingCoordinates(handlerInput) {
 /**
  * Construct address from the street, city and state fields
  * in the session attributes.
- * TODO: Add spaces and commas to make it easier for Google
- * TODO: Convert input like 'six zero one', 'six oh one' etc to 601.
  */
 function getAddress(handlerInput) {
   const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
@@ -143,7 +141,7 @@ function getAddress(handlerInput) {
   const city = sessionAttributes.city || '';
   const state = sessionAttributes.state || '';
 
-  const address = street + city + state;
+  const address = `${street}${city ? ` ${city}` : ''}${state ? ` ${state}` : ''}`;
   // TODO: Test this.
   if (!address) throw new Error("Address was empty. Address should include at least the street name.");
   return address;

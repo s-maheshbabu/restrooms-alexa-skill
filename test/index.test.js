@@ -500,7 +500,7 @@ describe("Finding restrooms at a user specified address", function () {
     const city = event.session.attributes.city;
     const state = event.session.attributes.state;
 
-    configureGoogleMapsService(200, sanitizedStreetAddress + city + state, dummyGoogleMapsResponse);
+    configureGoogleMapsService(200, `${sanitizedStreetAddress} ${city} ${state}`, dummyGoogleMapsResponse);
     const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
     const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
     configureRRService(200, latitude, longitude, false, true, dummyRestRooms);
@@ -756,7 +756,7 @@ describe("Finding restrooms at a user specified address", function () {
     const city = event.session.attributes.city;
     const state = event.session.attributes.state;
 
-    configureGoogleMapsService(200, street + city + state, dummyGoogleMapsResponse);
+    configureGoogleMapsService(200, `${street}${city ? ` ${city}` : ''}${state ? ` ${state}` : ''}`, dummyGoogleMapsResponse);
     const latitude = dummyGoogleMapsResponse.results[0].geometry.location.lat;
     const longitude = dummyGoogleMapsResponse.results[0].geometry.location.lng;
     const emptyRestroomsResult = [];
@@ -784,7 +784,7 @@ describe("Finding restrooms at a user specified address", function () {
       results: [],
       status: "ZERO_RESULTS"
     };
-    configureGoogleMapsService(200, `${street}${city}${state}`, emptyGoogleMapsResponse);
+    configureGoogleMapsService(200, `${street}${city ? ` ${city}` : ''}${state ? ` ${state}` : ''}`, emptyGoogleMapsResponse);
 
     const responseContainer = await unitUnderTest.handler(event, context);
 
@@ -807,10 +807,10 @@ describe("Finding restrooms at a user specified address", function () {
 
     const error_codes = [400, 401, 403, 404, 409, 429, 500, 501, 503, 504];
     for (var i = 0; i < error_codes.length; i++) {
-      configureGoogleMapsService(error_codes[i], street + city + state, {});
+      configureGoogleMapsService(error_codes[i], `${street}${city ? ` ${city}` : ''}${state ? ` ${state}` : ''}`, {});
       // Error codes above 409 are retried automatically. So mock it one more time so Nock won't complain about not having a matching mock on retry.
       if (error_codes[i] > 409)
-        configureGoogleMapsService(error_codes[i], street + city + state, {});
+        configureGoogleMapsService(error_codes[i], `${street}${city ? ` ${city}` : ''}${state ? ` ${state}` : ''}`, {});
 
       const responseContainer = await unitUnderTest.handler(event, context);
 
