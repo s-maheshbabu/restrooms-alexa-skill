@@ -2,19 +2,14 @@ const unitUnderTest = require("../../src/index");
 const utilities = require("../../src/utilities");
 
 const expect = require("chai").expect;
-const decache = require("decache");
+const importFresh = require('import-fresh');
 
 const context = {};
 
 describe("FindRestroomAtLocation API handler tests", function () {
-  afterEach(function () {
-    decache("../test-data/api/atlocation_api");
-    decache("../test-data/api/atlocation_no_apl_api");
-  });
-
   it("should delegate to skill with the right resolved search filters and zipcode loaded into session attributes", async () => {
-    const eventWithAPL = require("../../test-data/api/atlocation_api");
-    const eventWithoutAPL = require("../../test-data/api/atlocation_no_apl_api");
+    const eventWithAPL = importFresh("../../test-data/api/atlocation_api");
+    const eventWithoutAPL = importFresh("../../test-data/api/atlocation_no_apl_api");
 
     const synonymsToIdMap = utilities.slotSynonymsToIdMap("RestRoomTypes");
     const allSynonyms = [...synonymsToIdMap.keys()];
@@ -59,7 +54,7 @@ describe("FindRestroomAtLocation API handler tests", function () {
   });
 
   it("should delegate to skill even when the zipcode is missing. We expiclity set a zipcode to null in the intent slots", async () => {
-    const event = require("../../test-data/api/atlocation_api");
+    const event = importFresh("../../test-data/api/atlocation_api");
 
     const synonymsToIdMap = utilities.slotSynonymsToIdMap("RestRoomTypes");
     const allSynonyms = [...synonymsToIdMap.keys()];

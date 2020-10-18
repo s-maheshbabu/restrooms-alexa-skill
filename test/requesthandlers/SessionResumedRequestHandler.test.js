@@ -1,18 +1,13 @@
 const unitUnderTest = require("../../src/index");
 
 const expect = require("chai").expect;
-const decache = require("decache");
+const importFresh = require('import-fresh');
 
 const context = {};
 
 describe("Tests for 'SessionResumedRequestHandler'", function () {
-    afterEach(function () {
-        decache("../test-data/requesthandlers/session_resumed_request_success");
-        decache("../test-data/requesthandlers/session_resumed_request_failure");
-    });
-
     it("should close the session without any prompts in the happy case.", async () => {
-        const event = require("../../test-data/requesthandlers/session_resumed_request_success");
+        const event = importFresh("../../test-data/requesthandlers/session_resumed_request_success");
 
         const responseContainer = await unitUnderTest.handler(event, context);
         const response = responseContainer.response;
@@ -23,7 +18,7 @@ describe("Tests for 'SessionResumedRequestHandler'", function () {
     });
 
     it("should render an error message is launching an appLink fails.", async () => {
-        const event = require("../../test-data/requesthandlers/session_resumed_request_failure");
+        const event = importFresh("../../test-data/requesthandlers/session_resumed_request_failure");
 
         const responseContainer = await unitUnderTest.handler(event, context);
         const response = responseContainer.response;

@@ -2,19 +2,14 @@ const unitUnderTest = require("../../src/index");
 const utilities = require("../../src/utilities");
 
 const expect = require("chai").expect;
-const decache = require("decache");
+const importFresh = require('import-fresh');
 
 const context = {};
 
 describe("FindRestRoomNearMe API handler tests", function () {
-  afterEach(function () {
-    decache("../test-data/api/nearme_api");
-    decache("../test-data/api/nearme_no_apl_api");
-  });
-
   it("should delegate to skill with the right resolved search filters loaded into session attributes", async () => {
-    const eventWithAPL = require("../../test-data/api/nearme_api");
-    const eventWithoutAPL = require("../../test-data/api/nearme_no_apl_api");
+    const eventWithAPL = importFresh("../../test-data/api/nearme_api");
+    const eventWithoutAPL = importFresh("../../test-data/api/nearme_no_apl_api");
 
     const synonymsToIdMap = utilities.slotSynonymsToIdMap("RestRoomTypes");
     const allSynonyms = [...synonymsToIdMap.keys()];

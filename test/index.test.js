@@ -3,7 +3,6 @@ const determinePositiveRatingPercentage = require("../src/utilities").determineP
 
 const expect = require("chai").expect;
 const assert = require("chai").assert;
-const decache = require("decache"); // TODO: Repplace this with importFresh
 const importFresh = require('import-fresh');
 const nock = require('nock')
 
@@ -41,22 +40,14 @@ describe("Finding restrooms near user's geo location", function () {
   const DUMMY_LATITUDE = 47.62078857421875;
   const DUMMY_LONGITUDE = -122.30061853955556;
 
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
     await zipcodes.init();
   });
 
-  after(async () => {
-    decache("../test-data/sample-RR-response.json");
-  });
-
-  afterEach(function () {
-    decache("../test-data/nearme_geo_supported");
-  });
-
   it("should be able to fetch restrooms near the user's geo location in the happy case where skill has permissions to access their location.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -96,7 +87,7 @@ describe("Finding restrooms near user's geo location", function () {
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
 
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
@@ -117,7 +108,7 @@ describe("Finding restrooms near user's geo location", function () {
   });
 
   it("should render a message and card requesting for user's geo location permissions if said permissions are not already granted by the user", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
 
     // Simulating lack of permissions to fetch user's geo address.
     event.context.System.user.permissions.scopes['alexa::devices:all:geolocation:read'].status = "any value except GRANTED";
@@ -139,7 +130,7 @@ describe("Finding restrooms near user's geo location", function () {
   });
 
   it("should render a message requesting user to enable location services on their device. This is the case where user gave permissions to the skill to access their location but the location services are either completely turned off on their device or the Alexa companion app itself has no access to the device's location.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
 
     // Simulating a device with location sharing disabled.
     event.context.Geolocation.locationServices.access = "any value except ENABLED";
@@ -156,11 +147,10 @@ describe("Finding restrooms near user's geo location", function () {
   });
 
   it("should render a message requesting user to try later. This is the case where user gave permissions to the skill to access their location and location sharing is enabled on the device but we are still not able to access the location. This is either a transient issue or some other unexpected issue and so the best course of action is to just tell the user to try again later.", async () => {
-    const event_no_geo_location = require("../test-data/nearme_geo_supported");
+    const event_no_geo_location = importFresh("../test-data/nearme_geo_supported");
     delete event_no_geo_location.context.Geolocation;
-    decache("../test-data/nearme_geo_supported");
 
-    const event_no_coordinates = require("../test-data/nearme_geo_supported");
+    const event_no_coordinates = importFresh("../test-data/nearme_geo_supported");
     delete event_no_coordinates.context.Geolocation.coordinate;
 
     const events = [event_no_geo_location, event_no_coordinates];
@@ -188,22 +178,14 @@ describe("Finding restrooms near device address", function () {
     countryCode: US_COUNTRY_CODE,
     postalCode: DUMMY_POSTAL_CODE,
   };
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
     await zipcodes.init();
   });
 
-  after(async () => {
-    decache("../test-data/sample-RR-response.json");
-  });
-
-  afterEach(function () {
-    decache("../test-data/nearme_geo_not_supported");
-  });
-
   it("should be able to fetch the postal address in the happy case where skill has permissions to access the device address.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
     configureAddressService(200, event.context, aDeviceAddress);
 
     const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
@@ -243,7 +225,7 @@ describe("Finding restrooms near device address", function () {
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
     configureAddressService(200, event.context, aDeviceAddress);
 
     const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
@@ -263,7 +245,7 @@ describe("Finding restrooms near device address", function () {
   });
 
   it("should render a message and card requesting for device address permissions if said permissions are not already granted by the user", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     // Simulating lack of permissions to fetch device address.
     const accessDeniedPayload = {
@@ -289,7 +271,7 @@ describe("Finding restrooms near device address", function () {
   });
 
   it("should deliver an error message for any non-service-errors while using device address service", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     const anyErrorCodeThatIsNot400 = 500;
     configureAddressService(anyErrorCodeThatIsNot400, event.context, {});
@@ -307,7 +289,7 @@ describe("Finding restrooms near device address", function () {
   });
 
   it("should render an error message when the zipcode requested by the user is invalid.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     const deviceAddress_InvalidPostalCode = {
       countryCode: US_COUNTRY_CODE,
@@ -328,7 +310,7 @@ describe("Finding restrooms near device address", function () {
   });
 
   it("should render an error message when the user's device address is not a US address.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     const deviceAddress_NonAmericanAddress = {
       countryCode: "notUS",
@@ -349,7 +331,7 @@ describe("Finding restrooms near device address", function () {
   });
 
   it("should render an error message when the user's device address does not include a postal code.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     const deviceAddress_NoPostalCode = {
       countryCode: US_COUNTRY_CODE,
@@ -371,22 +353,14 @@ describe("Finding restrooms near device address", function () {
 });
 
 describe("Finding restrooms at a user specified location", function () {
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
     await zipcodes.init();
   });
 
-  after(async () => {
-    decache("../test-data/sample-RR-response.json");
-  });
-
-  afterEach(function () {
-    decache("../test-data/atlocation");
-  });
-
   it("should be able to find restrooms at the location specified by the user.", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
 
     const zipcode = event.session.attributes.zipcode;
     const coordinates = zipcodes.getCoordinates(zipcode);
@@ -425,7 +399,7 @@ describe("Finding restrooms at a user specified location", function () {
   });
 
   it("should let the user know if there are no restrooms in the location they are searching for", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
 
     const zipcode = event.session.attributes.zipcode;
     const coordinates = zipcodes.getCoordinates(zipcode);
@@ -445,7 +419,7 @@ describe("Finding restrooms at a user specified location", function () {
   });
 
   it("should render an error message if the zipcode provided by the user is invalid.", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
 
     const anInvalidZipCode = "an-invalid-zipcode";
     event.session.attributes.zipcode = anInvalidZipCode;
@@ -475,16 +449,12 @@ describe("Finding restrooms at a user specified address", function () {
     postalCode: DUMMY_POSTAL_CODE,
   };
 
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
-  const dummyGoogleMapsResponse = require("../test-data/sample-GoogleMaps-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
+  const dummyGoogleMapsResponse = importFresh("../test-data/sample-GoogleMaps-response.json");
 
   before(async () => {
     process.env.GOOGLE_MAPS_API_KEY = DUMMY_GOOGLE_MAPS_API_KEY;
     await zipcodes.init();
-  });
-
-  afterEach(function () {
-    decache("../test-data/atAddress");
   });
 
   after(function () {
@@ -775,7 +745,7 @@ describe("Finding restrooms at a user specified address", function () {
   });
 
   it("should render an error message if we are unable to locate the address. Google Maps almost always returns results even if the address is invalid using partial matches. If Google Maps did not return any results, the address is incomprehensibly wrong. Probably a misrecognition by Alexa.", async () => {
-    const event = require("../test-data/atAddress");
+    const event = importFresh("../test-data/atAddress");
     const street = event.session.attributes.street = "some";
     const city = event.session.attributes.city = "incomprehensibly wrong";
     const state = event.session.attributes.state = "address";
@@ -799,7 +769,7 @@ describe("Finding restrooms at a user specified address", function () {
   });
 
   it("should render an error message to the user if we get an error from Google Maps", async () => {
-    const event = require("../test-data/atAddress");
+    const event = importFresh("../test-data/atAddress");
 
     const street = event.session.attributes.street;
     const city = event.session.attributes.city;
@@ -827,25 +797,14 @@ describe("Finding restrooms at a user specified address", function () {
 });
 
 describe("Honor search filters when searching for restrooms near the user's location", function () {
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
     await zipcodes.init();
   });
 
-  after(async () => {
-    decache("../test-data/sample-RR-response.json");
-  });
-
-  afterEach(function () {
-    decache("../test-data/nearme_ada_unisex_filters");
-    decache("../test-data/nearme_ada_filters");
-    decache("../test-data/nearme_unisex_filters");
-    decache("../test-data/nearme_ada_unisex_changing_table_filters");
-  });
-
   it("should be able to fetch restrooms when user filters for accessible & unisex restrooms", async () => {
-    const event = require("../test-data/nearme_ada_unisex_filters");
+    const event = importFresh("../test-data/nearme_ada_unisex_filters");
     const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
     const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
 
@@ -864,7 +823,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
   });
 
   it("should be able to fetch restrooms when user filters for accessible restrooms", async () => {
-    const event = require("../test-data/nearme_ada_filters");
+    const event = importFresh("../test-data/nearme_ada_filters");
     const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
     const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
 
@@ -883,7 +842,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
   });
 
   it("should be able to fetch restrooms when user filters for unisex restrooms", async () => {
-    const event = require("../test-data/nearme_unisex_filters");
+    const event = importFresh("../test-data/nearme_unisex_filters");
     const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
     const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
 
@@ -902,7 +861,7 @@ describe("Honor search filters when searching for restrooms near the user's loca
   });
 
   it("should be able to fetch restrooms when user filters for accessible & unisex & changing_table restrooms. Refugee Restrooms does not support filtering by changing_table restrooms and so we filter it ourselves. Hence this additional test.", async () => {
-    const event = require("../test-data/nearme_ada_unisex_changing_table_filters");
+    const event = importFresh("../test-data/nearme_ada_unisex_changing_table_filters");
     const latitude = event.context.Geolocation.coordinate.latitudeInDegrees;
     const longitude = event.context.Geolocation.coordinate.longitudeInDegrees;
 
@@ -933,23 +892,14 @@ describe("APL directives support", function () {
   const DUMMY_LATITUDE = 47.62078857421875;
   const DUMMY_LONGITUDE = -122.30061853955556;
 
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
     await zipcodes.init();
   });
 
-  after(async () => {
-    decache("../test-data/sample-RR-response.json");
-  });
-
-  afterEach(function () {
-    decache("../test-data/nearme_geo_supported_no_apl");
-    decache("../test-data/nearme_geo_supported");
-  });
-
   it("should not include the APL directives when the device does not support APL.", async () => {
-    const event = require("../test-data/nearme_geo_supported_no_apl");
+    const event = importFresh("../test-data/nearme_geo_supported_no_apl");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -971,7 +921,7 @@ describe("APL directives support", function () {
   });
 
   it("the features of the restroom should be accurately represented in the APL visual.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1046,7 +996,7 @@ describe("Sending emails", function () {
     postalCode: DUMMY_POSTAL_CODE,
   };
 
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
     await zipcodes.init();
@@ -1057,21 +1007,16 @@ describe("Sending emails", function () {
   });
 
   afterEach(function () {
-    decache("../test-data/nearme_geo_supported");
-    decache("../test-data/nearme_geo_not_supported");
-    decache("../test-data/atlocation");
     nodemailerMock.mock.reset();
   });
 
   after(async () => {
-    decache("../test-data/sample-RR-response.json");
-
     mockery.deregisterAll();
     mockery.disable();
   });
 
   it("should send an email to the user with search results when users searched for restrooms near their geo location and have granted permission to use their email.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1125,7 +1070,7 @@ describe("Sending emails", function () {
   });
 
   it("should send an email to the user with search results when users searched for restrooms near their device address and have granted permission to use their email.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
     configureAddressService(200, event.context, aDeviceAddress);
 
     const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
@@ -1180,7 +1125,7 @@ describe("Sending emails", function () {
   });
 
   it("should send an email to the user with search results when users searched for restrooms by zipcode and have granted permission to use their email.", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
     const zipcode = event.session.attributes.zipcode;
     const coordinates = zipcodes.getCoordinates(zipcode);
     configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, dummyRestRooms);
@@ -1233,7 +1178,7 @@ describe("Sending emails", function () {
   });
 
   it("should not send an email with search results when users searched for restrooms near their geo location but hasn't granted permissions to use their email address or we failed to fetch email address due to other service errors.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1269,7 +1214,7 @@ describe("Sending emails", function () {
   });
 
   it("should not send an email with search results when users searched for restrooms near their device address but hasn't granted permissions to use their email address or we failed to fetch email address due to other service errors.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     const coordinates = zipcodes.getCoordinates(DUMMY_POSTAL_CODE);
 
@@ -1305,7 +1250,7 @@ describe("Sending emails", function () {
   });
 
   it("should not send an email with search results when users searched for restrooms by zipcode but hasn't granted permissions to use their email address or we failed to fetch email address due to other service errors.", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
     const zipcode = event.session.attributes.zipcode;
     const coordinates = zipcodes.getCoordinates(zipcode);
 
@@ -1340,7 +1285,7 @@ describe("Sending emails", function () {
   });
 
   it("should not send an email with search results if the email returned by Alexa is invalid.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1380,7 +1325,7 @@ describe("Convey ratings of the restrooms", function () {
 
   const DUMMY_EMAIL_ADDRESS = "success@simulator.amazonses.com";
 
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
     await zipcodes.init();
@@ -1396,22 +1341,16 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   afterEach(function () {
-    decache("../test-data/nearme_geo_supported");
-    decache("../test-data/nearme_geo_not_supported");
-    decache("../test-data/atlocation");
-
     nodemailerMock.mock.reset();
   });
 
   after(async () => {
-    decache("../test-data/sample-RR-response.json");
-
     mockery.deregisterAll();
     mockery.disable();
   });
 
   it("should convey the information when we find a highly rated restrooms when searching for restrooms by geo location.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1463,7 +1402,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should not call out rating in  prompts if we find a not so highly rated restroom when searching for restrooms by geo location. We should still show the rating in visual results.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1519,7 +1458,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should not call out rating in  prompts if we find an unrated restroom when searching for restrooms by geo location. We should still show that the restroom is unreated in visual results.", async () => {
-    const event = require("../test-data/nearme_geo_supported");
+    const event = importFresh("../test-data/nearme_geo_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1567,7 +1506,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should convey the information when we find a highly rated restrooms when searching for restrooms by device address.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     const restroomDelivered = clonedDummyRestRooms[0];
     const highlyRatedRestRoomVoteCombinations = [[70, 30], [71, 30], [1, 0], [1000, 0]];
@@ -1620,7 +1559,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should not call out rating in  prompts if we find a not so highly rated restroom when searching for restrooms by device address. We should still show the rating in visual results.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
 
     const restroomDelivered = clonedDummyRestRooms[0];
     const highlyRatedRestRoomVoteCombinations = [[69, 30], [30, 30], [0, 0], [0, 1000]];
@@ -1675,7 +1614,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should not call out rating in  prompts if we find an unrated restroom when searching for restrooms by device address. We should still show that the restroom is unreated in visual results.", async () => {
-    const event = require("../test-data/nearme_geo_not_supported");
+    const event = importFresh("../test-data/nearme_geo_not_supported");
     configureAddressService(200, event.context, aDeviceAddress);
 
     const restroomDelivered = clonedDummyRestRooms[0];
@@ -1724,7 +1663,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should convey the information when we find a highly rated restrooms when searching for restrooms by location.", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
 
     const restroomDelivered = clonedDummyRestRooms[0];
     const highlyRatedRestRoomVoteCombinations = [[70, 30], [71, 30], [1, 0], [1000, 0]];
@@ -1776,7 +1715,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should not call out rating in  prompts if we find a not so highly rated restroom when searching for restrooms by location. We should still show the rating in visual results.", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
 
     const restroomDelivered = clonedDummyRestRooms[0];
     const highlyRatedRestRoomVoteCombinations = [[69, 30], [30, 30], [0, 0], [0, 1000]];
@@ -1830,7 +1769,7 @@ describe("Convey ratings of the restrooms", function () {
   });
 
   it("should not call out rating in  prompts if we find an unrated restroom when searching for restrooms by location. We should still show that the restroom is unreated in visual results.", async () => {
-    const event = require("../test-data/atlocation");
+    const event = importFresh("../test-data/atlocation");
 
     const restroomDelivered = clonedDummyRestRooms[0];
     restroomDelivered.upvote = 0;
@@ -1884,7 +1823,7 @@ describe("Punching out to Maps navigation", function () {
   const DUMMY_LATITUDE = 47.62078857421875;
   const DUMMY_LONGITUDE = -122.30061853955556;
 
-  const dummyRestRooms = require("../test-data/sample-RR-response.json");
+  const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
   });
@@ -1894,20 +1833,8 @@ describe("Punching out to Maps navigation", function () {
     clonedDummyRestRooms = cloneDeep(dummyRestRooms);
   });
 
-  afterEach(function () {
-    decache("../test-data/nearme_geo_supported_android_applinks_supported");
-    decache("../test-data/nearme_geo_supported_applinks_not_supported");
-    decache("../test-data/nearme_geo_supported_ios_applinks_supported");
-    decache("../test-data/yes_android");
-    decache("../test-data/yes_ios");
-  });
-
-  after(async () => {
-    decache("../test-data/sample-RR-response.json");
-  });
-
   it("should punch out to Apple Maps directions for the top search result in the happy path on iOS devices.", async () => {
-    const event = require("../test-data/yes_ios");
+    const event = importFresh("../test-data/yes_ios");
     const latitude = event.session.attributes.latitude;
     const longitude = event.session.attributes.longitude;
 
@@ -1921,7 +1848,7 @@ describe("Punching out to Maps navigation", function () {
   });
 
   it("should punch out to Google Maps directions for the top search result in the happy path on Android devices.", async () => {
-    const event = require("../test-data/yes_android");
+    const event = importFresh("../test-data/yes_android");
     const latitude = event.session.attributes.latitude;
     const longitude = event.session.attributes.longitude;
 
@@ -1935,7 +1862,7 @@ describe("Punching out to Maps navigation", function () {
   });
 
   it.skip("should offer to punch out to Apple Maps directions on iOS devices that support AppLinks.", async () => {
-    const event = require("../test-data/nearme_geo_supported_ios_applinks_supported");
+    const event = importFresh("../test-data/nearme_geo_supported_ios_applinks_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1966,7 +1893,7 @@ describe("Punching out to Maps navigation", function () {
   });
 
   it.skip("should offer to punch out to Google Maps directions on Android devices that support AppLinks.", async () => {
-    const event = require("../test-data/nearme_geo_supported_android_applinks_supported");
+    const event = importFresh("../test-data/nearme_geo_supported_android_applinks_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 
@@ -1997,7 +1924,7 @@ describe("Punching out to Maps navigation", function () {
   });
 
   it("should not offer to punch out to Maps directions if the device does not support AppLinks.", async () => {
-    const event = require("../test-data/nearme_geo_supported_applinks_not_supported");
+    const event = importFresh("../test-data/nearme_geo_supported_applinks_not_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
 

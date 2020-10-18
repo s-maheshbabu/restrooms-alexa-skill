@@ -36,7 +36,6 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "decache": "^4.6.0",
     "import-fresh": "^3.2.1",
     "grunt": "^1.0.4",
     "grunt-aws-lambda": "^0.13.0",

@@ -1,17 +1,13 @@
 const unitUnderTest = require("../../src/index");
 
 const expect = require("chai").expect;
-const decache = require("decache");
+const importFresh = require('import-fresh');
 
 const context = {};
 
 describe("Invalid cases for 'NoIntentHandler'", function () {
-    afterEach(function () {
-        decache("../../test-data/intenthandlers/no_android");
-    });
-
     it("should render an error message if state is missing or invalid in the session attributes.", async () => {
-        const event = require("../../test-data/intenthandlers/no_android");
+        const event = importFresh("../../test-data/intenthandlers/no_android");
         invalidStates = [null, undefined, 'any-state-that-not-offering-directions'];
 
         for (var i = 0; i < invalidStates.length; i++) {
@@ -31,7 +27,7 @@ describe("Invalid cases for 'NoIntentHandler'", function () {
     });
 
     it("should close the session without any prompts in the happy case.", async () => {
-        const event = require("../../test-data/intenthandlers/no_android");
+        const event = importFresh("../../test-data/intenthandlers/no_android");
 
         const responseContainer = await unitUnderTest.handler(event, context);
         const response = responseContainer.response;
