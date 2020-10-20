@@ -1,7 +1,11 @@
 const slotnames = require("../constants/SlotNames").slotnames;
 const utilities = require("../utilities");
+const UnparseableError = require('../errors/UnparseableError');
 
 let synonymsToIdMap;
+
+const UNPARSEABLE_ADDRESS = "UNPARSEABLE_ADDRESS";
+
 
 // TODO Tests for this.
 module.exports = FindRestroomAtAddressAPI = {
@@ -28,6 +32,17 @@ module.exports = FindRestroomAtAddressAPI = {
       context.state = apiArguments.State;
     }
 
+    try {
+      utilities.sanitizeAddress(apiArguments.Street);
+    } catch (error) {
+      if (error instanceof UnparseableError)
+        return {
+          apiResponse: {
+            ResponseCode: UNPARSEABLE_ADDRESS,
+          }
+        };
+    }
+
     return {
       directives: [{
         type: 'Dialog.DelegateRequest',
@@ -42,7 +57,9 @@ module.exports = FindRestroomAtAddressAPI = {
           }
         }
       }],
-      apiResponse: {}
+      apiResponse: {
+        ResponseCode: "SUCCESS",
+      }
     }
   }
 }
