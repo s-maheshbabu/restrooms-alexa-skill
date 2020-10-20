@@ -1,0 +1,3 @@
+{
+    "WhatIsThis": "Test input goes here and can be executed with 'grunt lambda_invoke'."
+}
