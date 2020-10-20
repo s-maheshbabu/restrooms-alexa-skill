@@ -23,7 +23,7 @@ module.exports = FindRestroomAtLocationIntentHandler = {
     const coordinates = zipcodes.getCoordinates(zipcode);
     if (!coordinates) {
       return responseBuilder
-        .speak(`Sorry. I'm unable to find any restrooms at <say-as interpret-as="digits">${zipcode}</say-as>. Good bye.`)
+        .speak(`Sorry. <say-as interpret-as="digits">${zipcode}</say-as> is not a valid US zip code. Please try later with a valid zip code. Good bye.`)
         .withShouldEndSession(true)
         .getResponse();
     }

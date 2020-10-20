@@ -431,7 +431,7 @@ describe("Finding restrooms at a user specified location", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>Sorry. I'm unable to find any restrooms at <say-as interpret-as="digits">${anInvalidZipCode}</say-as>. Good bye.</speak>`
+      `<speak>Sorry. <say-as interpret-as="digits">${anInvalidZipCode}</say-as> is not a valid US zip code. Please try later with a valid zip code. Good bye.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });
@@ -483,7 +483,7 @@ describe("Finding restrooms at a user specified address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom near the given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -530,7 +530,7 @@ describe("Finding restrooms at a user specified address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom near the given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -578,7 +578,7 @@ describe("Finding restrooms at a user specified address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom near the given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -626,7 +626,7 @@ describe("Finding restrooms at a user specified address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom near the given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -680,7 +680,7 @@ describe("Finding restrooms at a user specified address", function () {
     const restroomDelivered = dummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I found this positively rated restroom at given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
+      `<speak>I found this positively rated restroom near the given address. ${describeRestroom(restroomDelivered)}. ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 
@@ -739,7 +739,7 @@ describe("Finding restrooms at a user specified address", function () {
 
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
-      `<speak>I'm sorry. I couldn't find any restrooms at given address matching your criteria.</speak>`
+      `<speak>I'm sorry. I couldn't find any restrooms near the given address matching your criteria.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
   });

@@ -59,7 +59,7 @@ module.exports = FindRestroomAtAddressIntentHandler = {
 
     if (!Array.isArray(restrooms) || !restrooms.length) {
       return responseBuilder
-        .speak(`I'm sorry. I couldn't find any restrooms at given address matching your criteria.`)
+        .speak(`I'm sorry. I couldn't find any restrooms near the given address matching your criteria.`)
         .withShouldEndSession(true)
         .getResponse();
     }
@@ -73,7 +73,7 @@ module.exports = FindRestroomAtAddressIntentHandler = {
 
     // TODO: We can't always say 'this and more results'. What if there was only one result?
     const builder = responseBuilder
-      .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom at given address. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
+      .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom near the given address. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
       .addDirective(IntentHelper.buildAPLDirective('given address', restrooms[0], !emailAddress))
       .withShouldEndSession(true);
 
