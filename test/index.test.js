@@ -1826,6 +1826,7 @@ describe("Punching out to Maps navigation", function () {
   const dummyRestRooms = importFresh("../test-data/sample-RR-response.json");
 
   before(async () => {
+    await zipcodes.init();
   });
 
   let clonedDummyRestRooms;
@@ -1861,7 +1862,7 @@ describe("Punching out to Maps navigation", function () {
     expect(response.directives[0]).to.eql(androidMapsAppLinkDirective(`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`, 'Okay.', 'Please unlock your device to see the directions.'));
   });
 
-  it("should offer to punch out to Apple Maps directions on iOS devices that support AppLinks.", async () => {
+  it("when searching by proximity, should offer to punch out to Apple Maps directions on iOS devices that support AppLinks.", async () => {
     const event = importFresh("../test-data/nearme_geo_supported_ios_applinks_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
@@ -1892,7 +1893,7 @@ describe("Punching out to Maps navigation", function () {
     verifyAPLDirectiveStructure(response.directives[0]);
   });
 
-  it("should offer to punch out to Google Maps directions on Android devices that support AppLinks.", async () => {
+  it("when searching by proximity, should offer to punch out to Google Maps directions on Android devices that support AppLinks.", async () => {
     const event = importFresh("../test-data/nearme_geo_supported_android_applinks_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
@@ -1923,7 +1924,7 @@ describe("Punching out to Maps navigation", function () {
     verifyAPLDirectiveStructure(response.directives[0]);
   });
 
-  it("should not offer to punch out to Maps directions if the device does not support AppLinks.", async () => {
+  it("when searching by proximity, should not offer to punch out to Maps directions if the device does not support AppLinks.", async () => {
     const event = importFresh("../test-data/nearme_geo_supported_applinks_not_supported");
     event.context.Geolocation.coordinate.latitudeInDegrees = DUMMY_LATITUDE;
     event.context.Geolocation.coordinate.longitudeInDegrees = DUMMY_LONGITUDE;
@@ -1941,6 +1942,89 @@ describe("Punching out to Maps navigation", function () {
     const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
       `<speak>I found this positively rated restroom ${distance} miles away. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    expect(response.directives.length).to.eql(1);
+    verifyAPLDirectiveStructure(response.directives[0]);
+  });
+
+  it.only("when searching by zipcode, should offer to punch out to Apple Maps directions on iOS devices that support AppLinks.", async () => {
+    const event = importFresh("../test-data/zipcode_geo_supported_ios_applinks_supported");
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    expect(response.shouldEndSession).to.be.false;
+
+    const sessionAttributes = responseContainer.sessionAttributes;
+    expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
+    expect(sessionAttributes.latitude).to.eql(coordinates.latitude);
+    expect(sessionAttributes.longitude).to.eql(coordinates.longitude);
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    expect(response.directives.length).to.eql(1);
+    verifyAPLDirectiveStructure(response.directives[0]);
+  });
+
+  it.only("when searching by zipcode, should offer to punch out to Google Maps directions on Android devices that support AppLinks.", async () => {
+    const event = importFresh("../test-data/zipcode_geo_supported_android_applinks_supported");
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    expect(response.shouldEndSession).to.be.false;
+
+    const sessionAttributes = responseContainer.sessionAttributes;
+    expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
+    expect(sessionAttributes.latitude).to.eql(coordinates.latitude);
+    expect(sessionAttributes.longitude).to.eql(coordinates.longitude);
+
+    const restroomDelivered = clonedDummyRestRooms[0];
+    console.log(JSON.stringify(restroomDelivered))
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
+    );
+    expect(outputSpeech.type).to.equal("SSML");
+
+    expect(response.directives.length).to.eql(1);
+    verifyAPLDirectiveStructure(response.directives[0]);
+  });
+
+  it.only("when searching by zipcode, should not offer to punch out to Maps directions if the device does not support AppLinks.", async () => {
+    const event = importFresh("../test-data/zipcode_geo_supported_applinks_not_supported");
+    const zipcode = event.session.attributes.zipcode;
+    const coordinates = zipcodes.getCoordinates(zipcode);
+
+    configureUpsService(200, event.context, DUMMY_EMAIL_ADDRESS);
+    configureRRService(200, coordinates.latitude, coordinates.longitude, false, false, clonedDummyRestRooms);
+
+    const responseContainer = await unitUnderTest.handler(event, context);
+    const response = responseContainer.response;
+
+    assert(response.shouldEndSession);
+    const restroomDelivered = clonedDummyRestRooms[0];
+    console.log(JSON.stringify(restroomDelivered))
+    const outputSpeech = response.outputSpeech;
+    expect(outputSpeech.ssml).to.equal(
+      `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email.</speak>`
     );
     expect(outputSpeech.type).to.equal("SSML");
 

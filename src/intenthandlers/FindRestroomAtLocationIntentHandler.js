@@ -6,6 +6,7 @@ const zipcodes = require("gateway/Zipcodes");
 
 const messages = require("constants/Messages").messages;
 const scopes = require("constants/Scopes").scopes;
+const states = require("constants/Constants").states;
 
 const IntentHelper = require("./FindRestroomIntentHelper");
 const isPositivelyRated = require("./FindRestroomIntentHelper").isPositivelyRated;
@@ -15,7 +16,7 @@ module.exports = FindRestroomAtLocationIntentHandler = {
     return utilities.isIntent(handlerInput, 'FindRestroomAtLocationIntent');
   },
   async handle(handlerInput) {
-    const { responseBuilder } = handlerInput;
+    const { attributesManager, responseBuilder } = handlerInput;
 
     const zipcode = getZipcode(handlerInput);
     // If zipcode is missing or invalid, render error messages.
@@ -45,11 +46,20 @@ module.exports = FindRestroomAtLocationIntentHandler = {
       console.log("We have the user's email address. An email was sent with the search results.");
     }
 
+    const offerDirections = utilities.isAppLinksSupported(handlerInput);
+    if (offerDirections) {
+      const attributes = attributesManager.getSessionAttributes() || {};
+      attributes.state = states.OFFER_DIRECTIONS;
+      attributes.latitude = coordinates.latitude;
+      attributes.longitude = coordinates.longitude;
+      attributesManager.setSessionAttributes(attributes);
+    }
+
     // TODO: We can't always say 'this and more results'. What if there was only one result?
     const builder = responseBuilder
-      .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email.` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
+      .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email. ${offerDirections ? `Shall I load a map with directions to this restroom?` : ``}` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
       .addDirective(IntentHelper.buildAPLDirective(zipcode, restrooms[0], !emailAddress))
-      .withShouldEndSession(true);
+      .withShouldEndSession(!offerDirections);
 
     if (!emailAddress) builder.withAskForPermissionsConsentCard([scopes.EMAIL_SCOPE]);
     else builder.withSimpleCard(...IntentHelper.buildSimpleCard(zipcode, restrooms));
