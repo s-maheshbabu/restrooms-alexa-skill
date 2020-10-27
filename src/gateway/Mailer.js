@@ -10,6 +10,9 @@ const SUBJECT_LINE = "Refugee Restrooms - Alexa Skill";
 
 const MAXIMUM_RESULTS = 10;
 
+const SEND_EMAIL_LATENCY = "send-mail-latency";
+const EMAIL_TRANSPORTER_INIT_LATENCY = "mail-transporter-initialization-latency";
+
 let transporter;
 
 /**
@@ -24,12 +27,14 @@ async function sendEmail(toAddress, zipcode, restrooms) {
     if (!EmailValidator.validate(toAddress)) throw new Error(`Invalid email address provided: ${toAddress}`);
     if (!Array.isArray(restrooms) || restrooms.length == 0) throw new Error(`At least one restroom should be provided as an array: ${restrooms}`);
 
+    console.time(SEND_EMAIL_LATENCY);
     let info = await transporter.sendMail({
         from: FROM_ADDRESS,
         to: toAddress,
         subject: SUBJECT_LINE,
         html: buildBody(zipcode, restrooms.slice(0, MAXIMUM_RESULTS)),
     });
+    console.timeEnd(SEND_EMAIL_LATENCY);
     console.log(`Email successfully sent. Email Id: ${info.messageId}.`);
 
     // What happens if sending email fails?
@@ -68,11 +73,13 @@ const init = (transporterForTesting) => {
         }
         else if (!transporter) {
             console.log("Creating NodeMailer SES transporter.");
+            console.time(EMAIL_TRANSPORTER_INIT_LATENCY);
             transporter = nodemailer.createTransport({
                 SES: new AWS.SES({
                     apiVersion: '2010-12-01'
                 })
             });
+            console.timeEnd(EMAIL_TRANSPORTER_INIT_LATENCY);
             resolve();
         } else {
             resolve();

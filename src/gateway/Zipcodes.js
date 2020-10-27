@@ -6,6 +6,7 @@ module.exports.init = () => {
     return new Promise((resolve, reject) => {
         if (!map) {
             console.log("Zipcode to Lat/Lon database being loaded.");
+            console.time("zipcode-database-load-latency");
             const data = require('./us-zip-code-latitude-and-longitude.json');
 
             const internalMap = Map();
@@ -14,6 +15,7 @@ module.exports.init = () => {
                     internalMap.set(datum.zip, datum);
                 });
             });
+            console.timeEnd("zipcode-database-load-latency");
             resolve();
         } else {
             resolve();

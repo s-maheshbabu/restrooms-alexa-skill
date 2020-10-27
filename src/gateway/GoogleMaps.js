@@ -4,6 +4,7 @@ const InvalidAddressError = require("../errors/InvalidAddressError");
 const client = new Client({});
 let API_KEY;
 
+const GEOCODE_API_LATENCY = "googlemaps-geocode-latency";
 /**
  * Loads the Google Maps api key from environment.
  */
@@ -33,6 +34,7 @@ const getCoordinates = async (address, latitude, longitude) => {
 
     let bounds = undefined;
     if (latitude && longitude) bounds = `${latitude},${longitude}|${latitude},${longitude}`;
+    console.time(GEOCODE_API_LATENCY);
     const response = await client.geocode({
         params: {
             address: address,
@@ -43,6 +45,7 @@ const getCoordinates = async (address, latitude, longitude) => {
         // TODO: Can this be tested?
         timeout: 1000, // milliseconds
     });
+    console.timeEnd(GEOCODE_API_LATENCY);
 
     if (response.data.status === ZERO_RESULTS_STATUS)
         throw new InvalidAddressError(`Unable to locate the address: ${address}. It is probably an invalid address.`);
