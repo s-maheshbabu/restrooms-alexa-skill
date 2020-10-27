@@ -113,11 +113,11 @@ async function findRestroomsNearUserGeoLocation(handlerInput) {
   const restrooms = await search(handlerInput, latitude, longitude);
 
   const offerDirections = utilities.isAppLinksSupported(handlerInput);
-  if (offerDirections) {
+  if (offerDirections && Array.isArray(restrooms) && restrooms.length) {
     const attributes = attributesManager.getSessionAttributes() || {};
     attributes.state = states.OFFER_DIRECTIONS;
-    attributes.latitude = latitude;
-    attributes.longitude = longitude;
+    attributes.latitude = restrooms[0].latitude;
+    attributes.longitude = restrooms[0].longitude;
     attributesManager.setSessionAttributes(attributes);
   }
   return await buildResponse(handlerInput, restrooms, offerDirections);

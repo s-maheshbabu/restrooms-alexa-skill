@@ -73,11 +73,11 @@ module.exports = FindRestroomAtAddressIntentHandler = {
     }
 
     const offerDirections = utilities.isAppLinksSupported(handlerInput);
-    if (offerDirections) {
+    if (offerDirections && Array.isArray(restrooms) && restrooms.length) {
       const attributes = attributesManager.getSessionAttributes() || {};
       attributes.state = states.OFFER_DIRECTIONS;
-      attributes.latitude = coordinates.latitude;
-      attributes.longitude = coordinates.longitude;
+      attributes.latitude = restrooms[0].latitude;
+      attributes.longitude = restrooms[0].longitude;
       attributesManager.setSessionAttributes(attributes);
     }
 

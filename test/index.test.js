@@ -1829,6 +1829,19 @@ describe("Punching out to Maps navigation", function () {
   before(async () => {
     process.env.GOOGLE_MAPS_API_KEY = DUMMY_GOOGLE_MAPS_API_KEY;
     await zipcodes.init();
+
+    mockery.enable({ warnOnUnregistered: false });
+    mockery.registerMock('nodemailer', nodemailerMock);
+    await Mailer.init(transporter);
+  });
+
+  afterEach(function () {
+    nodemailerMock.mock.reset();
+  });
+
+  after(async () => {
+    mockery.deregisterAll();
+    mockery.disable();
   });
 
   let clonedDummyRestRooms;
@@ -1877,12 +1890,12 @@ describe("Punching out to Maps navigation", function () {
 
     expect(response.shouldEndSession).to.be.false;
 
+    const restroomDelivered = clonedDummyRestRooms[0];
     const sessionAttributes = responseContainer.sessionAttributes;
     expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
-    expect(sessionAttributes.latitude).to.eql(DUMMY_LATITUDE);
-    expect(sessionAttributes.longitude).to.eql(DUMMY_LONGITUDE);
+    expect(sessionAttributes.latitude).to.eql(restroomDelivered.latitude);
+    expect(sessionAttributes.longitude).to.eql(restroomDelivered.longitude);
 
-    const restroomDelivered = clonedDummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
@@ -1907,12 +1920,12 @@ describe("Punching out to Maps navigation", function () {
 
     expect(response.shouldEndSession).to.be.false;
 
+    const restroomDelivered = clonedDummyRestRooms[0];
     const sessionAttributes = responseContainer.sessionAttributes;
     expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
-    expect(sessionAttributes.latitude).to.eql(DUMMY_LATITUDE);
-    expect(sessionAttributes.longitude).to.eql(DUMMY_LONGITUDE);
+    expect(sessionAttributes.latitude).to.eql(restroomDelivered.latitude);
+    expect(sessionAttributes.longitude).to.eql(restroomDelivered.longitude);
 
-    const restroomDelivered = clonedDummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     const distance = roundDownDistance(restroomDelivered.distance);
     expect(outputSpeech.ssml).to.equal(
@@ -1961,12 +1974,12 @@ describe("Punching out to Maps navigation", function () {
 
     expect(response.shouldEndSession).to.be.false;
 
+    const restroomDelivered = clonedDummyRestRooms[0];
     const sessionAttributes = responseContainer.sessionAttributes;
     expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
-    expect(sessionAttributes.latitude).to.eql(coordinates.latitude);
-    expect(sessionAttributes.longitude).to.eql(coordinates.longitude);
+    expect(sessionAttributes.latitude).to.eql(restroomDelivered.latitude);
+    expect(sessionAttributes.longitude).to.eql(restroomDelivered.longitude);
 
-    const restroomDelivered = clonedDummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
       `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
@@ -1990,12 +2003,12 @@ describe("Punching out to Maps navigation", function () {
 
     expect(response.shouldEndSession).to.be.false;
 
+    const restroomDelivered = clonedDummyRestRooms[0];
     const sessionAttributes = responseContainer.sessionAttributes;
     expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
-    expect(sessionAttributes.latitude).to.eql(coordinates.latitude);
-    expect(sessionAttributes.longitude).to.eql(coordinates.longitude);
+    expect(sessionAttributes.latitude).to.eql(restroomDelivered.latitude);
+    expect(sessionAttributes.longitude).to.eql(restroomDelivered.longitude);
 
-    const restroomDelivered = clonedDummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
       `<speak>I found this positively rated restroom at <say-as interpret-as="digits">${zipcode}</say-as>. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
@@ -2048,12 +2061,12 @@ describe("Punching out to Maps navigation", function () {
 
     expect(response.shouldEndSession).to.be.false;
 
+    const restroomDelivered = clonedDummyRestRooms[0];
     const sessionAttributes = responseContainer.sessionAttributes;
     expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
-    expect(sessionAttributes.latitude).to.eql(latitude);
-    expect(sessionAttributes.longitude).to.eql(longitude);
+    expect(sessionAttributes.latitude).to.eql(restroomDelivered.latitude);
+    expect(sessionAttributes.longitude).to.eql(restroomDelivered.longitude);
 
-    const restroomDelivered = clonedDummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
       `<speak>I found this positively rated restroom near the given address. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
@@ -2083,12 +2096,12 @@ describe("Punching out to Maps navigation", function () {
 
     expect(response.shouldEndSession).to.be.false;
 
+    const restroomDelivered = clonedDummyRestRooms[0];
     const sessionAttributes = responseContainer.sessionAttributes;
     expect(sessionAttributes.state).to.eql(states.OFFER_DIRECTIONS);
-    expect(sessionAttributes.latitude).to.eql(latitude);
-    expect(sessionAttributes.longitude).to.eql(longitude);
+    expect(sessionAttributes.latitude).to.eql(restroomDelivered.latitude);
+    expect(sessionAttributes.longitude).to.eql(restroomDelivered.longitude);
 
-    const restroomDelivered = clonedDummyRestRooms[0];
     const outputSpeech = response.outputSpeech;
     expect(outputSpeech.ssml).to.equal(
       `<speak>I found this positively rated restroom near the given address. ${describeRestroom(restroomDelivered)}. I also sent this and more restrooms to your email. Shall I load a map with directions to this restroom?</speak>`
