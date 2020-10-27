@@ -13,7 +13,16 @@ module.exports = FindRestroomAtLocationAPI = {
     const { attributesManager } = handlerInput;
     const sessionAttributes = attributesManager.getSessionAttributes();
     sessionAttributes.search_filters = resolveEntities(apiArguments.SearchFiltersList);
-    sessionAttributes.zipcode = apiArguments.Zipcode || null;
+
+    const zipCode = apiArguments.Zipcode;
+    if (zipCode) {
+      const zipCodeAsString = zipCode.toString();
+
+      if (zipCodeAsString.length === 4) sessionAttributes.zipcode = 0 + zipCodeAsString;
+      else sessionAttributes.zipcode = zipCodeAsString;
+    } else {
+      sessionAttributes.zipcode = null;
+    }
 
     // Sticking the search filters in context just for testing purposes.
     const { context } = handlerInput;

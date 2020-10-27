@@ -25,11 +25,11 @@ module.exports.init = () => {
  * Returns latitude/longitude within the requested zipcode. The coordinates are usually
  * but not necessarily close to the center of the zipcode.
  * 
- * @param {*} zipCode The zipcode to lookup. It can either be a string or a number.
+ * @param {*} zipCode The zipcode to lookup. Has to be a string.
  */
 module.exports.getCoordinates = zipCode => {
-    if (!map.has(zipCode.toString())) return null;
+    if (!map.has(zipCode)) return null;
 
-    const address = map.get(zipCode.toString());
+    const address = map.get(zipCode);
     return { latitude: address.latitude, longitude: address.longitude };
 };

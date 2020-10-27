@@ -7,7 +7,7 @@ const importFresh = require('import-fresh');
 const context = {};
 
 describe("FindRestroomAtLocation API handler tests", function () {
-  it("should delegate to skill with the right resolved search filters and zipcode loaded into session attributes", async () => {
+  it("should delegate to skill with the right resolved search filters and zipcode (converted to string) loaded into session attributes", async () => {
     const eventWithAPL = importFresh("../../test-data/api/atlocation_api");
     const eventWithoutAPL = importFresh("../../test-data/api/atlocation_no_apl_api");
 
@@ -48,9 +48,19 @@ describe("FindRestroomAtLocation API handler tests", function () {
 
         expect(actualResolvedEntitiesArray).to.eql(expectedResolvedEntitiesArray);
 
-        expect(context.zipcode).to.equal(zipcode);
+        expect(context.zipcode).to.equal(zipcode.toString());
       }
     }
+  });
+
+  it("should be able to sanitize four digit zip codes. The US has zip codes like 07834 which will be given by Alexa as 7834. We should convert it back to a valid five digit zip code by prepending a '0'.", async () => {
+    const fourDigitZipCode = 7834;
+    const event = importFresh("../../test-data/api/atlocation_api");
+    event.request.apiRequest.arguments.Zipcode = fourDigitZipCode;
+
+    await unitUnderTest.handler(event, context);
+
+    expect(context.zipcode).to.equal("07834");
   });
 
   it("should delegate to skill even when the zipcode is missing. We expiclity set a zipcode to null in the intent slots", async () => {
