@@ -22,18 +22,22 @@ const ResponseSanitizationInterceptor = require("interceptors/ResponseSanitizati
 
 const ErrorHandler = require("errors/ErrorHandler");
 
+const TOTAL_REQUEST_TIME = `Total Request Time`;
+
 // ***************************************************************************************************
 // These simple interceptors just log the incoming and outgoing request bodies to assist in debugging.
 
 const LogRequestInterceptor = {
   process(handlerInput) {
     console.log(`REQUEST ENVELOPE = ${JSON.stringify(handlerInput.requestEnvelope)}`);
+    console.time(TOTAL_REQUEST_TIME);
   },
 };
 
 const LogResponseInterceptor = {
   process(handlerInput, response) {
     console.log(`RESPONSE = ${JSON.stringify(response)}`);
+    console.timeEnd(TOTAL_REQUEST_TIME);
   },
 };
 
@@ -58,9 +62,9 @@ exports.handler = async function (event, context) {
         YesIntentHandler,
       )
       .addRequestInterceptors(
+        LogRequestInterceptor,
         SESTransporterInterceptor,
         ZipcodesDataLoadInterceptor,
-        LogRequestInterceptor,
       )
       .addResponseInterceptors(
         ResponseSanitizationInterceptor,

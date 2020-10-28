@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const determinePositiveRatingPercentage = require("../utilities").determinePositiveRatingPercentage;
 
 const BASE_URL = `https://www.refugerestrooms.org`;
+const RR_API_LATENCY = `refugee-restrooms-api-latency`;
 
 async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFilterByUnisex, isFilterByChangingTable) {
     if (!latitude || !longitude)
@@ -10,6 +11,7 @@ async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFil
     let URL = `${BASE_URL}/api/v1/restrooms/by_location?page=1&per_page=10&offset=0&ada=${isFilterByADA === true ? `true` : `false`}&unisex=${isFilterByUnisex === true ? `true` : `false`}&lat=${latitude}&lng=${longitude}`;
     console.log(`Endpoint ${URL}`);
 
+    console.time(RR_API_LATENCY);
     var restroomsArray = [];
     try {
         const response = await fetch(URL);
@@ -17,6 +19,7 @@ async function searchRestroomsByLatLon(latitude, longitude, isFilterByADA, isFil
     } catch (error) {
         console.log(error);
     }
+    console.timeEnd(RR_API_LATENCY);
 
     if (isFilterByChangingTable === true) {
         filterInPlace(restroomsArray, value => value.changing_table);
