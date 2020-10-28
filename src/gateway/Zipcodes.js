@@ -1,21 +1,15 @@
-const { Map } = require('immutable');
-
-let map;
+let zipCodesMap;
+const ZIPCODE_DATABASE_LOAD_LATENCY = `zipcode-database-load-latency`;
 
 module.exports.init = () => {
     return new Promise((resolve, reject) => {
-        if (!map) {
-            console.log("Zipcode to Lat/Lon database being loaded.");
-            console.time("zipcode-database-load-latency");
-            const data = require('./us-zip-code-latitude-and-longitude.json');
+        if (!zipCodesMap) {
+            console.log("Zipcode to Lat/Lon database being loaded into memory.");
 
-            const internalMap = Map();
-            map = internalMap.withMutations(internalMap => {
-                data.forEach(datum => {
-                    internalMap.set(datum.zip, datum);
-                });
-            });
-            console.timeEnd("zipcode-database-load-latency");
+            console.time(ZIPCODE_DATABASE_LOAD_LATENCY);
+            zipCodesMap = require('./us-zip-code-latitude-and-longitude.json');
+            console.timeEnd(ZIPCODE_DATABASE_LOAD_LATENCY);
+
             resolve();
         } else {
             resolve();
@@ -30,8 +24,8 @@ module.exports.init = () => {
  * @param {*} zipCode The zipcode to lookup. Has to be a string.
  */
 module.exports.getCoordinates = zipCode => {
-    if (!map.has(zipCode)) return null;
+    if (!zipCodesMap[zipCode]) return null;
 
-    const address = map.get(zipCode);
-    return { latitude: address.latitude, longitude: address.longitude };
+    const coordinates = zipCodesMap[zipCode];
+    return { latitude: coordinates[0], longitude: coordinates[1] };
 };
