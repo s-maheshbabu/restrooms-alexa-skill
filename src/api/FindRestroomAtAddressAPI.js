@@ -43,6 +43,8 @@ module.exports = FindRestroomAtAddressAPI = {
         };
     }
 
+    // TODO: You must not return both an apiResponse object and a Dialog.DelegateRequest directive.
+    // https://developer.amazon.com/en-US/docs/alexa/conversations/handle-api-calls.html
     return {
       directives: [{
         type: 'Dialog.DelegateRequest',
