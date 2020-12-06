@@ -1,11 +1,11 @@
 {
   "type": "APL",
-  "version": "1.0",
+  "version": "1.5",
   "theme": "dark",
   "import": [
     {
       "name": "alexa-layouts",
-      "version": "1.0.0"
+      "version": "1.2.0"
     }
   ],
   "resources": [
@@ -239,7 +239,7 @@
           },
           {
             "type": "AlexaFooter",
-            "footerHint": "${payload.bodyTemplate2Data.hintText}"
+            "hintText": "${payload.bodyTemplate2Data.hintText}"
           }
         ]
       }
