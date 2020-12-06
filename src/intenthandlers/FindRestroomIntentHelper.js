@@ -45,24 +45,32 @@ Unisex: ${restroom.unisex ? 'Yes' : 'No'}, Accessible: ${restroom.accessible ? '
  * Constructs an APL directive to display the given restroom's details.
  *
  * @param {*} zipcode The zipcode at which the restrooms are located.
- * @param {*} restrooms The restrooms to be used to build the Alexa card.
+ * @param {*} restrooms The restrooms to be used to build the Alexa visuals.
  * @param {*} isRequestEmailAccess true if we should render information advertising
  * the email capabilities and requesting the user to consider granting permission.
  * TODO: Validate inputs and update documentation.
  */
-function buildAPLDirective(zipcode, restroom, isRequestEmailAccess) {
-    const distance = zipcode ? `` : `\<br\>${icons.DISTANCE} ${restroom.distance} miles`;
-    const rating = `\<br\>${icons.RATINGS} ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}`
+function buildAPLDirective(zipcode, restrooms, isRequestEmailAccess) {
+    const restroomsWithVisualInfo = [];
 
+    restrooms.forEach(restroom => {
+        const distance = zipcode ? `` : `\<br\>${icons.DISTANCE} ${restroom.distance} miles`;
+        const rating = `\<br\>${icons.RATINGS} ${Number.isInteger(restroom.positive_rating) ? `${restroom.positive_rating}% positive` : `Not Rated`}`
+        restroomsWithVisualInfo.push(
+            {
+                location: `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
+                features: `${restroom.unisex ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Gender Neutral\<br\>${restroom.accessible ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Accessible\<br\>${restroom.changing_table ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Changing Table${distance}${rating}`,
+                additionalInfo: `${!isRequestEmailAccess ? `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.` : `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`,
+            }
+        );
+    });
     return {
         type: APL_DOCUMENT_TYPE,
         version: APL_DOCUMENT_VERSION,
         document: restroomDetailsDocument,
         datasources: restroomDetailsDatasource(
             `${zipcode ? `Here is a restroom at ${zipcode}.` : `Here is a restroom near you.`}`,
-            `${restroom.name}\<br\>${restroom.street}, ${restroom.city}, ${restroom.state}`,
-            `${restroom.unisex ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Gender Neutral\<br\>${restroom.accessible ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Accessible\<br\>${restroom.changing_table ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Changing Table${distance}${rating}`,
-            `${!isRequestEmailAccess ? `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.` : `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`,
+            restroomsWithVisualInfo,
         )
     }
 }

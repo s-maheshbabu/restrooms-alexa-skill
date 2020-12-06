@@ -132,7 +132,7 @@
         "items": [
           {
             "type": "Image",
-            "source": "${payload.bodyTemplate2Data.image.sources[0].url}",
+            "source": "${payload.searchResults.image.sources[0].url}",
             "scale": "best-fill",
             "width": "100vw",
             "height": "100vh",
@@ -153,19 +153,19 @@
                 "items": [
                   {
                     "type": "AlexaHeader",
-                    "headerAttributionImage": "${payload.bodyTemplate2Data.logoUrl}",
-                    "headerTitle": "${payload.bodyTemplate2Data.title}"
+                    "headerAttributionImage": "${payload.searchResults.logoUrl}",
+                    "headerTitle": "${payload.searchResults.title}"
                   },
                   {
                     "type": "Text",
-                    "text": "<b>${payload.bodyTemplate2Data.textContent.title.text}</b>",
+                    "text": "<b>${payload.searchResults.textContent.title.text}</b>",
                     "style": "textStyleBody",
                     "width": "70vw",
                     "textAlign": "center"
                   },
                   {
                     "type": "Text",
-                    "text": "${payload.bodyTemplate2Data.textContent.subtitle.text}",
+                    "text": "${payload.searchResults.textContent.subtitle.text}",
                     "style": "textStylePrimary",
                     "width": "70vw",
                     "textAlign": "center"
@@ -183,7 +183,7 @@
         "items": [
           {
             "type": "Image",
-            "source": "${payload.bodyTemplate2Data.backgroundImage.sources[0].url}",
+            "source": "${payload.searchResults.backgroundImage.sources[0].url}",
             "scale": "best-fill",
             "width": "100vw",
             "height": "100vh",
@@ -191,8 +191,8 @@
           },
           {
             "type": "AlexaHeader",
-            "headerTitle": "${payload.bodyTemplate2Data.title}",
-            "headerAttributionImage": "${payload.bodyTemplate2Data.logoUrl}"
+            "headerTitle": "${payload.searchResults.title}",
+            "headerAttributionImage": "${payload.searchResults.logoUrl}"
           },
           {
             "type": "Container",
@@ -201,37 +201,44 @@
             "paddingRight": "72dp",
             "grow": 1,
             "shrink": 1,
-            "height": "100vh",
+            "height": "100%",
+            "width": "100%",
             "items": [
               {
                 "type": "ScrollView",
+                "width": "100%",
                 "height": "100%",
-                "grow": 1,
-                "shrink": 1,
                 "item": [
                   {
-                    "type": "Container",
-                    "items": [
-                      {
-                        "type": "Text",
-                        "text": "<b>${payload.bodyTemplate2Data.textContent.title.text}</b>",
-                        "style": "textStyleBody",
-                        "color": "#4dd2ff"
-                      },
-                      {
-                        "type": "Text",
-                        "text": "${payload.bodyTemplate2Data.textContent.primaryText.text}",
-                        "style": "textStylePrimary"
-                      },
-                      {
-                        "type": "Text",
-                        "text": "${payload.bodyTemplate2Data.textContent.secondaryText.text}",
-                        "spacing": "@spacingSmall",
-                        "paddingTop": "40dp",
-                        "paddingRight": "70dp",
-                        "style": "textStylePrimary"
-                      }
-                    ]
+                    "type": "Pager",
+                    "width": "100%",
+                    "height": "100%",
+                    "data": "${payload.searchResults.restrooms}",
+                    "item": {
+                      "type": "Container",
+                      "items": [
+                        {
+                          "type": "Text",
+                          "text": "<b>${data.location}</b>",
+                          "style": "textStyleBody",
+                          "color": "#4dd2ff"
+                        },
+                        {
+                          "type": "Text",
+                          "text": "${data.features}",
+                          "style": "textStylePrimary"
+                        },
+                        {
+                          "type": "Text",
+                          "text": "${data.additionalInfo}",
+                          "spacing": "@spacingSmall",
+                          "paddingTop": "40dp",
+                          "paddingRight": "70dp",
+                          "style": "textStylePrimary"
+                        }
+                      ]
+                    },
+                    "navigation": "normal"
                   }
                 ]
               }
@@ -239,7 +246,7 @@
           },
           {
             "type": "AlexaFooter",
-            "hintText": "${payload.bodyTemplate2Data.hintText}"
+            "hintText": "${payload.searchResults.hintText}"
           }
         ]
       }

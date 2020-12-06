@@ -1,9 +1,7 @@
-module.exports = (title, restroomLocation, restroomFeatures, additionalInfo) => {
-  //TODO: Input validation and testing?
+module.exports = (title, restrooms) => {
+
   return {
-    bodyTemplate2Data: {
-      type: "object",
-      objectId: "bt2Sample",
+    searchResults: {
       backgroundImage: {
         contentDescription: null,
         smallSourceUrl: null,
@@ -47,23 +45,10 @@ module.exports = (title, restroomLocation, restroomFeatures, additionalInfo) => 
           }
         ]
       },
-      textContent: {
-        title: {
-          type: "PlainText",
-          text: restroomLocation
-        },
-        primaryText: {
-          type: "PlainText",
-          text: restroomFeatures
-        },
-        secondaryText: {
-          type: "PlainText",
-          text: additionalInfo
-        }
-      },
+      restrooms: restrooms,
       logoUrl:
         "https://restrooms-alexa-skill.s3.amazonaws.com/512x512.png",
-      hintText: `Try, "Alexa, ask Refugee Restrooms to find something near me"`
+      hintText: `Try swiping sideways for more restrooms"`
     }
   };
 };

@@ -82,9 +82,10 @@ module.exports = FindRestroomAtAddressIntentHandler = {
     }
 
     // TODO: We can't always say 'this and more results'. What if there was only one result?
+    // TODO: We should probably pass undefined here instead of 'given address'.
     const builder = responseBuilder
       .speak(`I found this ${isPositivelyRated(restrooms[0]) ? `positively rated ` : ``}restroom near the given address. ${IntentHelper.describeRestroom(restrooms[0])}.${emailAddress ? ` I also sent this and more restrooms to your email. ${offerDirections ? `Shall I load a map with directions to this restroom?` : ``}` : ` ${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`}`)
-      .addDirective(IntentHelper.buildAPLDirective('given address', restrooms[0], !emailAddress))
+      .addDirective(IntentHelper.buildAPLDirective('given address', restrooms, !emailAddress))
       .withShouldEndSession(!offerDirections);
 
     if (!emailAddress) builder.withAskForPermissionsConsentCard([scopes.EMAIL_SCOPE]);

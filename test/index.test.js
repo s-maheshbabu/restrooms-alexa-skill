@@ -70,20 +70,7 @@ describe("Finding restrooms near user's geo location", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom near you.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, dummyRestRooms);
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
@@ -208,20 +195,7 @@ describe("Finding restrooms near device address", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom near you.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, dummyRestRooms);
   });
 
   it("should let the user know if there are no restrooms near the user's geo location", async () => {
@@ -382,20 +356,7 @@ describe("Finding restrooms at a user specified location", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at ${zipcode}.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at ${zipcode}.`, dummyRestRooms, true);
   });
 
   it("should let the user know if there are no restrooms in the location they are searching for", async () => {
@@ -491,19 +452,7 @@ describe("Finding restrooms at a user specified address", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at given address.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at given address.`, dummyRestRooms, true /* should be false once bug in code fixed*/);
   });
 
   it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a mobile device, we should use their geo coordinates to influence the search for restrooms.", async () => {
@@ -538,19 +487,7 @@ describe("Finding restrooms at a user specified address", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at given address.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at given address.`, dummyRestRooms, true /* should be false once bug in code fixed*/);
   });
 
   it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a mobile device, we should use their geo coordinates to influence the search for restrooms. However, if we don't have permissions to use the coordinates, we should still move forward with an unbounded search.", async () => {
@@ -586,19 +523,7 @@ describe("Finding restrooms at a user specified address", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at given address.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at given address.`, dummyRestRooms, true /* should be false once bug in code fixed*/);
   });
 
   it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a home device like Echo Dot, we should use their zipcode to influence the search for restrooms.", async () => {
@@ -634,19 +559,7 @@ describe("Finding restrooms at a user specified address", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at given address.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at given address.`, dummyRestRooms, true /* should be false once bug in code fixed*/);
   });
 
   it("when user specifies only the street address, there can be multiple matches across the country. So, if they are on a home device like Echo Dot, we should use their zipcode to influence the search for restrooms. However, if we don't have permissions to use the zipcode, we should still move forward with an unbounded search.", async () => {
@@ -688,19 +601,7 @@ describe("Finding restrooms at a user specified address", function () {
     expect(card.type).to.equal("AskForPermissionsConsent");
     expect(card.permissions).to.eql([scopes.EMAIL_SCOPE]);
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at given address.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at given address.`, dummyRestRooms, true /* should be false once bug in code fixed*/);
   });
 
   it("should let the user know if the address they provided is not parseable.", async () => {
@@ -963,20 +864,7 @@ describe("APL directives support", function () {
       );
       expect(outputSpeech.type).to.equal("SSML");
 
-      const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-      expect(response.directives.length).is.equal(1);
-      const directive = response.directives[0];
-      verifyAPLDirectiveStructure(directive);
-      expect(directive.document).to.eql(restroomDetailsDocument);
-      const actualDatasource = directive.datasources;
-      expect(actualDatasource).to.eql(
-        restroomDetailsDatasource(
-          `Here is a restroom near you.`,
-          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${isUnisex ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Gender Neutral<br>${isAccessible ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Accessible<br>${isChangingTable ? `${icons.GREEN_CHECKMARK}` : `${icons.RED_CROSSMARK}`} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-          messages.NOTIFY_MISSING_EMAIL_PERMISSIONS,
-        )
-      );
+      verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, clonedDummyRestRooms);
     }
   });
 });
@@ -1040,20 +928,7 @@ describe("Sending emails", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom near you.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, dummyRestRooms, false, true);
 
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
@@ -1095,20 +970,7 @@ describe("Sending emails", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom near you.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, dummyRestRooms, false, true);
 
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
@@ -1148,20 +1010,7 @@ describe("Sending emails", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(dummyRestRooms));
 
-    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomDelivered);
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at ${zipcode}.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at ${zipcode}.`, dummyRestRooms, true, true);
 
     const sentMail = nodemailerMock.mock.getSentMail();
     expect(sentMail.length).to.equal(1);
@@ -1381,19 +1230,7 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      expect(response.directives.length).is.equal(1);
-      const directive = response.directives[0];
-      verifyAPLDirectiveStructure(directive);
-      expect(directive.document).to.eql(restroomDetailsDocument);
-      const actualDatasource = directive.datasources;
-      expect(actualDatasource).to.eql(
-        restroomDetailsDatasource(
-          `Here is a restroom near you.`,
-          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-        )
-      );
+      verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, clonedDummyRestRooms, false, true);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
@@ -1435,19 +1272,7 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      expect(response.directives.length).is.equal(1);
-      const directive = response.directives[0];
-      verifyAPLDirectiveStructure(directive);
-      expect(directive.document).to.eql(restroomDetailsDocument);
-      const actualDatasource = directive.datasources;
-      expect(actualDatasource).to.eql(
-        restroomDetailsDatasource(
-          `Here is a restroom near you.`,
-          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-        )
-      );
+      verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, clonedDummyRestRooms, false, true);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
@@ -1486,19 +1311,7 @@ describe("Convey ratings of the restrooms", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom near you.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} Not Rated`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, clonedDummyRestRooms, false, true);
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
@@ -1538,19 +1351,7 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      expect(response.directives.length).is.equal(1);
-      const directive = response.directives[0];
-      verifyAPLDirectiveStructure(directive);
-      expect(directive.document).to.eql(restroomDetailsDocument);
-      const actualDatasource = directive.datasources;
-      expect(actualDatasource).to.eql(
-        restroomDetailsDatasource(
-          `Here is a restroom near you.`,
-          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-        )
-      );
+      verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, clonedDummyRestRooms, false, true);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
@@ -1591,19 +1392,7 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      expect(response.directives.length).is.equal(1);
-      const directive = response.directives[0];
-      verifyAPLDirectiveStructure(directive);
-      expect(directive.document).to.eql(restroomDetailsDocument);
-      const actualDatasource = directive.datasources;
-      expect(actualDatasource).to.eql(
-        restroomDetailsDatasource(
-          `Here is a restroom near you.`,
-          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
-          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-        )
-      );
+      verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, clonedDummyRestRooms, false, true);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
@@ -1643,19 +1432,7 @@ describe("Convey ratings of the restrooms", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom near you.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.DISTANCE} ${distance} miles<br>${icons.RATINGS} Not Rated`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom near you.`, clonedDummyRestRooms, false, true);
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
@@ -1694,19 +1471,7 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      expect(response.directives.length).is.equal(1);
-      const directive = response.directives[0];
-      verifyAPLDirectiveStructure(directive);
-      expect(directive.document).to.eql(restroomDetailsDocument);
-      const actualDatasource = directive.datasources;
-      expect(actualDatasource).to.eql(
-        restroomDetailsDatasource(
-          `Here is a restroom at ${zipcode}.`,
-          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${positiveRatingPercentage}% positive`,
-          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-        )
-      );
+      verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at ${zipcode}.`, clonedDummyRestRooms, true, true);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
@@ -1746,19 +1511,7 @@ describe("Convey ratings of the restrooms", function () {
       expect(card.type).to.equal("Simple");
       expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-      expect(response.directives.length).is.equal(1);
-      const directive = response.directives[0];
-      verifyAPLDirectiveStructure(directive);
-      expect(directive.document).to.eql(restroomDetailsDocument);
-      const actualDatasource = directive.datasources;
-      expect(actualDatasource).to.eql(
-        restroomDetailsDatasource(
-          `Here is a restroom at ${zipcode}.`,
-          `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-          `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} ${Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`}`,
-          `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-        )
-      );
+      verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at ${zipcode}.`, clonedDummyRestRooms, true, true);
 
       const sentMail = nodemailerMock.mock.getSentMail();
       const htmlBody = sentMail[0].html;
@@ -1797,19 +1550,7 @@ describe("Convey ratings of the restrooms", function () {
     expect(card.type).to.equal("Simple");
     expect(card.content).to.equal(buildSimpleCardContent(clonedDummyRestRooms));
 
-    expect(response.directives.length).is.equal(1);
-    const directive = response.directives[0];
-    verifyAPLDirectiveStructure(directive);
-    expect(directive.document).to.eql(restroomDetailsDocument);
-    const actualDatasource = directive.datasources;
-    expect(actualDatasource).to.eql(
-      restroomDetailsDatasource(
-        `Here is a restroom at ${zipcode}.`,
-        `${restroomDelivered.name}<br>${restroomDelivered.street}, ${restroomDelivered.city}, ${restroomDelivered.state}`,
-        `${icons.GREEN_CHECKMARK} Gender Neutral<br>${icons.GREEN_CHECKMARK} Accessible<br>${icons.RED_CROSSMARK} Changing Table<br>${icons.RATINGS} Not Rated`,
-        `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`,
-      )
-    );
+    verifyAPLSearchResultsDirective(response.directives, `Here is a restroom at ${zipcode}.`, clonedDummyRestRooms, true, true);
 
     const sentMail = nodemailerMock.mock.getSentMail();
     const htmlBody = sentMail[0].html;
@@ -2294,6 +2035,49 @@ function describeRestroom(restroom) {
  */
 function visuallyDescribeRestroom(restroom) {
   return `${restroom.name}, ${restroom.street}, ${restroom.city}, ${restroom.state}`;
+}
+
+/**
+ * Verifies that the right APL directive is issued with focus on the contents of the data source.
+ * @param {*} directives The APL directives to be verified.
+ * @param {*} title The title expected in the directive.
+ * @param {*} restrooms The list of restrooms off of which the APL directive is to be built.
+ * @param {*} isZipcodeBasedSearch true if the test case is for a zipcode based search.
+ */
+function verifyAPLSearchResultsDirective(directives, title, restrooms, isZipcodeBasedSearch = false, isEmailAccessAllowed = false) {
+  expect(directives.length).is.equal(1);
+
+  const directive = directives[0];
+  verifyAPLDirectiveStructure(directive);
+
+  expect(directive.document).to.eql(restroomDetailsDocument);
+
+  const actualDatasource = directive.datasources;
+  expect(actualDatasource.searchResults.title).to.eql(title);
+
+  const visualRespresentationOfRestrooms = actualDatasource.searchResults.restrooms;
+  expect(visualRespresentationOfRestrooms.length).to.equal(restrooms.length);
+  for (let index = 0; index < visualRespresentationOfRestrooms.length; index++) {
+    const restroomToBeShown = restrooms[index];
+    expect(visualRespresentationOfRestrooms[index].location).to.equal(
+      `${restroomToBeShown.name}<br>${restroomToBeShown.street}, ${restroomToBeShown.city}, ${restroomToBeShown.state}`);
+
+    let features = ``;
+    features += restroomToBeShown.unisex ? `${icons.GREEN_CHECKMARK} Gender Neutral\<br\>` : `${icons.RED_CROSSMARK} Gender Neutral\<br\>`;
+    features += restroomToBeShown.accessible ? `${icons.GREEN_CHECKMARK} Accessible\<br\>` : `${icons.RED_CROSSMARK} Accessible\<br\>`;
+    features += restroomToBeShown.changing_table ? `${icons.GREEN_CHECKMARK} Changing Table` : `${icons.RED_CROSSMARK} Changing Table`;
+
+    features += isZipcodeBasedSearch ? `` : `\<br\>${icons.DISTANCE} ${roundDownDistance(restroomToBeShown.distance)} miles`;
+
+    features += `\<br\>${icons.RATINGS} `;
+    const positiveRatingPercentage = determinePositiveRatingPercentage(restroomToBeShown);
+    features += Number.isInteger(positiveRatingPercentage) ? `${positiveRatingPercentage}% positive` : `Not Rated`;
+    expect(visualRespresentationOfRestrooms[index].features).to.equal(features);
+
+    let additionalInfo = `I also sent this and other restrooms I found to your email. I also included Google Maps™ navigation links in the email.`;
+    if (!isEmailAccessAllowed) additionalInfo = `${messages.NOTIFY_MISSING_EMAIL_PERMISSIONS}`;
+    expect(visualRespresentationOfRestrooms[index].additionalInfo).to.equal(additionalInfo);
+  }
 }
 
 /**
