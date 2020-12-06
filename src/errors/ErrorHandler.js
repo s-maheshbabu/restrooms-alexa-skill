@@ -3,7 +3,7 @@ module.exports = ErrorHandler = {
     return true;
   },
   handle(handlerInput, error) {
-    console.error(`Error handled: ${error.message}`);
+    console.log(`ERROR: ${error.stack}`);
 
     return handlerInput.responseBuilder
       .speak(`I'm Sorry, I'm having trouble helping you. Please try again later.`)
