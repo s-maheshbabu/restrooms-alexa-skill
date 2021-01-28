@@ -1,6 +1,5 @@
 require("app-module-path").addPath(__dirname);
 
-const axios = require('axios')
 const Alexa = require("ask-sdk-core");
 
 const FindRestroomNearMeAPI = require("api/FindRestroomNearMeAPI");
@@ -46,20 +45,6 @@ const LogResponseInterceptor = {
 let skill;
 
 exports.handler = async function (event, context) {
-  const isRunInAzure = process.env.RUN_IN_AZURE;
-  if (isRunInAzure) {
-    console.log("Invoking Azure End Point");
-    try {
-      const response = await axios.post(`https://azure-restrooms-alexa-skill.azurewebsites.net/api/RefugeeRestrooms_AlexaSkillsKit_Trigger`,
-        event
-      );
-      console.log(`Response from Azure was: ${JSON.stringify(response.data)}`);
-      return response.data;
-    } catch (e) {
-      console.log(`Failed to handle the request on Azure. Falling back to self-hosted request handling. Error was: ${e}`);
-    }
-  }
-
   if (!skill) {
     skill = Alexa.SkillBuilders.custom()
       .addRequestHandlers(

@@ -26,7 +26,6 @@
     "ask-sdk-core": "^2.9.0",
     "ask-sdk-model": "^1.29.0",
     "aws-sdk": "^2.751.0",
-    "axios": "^0.20.0",
     "email-validator": "^2.0.4",
     "immutable": "^4.0.0-rc.12",
     "node-fetch": "^2.6.0",
